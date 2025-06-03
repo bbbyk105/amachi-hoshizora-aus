@@ -2,7 +2,7 @@
 "use client";
 
 import { Icon } from "@/components/Icon";
-import { useCart } from "@/src/store/cart";
+import { useCart } from "@/store/cart";
 import Image from "next/image";
 import { useState } from "react";
 
