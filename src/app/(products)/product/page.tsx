@@ -5,16 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { ShoppingCart, Share2, SortDesc, Check } from "lucide-react";
-import {
-  categories,
-  sortOptions,
-  formatPrice,
-  sortProducts,
-  getProductsByCategory,
-  getProductDetails,
-} from "@/data/products";
+
 import { Product } from "@/types/products";
 import { useCart } from "@/store/cart";
+import {
+  categories,
+  formatPrice,
+  getProductDetails,
+  getProductsByCategory,
+  sortOptions,
+  sortProducts,
+} from "@/data";
 
 interface ProductCardProps {
   product: Product;

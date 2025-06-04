@@ -20,9 +20,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No items provided" }, { status: 400 });
     }
 
-    console.log("Base URL:", BASE_URL);
-    console.log("Items:", items);
-
     // 商品データの検証とライン項目の作成
     const lineItems = items.map((item) => {
       const product = products.find((p) => p.id === item.id);
@@ -30,16 +27,12 @@ export async function POST(request: Request) {
         throw new Error(`Invalid product ID: ${item.id}`);
       }
 
-      console.log("Processing product:", product.name, product.price);
-
       return {
         price_data: {
           currency: "aud",
           product_data: {
             name: product.name,
             description: product.description,
-            // 画像URLは無効なのでコメントアウト
-            // images: [product.image.url],
             metadata: {
               product_id: product.id.toString(),
             },
@@ -50,8 +43,6 @@ export async function POST(request: Request) {
       };
     });
 
-    console.log("Line items created:", lineItems.length);
-
     // Stripe Checkoutセッション作成
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
@@ -59,25 +50,24 @@ export async function POST(request: Request) {
       mode: "payment",
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE_URL}/cancel`,
-      shipping_address_collection: {
-        allowed_countries: ["AU"],
-      },
-      billing_address_collection: "required",
+      locale: "en", // 英語で表示
+      billing_address_collection: "auto", // 請求先住所は自動判定
       metadata: {
-        order_type: "online_purchase",
+        order_type: "in_person_purchase", // 対面決済
         currency: "aud",
       },
+      custom_text: {
+        submit: {
+          message: "Complete your purchase", // 英語でのボタンテキスト
+        },
+      },
     });
-
-    console.log("Stripe session created:", session.id);
 
     return NextResponse.json({
       url: session.url,
       sessionId: session.id,
     });
   } catch (error) {
-    console.error("Stripe checkout error:", error);
-
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
@@ -113,8 +103,7 @@ export async function GET(request: Request) {
         currency: session.currency,
       },
     });
-  } catch (error) {
-    console.error("Stripe session retrieval error:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to retrieve session" },
       { status: 500 }

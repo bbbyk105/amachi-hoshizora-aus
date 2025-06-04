@@ -2,7 +2,6 @@
 "use client";
 
 import { useCart } from "@/store/cart";
-import { formatPrice } from "@/data/products";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -18,6 +17,7 @@ import {
   Package,
   AlertTriangle,
 } from "lucide-react";
+import { formatPrice } from "@/data";
 
 export default function CartPage() {
   const {
@@ -316,7 +316,7 @@ export default function CartPage() {
                     ) : (
                       <div className="flex items-center">
                         <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        Stripeで決済
+                        決済
                       </div>
                     )}
                   </Button>

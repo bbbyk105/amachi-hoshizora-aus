@@ -4,12 +4,8 @@ import React from "react";
 import { Hero } from "./(top-page)/Hero";
 import { About } from "./(top-page)/About";
 import { Product } from "./(top-page)/Product";
-import {
-  heroData,
-  topicsData,
-  products,
-  formatPriceWithVolume,
-} from "@/data/products";
+import { products } from "@/data/products";
+import { formatPriceWithVolume, heroData, topicsData } from "@/data";
 
 // products データを既存のコンポーネントと互換性のある形式に変換
 const compatibleProductsData = products.map((product) => ({
