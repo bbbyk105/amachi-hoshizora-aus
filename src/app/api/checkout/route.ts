@@ -3,9 +3,13 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { products } from "@/data/products";
 
+// Stripe初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
   apiVersion: "2025-05-28.basil",
 });
+
+// ベースURL定数
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export async function POST(request: Request) {
   try {
@@ -16,40 +20,47 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "No items provided" }, { status: 400 });
     }
 
-    // サーバー側で正しい商品データを参照
+    console.log("Base URL:", BASE_URL);
+    console.log("Items:", items);
+
+    // 商品データの検証とライン項目の作成
     const lineItems = items.map((item) => {
       const product = products.find((p) => p.id === item.id);
       if (!product) {
         throw new Error(`Invalid product ID: ${item.id}`);
       }
 
+      console.log("Processing product:", product.name, product.price);
+
       return {
         price_data: {
-          currency: "aud", // オーストラリアドル
+          currency: "aud",
           product_data: {
             name: product.name,
             description: product.description,
-            images: [product.image.url], // 商品画像のURL
+            // 画像URLは無効なのでコメントアウト
+            // images: [product.image.url],
             metadata: {
               product_id: product.id.toString(),
-              stripe_product_id: product.stripeProductId || "",
             },
           },
-          unit_amount: Math.round(product.price * 100), // AUDをセントに変換 ($88.00 -> 8800 cents)
+          unit_amount: Math.round(product.price * 100), // AUDをセントに変換
         },
         quantity: item.quantity,
       };
     });
 
-    // Stripe の Checkout セッションを作成
+    console.log("Line items created:", lineItems.length);
+
+    // Stripe Checkoutセッション作成
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+      success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${BASE_URL}/cancel`,
       shipping_address_collection: {
-        allowed_countries: ["AU"], // オーストラリアのみ
+        allowed_countries: ["AU"],
       },
       billing_address_collection: "required",
       metadata: {
@@ -58,7 +69,8 @@ export async function POST(request: Request) {
       },
     });
 
-    // フロントエンドにCheckout URLを返す
+    console.log("Stripe session created:", session.id);
+
     return NextResponse.json({
       url: session.url,
       sessionId: session.id,
@@ -77,7 +89,7 @@ export async function POST(request: Request) {
   }
 }
 
-// GET method for retrieving session details
+// セッション詳細取得用のGETメソッド
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

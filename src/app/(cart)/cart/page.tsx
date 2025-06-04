@@ -70,15 +70,39 @@ export default function CartPage() {
     setItemToDelete(null);
   };
 
+  // ✅ 実際のStripeチェックアウトと連携
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      // チェックアウト処理をここに実装
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // デモ用の遅延
-      alert("チェックアウト機能は開発中です");
+      // カートアイテムをAPI用の形式に変換
+      const items = cartItems.map((item) => ({
+        id: item.product.id,
+        quantity: item.quantity,
+      }));
+
+      // チェックアウトセッションを作成
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "チェックアウトに失敗しました");
+      }
+
+      const { url } = await response.json();
+
+      // Stripeのチェックアウトページにリダイレクト
+      window.location.href = url;
     } catch (error) {
-      console.error(error);
-      alert("チェックアウトに失敗しました");
+      console.error("Checkout error:", error);
+      alert(
+        error instanceof Error ? error.message : "チェックアウトに失敗しました"
+      );
     } finally {
       setLoading(false);
     }
@@ -281,8 +305,8 @@ export default function CartPage() {
 
                   <Button
                     onClick={handleCheckout}
-                    disabled={loading}
-                    className="w-full bg-gray-900 hover:bg-gray-800 text-white h-10 sm:h-12 text-sm sm:text-base"
+                    disabled={loading || isCartEmpty}
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white h-10 sm:h-12 text-sm sm:text-base disabled:opacity-50"
                   >
                     {loading ? (
                       <div className="flex items-center">
@@ -292,7 +316,7 @@ export default function CartPage() {
                     ) : (
                       <div className="flex items-center">
                         <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        レジに進む
+                        Stripeで決済
                       </div>
                     )}
                   </Button>
