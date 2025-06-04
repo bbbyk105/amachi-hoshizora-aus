@@ -8,8 +8,18 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
   apiVersion: "2025-05-28.basil",
 });
 
-// ベースURL定数
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+// ベースURL定数 - 本番環境では必ずHTTPS URLを使用
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://your-domain.com";
+
+// Product data type for Stripe
+interface StripeProductData {
+  name: string;
+  description: string;
+  metadata: {
+    product_id: string;
+  };
+  images?: string[];
+}
 
 export async function POST(request: Request) {
   try {
@@ -27,16 +37,35 @@ export async function POST(request: Request) {
         throw new Error(`Invalid product ID: ${item.id}`);
       }
 
+      // 本番環境または ngrok 使用時のみ画像を含める
+      const isProduction = process.env.NODE_ENV === "production";
+      const isNgrok =
+        BASE_URL.includes("ngrok") || BASE_URL.includes("https://");
+      const shouldIncludeImages = isProduction || isNgrok;
+
+      const productData: StripeProductData = {
+        name: product.name,
+        description: product.description,
+        metadata: {
+          product_id: product.id.toString(),
+        },
+      };
+
+      // HTTPS の場合のみ画像を追加
+      if (shouldIncludeImages) {
+        const imageUrl = product.image.url.startsWith("http")
+          ? product.image.url
+          : `${BASE_URL}${product.image.url}`;
+        productData.images = [imageUrl];
+        console.log(`Including image: ${imageUrl}`);
+      } else {
+        console.log(`Skipping images for localhost development`);
+      }
+
       return {
         price_data: {
           currency: "aud",
-          product_data: {
-            name: product.name,
-            description: product.description,
-            metadata: {
-              product_id: product.id.toString(),
-            },
-          },
+          product_data: productData,
           unit_amount: Math.round(product.price * 100), // AUDをセントに変換
         },
         quantity: item.quantity,
@@ -51,7 +80,19 @@ export async function POST(request: Request) {
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE_URL}/cancel`,
       locale: "en", // 英語で表示
-      billing_address_collection: "auto", // 請求先住所は自動判定
+      // 領収書自動送信を有効化
+      invoice_creation: {
+        enabled: true,
+        invoice_data: {
+          description: "Purchase from Amachi-Hoshizora",
+          metadata: {
+            order_type: "in_person_purchase",
+          },
+          footer: "Thank you for your purchase!",
+        },
+      },
+      // 顧客メール収集を必須にして領収書送信先を確保
+      customer_email: undefined, // フォームで入力してもらう
       metadata: {
         order_type: "in_person_purchase", // 対面決済
         currency: "aud",
@@ -61,6 +102,10 @@ export async function POST(request: Request) {
           message: "Complete your purchase", // 英語でのボタンテキスト
         },
       },
+      // 自動的な税金計算（必要に応じて）
+      automatic_tax: {
+        enabled: false, // 必要に応じてtrueに変更
+      },
     });
 
     return NextResponse.json({
@@ -68,6 +113,8 @@ export async function POST(request: Request) {
       sessionId: session.id,
     });
   } catch (error) {
+    console.error("Stripe checkout error:", error); // エラーログ追加
+
     if (error instanceof Error) {
       return NextResponse.json({ error: error.message }, { status: 400 });
     }
@@ -92,7 +139,9 @@ export async function GET(request: Request) {
       );
     }
 
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ["invoice"], // 領収書情報も取得
+    });
 
     return NextResponse.json({
       session: {
@@ -101,9 +150,11 @@ export async function GET(request: Request) {
         customer_details: session.customer_details,
         amount_total: session.amount_total,
         currency: session.currency,
+        invoice: session.invoice, // 領収書情報を含める
       },
     });
-  } catch {
+  } catch (error) {
+    console.error("Session retrieval error:", error);
     return NextResponse.json(
       { error: "Failed to retrieve session" },
       { status: 500 }
