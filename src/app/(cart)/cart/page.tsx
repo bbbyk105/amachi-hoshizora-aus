@@ -1,94 +1,357 @@
 // app/cart/page.tsx
 "use client";
 
-import { Icon } from "@/components/Icon";
 import { useCart } from "@/store/cart";
+import { formatPrice } from "@/data/products";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  ShoppingCart,
+  Minus,
+  Plus,
+  Trash2,
+  ArrowLeft,
+  CreditCard,
+  Package,
+  AlertTriangle,
+} from "lucide-react";
 
 export default function CartPage() {
-  const { cartItems, removeFromCart, clearCart, getTotalPrice } = useCart();
+  const {
+    cartItems,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    getTotalPrice,
+    getTotalQuantity,
+  } = useCart();
   const [loading, setLoading] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+
+  const handleQuantityChange = (productId: number, newQuantity: number) => {
+    if (newQuantity < 1) {
+      setItemToDelete(productId);
+      setShowDeleteConfirm(true);
+    } else {
+      updateQuantity(productId, newQuantity);
+    }
+  };
+
+  const handleRemoveItem = (productId: number) => {
+    setItemToDelete(productId);
+    setShowDeleteConfirm(true);
+  };
+
+  const handleClearCart = () => {
+    setShowClearConfirm(true);
+  };
+
+  const confirmDeleteItem = () => {
+    if (itemToDelete !== null) {
+      removeFromCart(itemToDelete);
+      setItemToDelete(null);
+    }
+    setShowDeleteConfirm(false);
+  };
+
+  const confirmClearCart = () => {
+    clearCart();
+    setShowClearConfirm(false);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setShowClearConfirm(false);
+    setItemToDelete(null);
+  };
 
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          // カートアイテムを { id, quantity } だけ送る（改ざん対策）
-          items: cartItems.map((item) => ({
-            id: item.product.id,
-            quantity: item.quantity,
-          })),
-        }),
-      });
-      if (!res.ok) throw new Error("Checkout session creation failed");
-
-      const data = await res.json();
-      window.location.href = data.url; // リダイレクト
+      // チェックアウト処理をここに実装
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // デモ用の遅延
+      alert("チェックアウト機能は開発中です");
     } catch (error) {
       console.error(error);
-      alert("Failed to initiate checkout.");
+      alert("チェックアウトに失敗しました");
     } finally {
       setLoading(false);
     }
   };
 
+  const isCartEmpty = cartItems.length === 0;
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-4">Your Cart</h1>
-      {cartItems.length === 0 ? (
-        <p>Your cart is empty.</p>
-      ) : (
-        <>
-          <ul className="space-y-4">
-            {cartItems.map((item) => (
-              <li key={item.product.id} className="flex items-center gap-4">
-                <Image
-                  src={item.product.image.url}
-                  alt={item.product.image.alt}
-                  width={100}
-                  height={100}
-                  className="object-cover"
-                />
-                <div>
-                  <h2 className="font-semibold">{item.product.name}</h2>
-                  <p>
-                    € {item.product.price} x {item.quantity} = €{" "}
-                    {item.product.price * item.quantity}
-                  </p>
-                  <button
-                    onClick={() => removeFromCart(item.product.id)}
-                    className="text-sm text-red-500 mt-1"
+    <div className="min-h-screen bg-gray-50 pt-16">
+      {/* ヘッダーセクション */}
+      <section className="bg-white border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+          <div className="flex items-center gap-2 sm:gap-4 mb-4">
+            <Link
+              href="/product"
+              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm sm:text-base"
+            >
+              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">商品一覧に戻る</span>
+              <span className="sm:hidden">戻る</span>
+            </Link>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
+            <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-gray-900" />
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900">
+              ショッピングカート
+            </h1>
+            {!isCartEmpty && (
+              <span className="bg-gray-900 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full">
+                {getTotalQuantity()}点
+              </span>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+        {isCartEmpty ? (
+          /* 空のカート */
+          <Card className="text-center py-8 sm:py-12 lg:py-16">
+            <CardContent className="space-y-4 sm:space-y-6 px-4">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center">
+                <Package className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 text-gray-400" />
+              </div>
+              <div>
+                <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-2">
+                  カートは空です
+                </h2>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
+                  お気に入りの商品を見つけて、カートに追加してください
+                </p>
+                <Link href="/product">
+                  <Button className="bg-gray-900 hover:bg-gray-800 text-white w-full sm:w-auto">
+                    商品を見る
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
+            {/* カート内商品一覧 - モバイルでは最初に表示 */}
+            <div className="xl:col-span-2 xl:order-1 space-y-3 sm:space-y-4">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-xl font-medium text-gray-900">
+                  カート内商品
+                </h2>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearCart}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start sm:self-auto"
+                >
+                  <Trash2 className="w-4 h-4 mr-2" />
+                  すべて削除
+                </Button>
+              </div>
+
+              {cartItems.map((item) => (
+                <Card key={item.product.id} className="overflow-hidden">
+                  <CardContent className="p-3 sm:p-4 lg:p-6">
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                      {/* 商品画像 */}
+                      <div className="relative w-20 h-20 sm:w-20 sm:h-20 lg:w-24 lg:h-24 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
+                        <Image
+                          src={item.product.image.url}
+                          alt={item.product.image.alt}
+                          fill
+                          className="object-cover"
+                          sizes="80px"
+                        />
+                      </div>
+
+                      {/* 商品情報 */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start mb-2 sm:mb-3">
+                          <div className="flex-1 min-w-0 pr-2">
+                            <h3 className="font-medium text-gray-900 line-clamp-2 text-sm sm:text-base">
+                              {item.product.name}
+                            </h3>
+                            <p className="text-xs sm:text-sm text-gray-600 mt-1">
+                              {item.product.category}
+                            </p>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleRemoveItem(item.product.id)}
+                            className="text-gray-400 hover:text-red-600 p-1 flex-shrink-0"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4">
+                          {/* 数量コントロール */}
+                          <div className="flex items-center border border-gray-300 rounded-lg w-fit">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                handleQuantityChange(
+                                  item.product.id,
+                                  item.quantity - 1
+                                )
+                              }
+                              className="h-8 w-8 p-0 hover:bg-gray-100"
+                              disabled={item.quantity <= 1}
+                            >
+                              <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </Button>
+                            <div className="w-10 sm:w-12 text-center text-sm font-medium">
+                              {item.quantity}
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                handleQuantityChange(
+                                  item.product.id,
+                                  item.quantity + 1
+                                )
+                              }
+                              className="h-8 w-8 p-0 hover:bg-gray-100"
+                            >
+                              <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                            </Button>
+                          </div>
+
+                          {/* 価格 */}
+                          <div className="text-left sm:text-right">
+                            <div className="font-medium text-gray-900 text-sm sm:text-base">
+                              {formatPrice(item.product.price * item.quantity)}
+                            </div>
+                            {item.quantity > 1 && (
+                              <div className="text-xs sm:text-sm text-gray-500">
+                                {formatPrice(item.product.price)} ×{" "}
+                                {item.quantity}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* 注文サマリー - モバイルでは下部に表示 */}
+            <div className="xl:col-span-1 xl:order-2">
+              <Card className="xl:sticky xl:top-24">
+                <CardContent className="p-4 sm:p-6">
+                  <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-4">
+                    注文サマリー
+                  </h3>
+
+                  <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">商品点数</span>
+                      <span>{getTotalQuantity()}点</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">小計</span>
+                      <span>{formatPrice(getTotalPrice())}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-gray-600">送料</span>
+                      <span className="text-green-600">無料</span>
+                    </div>
+                    <div className="border-t pt-2 sm:pt-3">
+                      <div className="flex justify-between font-medium text-base sm:text-lg">
+                        <span>合計</span>
+                        <span className="text-gray-900">
+                          {formatPrice(getTotalPrice())}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={handleCheckout}
+                    disabled={loading}
+                    className="w-full bg-gray-900 hover:bg-gray-800 text-white h-10 sm:h-12 text-sm sm:text-base"
                   >
-                    Remove
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <div className="mt-8">
-            <p className="text-lg font-semibold">Total: € {getTotalPrice()}</p>
-            <div className="flex gap-4 mt-4">
-              <button onClick={clearCart} className="border px-4 py-2 rounded">
-                Clear Cart
-              </button>
-              <button
-                onClick={handleCheckout}
-                className="bg-blue-600 text-white px-4 py-2 rounded"
-                disabled={loading}
-              >
-                {loading ? (
-                  <Icon.spinner className="mr-2 animate-spin" />
-                ) : (
-                  "Proceed to Checkout"
-                )}
-              </button>
+                    {loading ? (
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                        処理中...
+                      </div>
+                    ) : (
+                      <div className="flex items-center">
+                        <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                        レジに進む
+                      </div>
+                    )}
+                  </Button>
+
+                  <div className="mt-3 sm:mt-4 text-center">
+                    <Link
+                      href="/product"
+                      className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 underline"
+                    >
+                      買い物を続ける
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </div>
-        </>
+        )}
+      </div>
+
+      {/* 削除確認ダイアログ */}
+      {(showDeleteConfirm || showClearConfirm) && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-sm sm:max-w-md mx-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                </div>
+                <h3 className="text-base sm:text-lg font-medium text-gray-900">
+                  {showClearConfirm ? "カートをクリア" : "商品を削除"}
+                </h3>
+              </div>
+
+              <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
+                {showClearConfirm
+                  ? "カート内のすべての商品を削除しますか？この操作は取り消せません。"
+                  : "この商品をカートから削除しますか？"}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
+                <Button
+                  variant="outline"
+                  onClick={cancelDelete}
+                  className="px-4 py-2 w-full sm:w-auto order-2 sm:order-1"
+                >
+                  キャンセル
+                </Button>
+                <Button
+                  onClick={
+                    showClearConfirm ? confirmClearCart : confirmDeleteItem
+                  }
+                  className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 w-full sm:w-auto order-1 sm:order-2"
+                >
+                  {showClearConfirm ? "すべて削除" : "削除"}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       )}
     </div>
   );

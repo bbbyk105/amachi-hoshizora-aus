@@ -1,26 +1,14 @@
+// src/contexts/CartProvider.tsx
 "use client";
 
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Product } from "@/types/products";
-
-interface CartItem {
-  product: Product;
-  quantity: number;
-}
-
-interface CartContextType {
-  cartItems: CartItem[];
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  clearCart: () => void;
-  getTotalPrice: () => number;
-  getTotalQuantity: () => number;
-}
+import { Product, CartItem, CartContextType } from "@/types/products";
 
 const CartContext = createContext<CartContextType>({
   cartItems: [],
   addToCart: () => {},
   removeFromCart: () => {},
+  updateQuantity: () => {},
   clearCart: () => {},
   getTotalPrice: () => 0,
   getTotalQuantity: () => 0,
@@ -52,6 +40,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
   };
 
+  const updateQuantity = (productId: number, quantity: number) => {
+    if (quantity <= 0) {
+      removeFromCart(productId);
+      return;
+    }
+
+    setCartItems((prev) =>
+      prev.map((item) =>
+        item.product.id === productId ? { ...item, quantity } : item
+      )
+    );
+  };
+
   const clearCart = () => {
     setCartItems([]);
   };
@@ -73,6 +74,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cartItems,
         addToCart,
         removeFromCart,
+        updateQuantity,
         clearCart,
         getTotalPrice,
         getTotalQuantity,

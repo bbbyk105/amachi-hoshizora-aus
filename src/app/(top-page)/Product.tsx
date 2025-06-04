@@ -1,19 +1,11 @@
+// src/app/(top-page)/Product.tsx
 "use client";
 import { ProductCard } from "./ProductCard";
 import React from "react";
-
-interface ProductData {
-  id: number;
-  name: string;
-  description?: string;
-  price?: string;
-  colorClass: string;
-  label: string;
-  image?: string | null;
-}
+import { LegacyProductData } from "@/types/products";
 
 interface ProductProps {
-  productsData: ProductData[];
+  productsData: LegacyProductData[];
 }
 
 export const Product: React.FC<ProductProps> = ({ productsData }) => {

@@ -1,84 +1,56 @@
+// src/app/(products)/product/page.tsx
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { ShoppingCart, Share2, SortDesc } from "lucide-react";
-
-// 拡張された商品データ
-const allProductsData = [
-  {
-    id: 1,
-    name: "天地星空 純米大吟醸 720ml",
-    description: "富士の伏流水・山田錦100%使用",
-    price: "¥8,800",
-    originalPrice: null,
-    category: "純米大吟醸",
-    label: "天地星空",
-    image: "720.webp",
-    alcoholContent: "16%",
-    riceMilling: "40%",
-    brewery: "富士錦酒造",
-    region: "静岡県富士市",
-    taste: "芳醇で上品な香り、なめらかな口当たり",
-    temperature: "10-15℃",
-    isNew: false,
-    isPopular: true,
-  },
-  {
-    id: 2,
-    name: "天地星空 純米大吟醸 500ml",
-    description: "富士の伏流水使用",
-    price: "¥6,600",
-    originalPrice: null,
-    category: "純米大吟醸",
-    label: "天地星空",
-    image: "500.webp",
-    alcoholContent: "16%",
-    riceMilling: "40%",
-    brewery: "富士錦酒造",
-    region: "静岡県富士市",
-    taste: "上品な香りと深い味わい",
-    temperature: "10-15℃",
-    isNew: false,
-    isPopular: true,
-  },
-  {
-    id: 3,
-    name: "抹茶",
-    description: "完全無農薬の静岡県抹茶",
-    price: "¥5,500",
-    originalPrice: null,
-    category: "抹茶",
-    label: "富士錦",
-    image: "maccha.webp",
-    alcoholContent: null,
-    riceMilling: null,
-    brewery: "富士錦酒造",
-    region: "静岡県",
-    taste: "濃厚で上品な苦味と甘み",
-    temperature: "70-80℃",
-    isNew: true,
-    isPopular: false,
-  },
-];
-
-const categories = ["すべて", "純米大吟醸", "抹茶"];
-const sortOptions = ["おすすめ順", "価格の安い順", "価格の高い順", "新着順"];
+import { ShoppingCart, Share2, SortDesc, Check } from "lucide-react";
+import {
+  categories,
+  sortOptions,
+  formatPrice,
+  sortProducts,
+  getProductsByCategory,
+  getProductDetails,
+} from "@/data/products";
+import { Product } from "@/types/products";
+import { useCart } from "@/store/cart";
 
 interface ProductCardProps {
-  product: (typeof allProductsData)[0];
+  product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
+  const [isAdding, setIsAdding] = useState(false);
+  const [justAdded, setJustAdded] = useState(false);
+
+  const handleAddToCart = async () => {
+    setIsAdding(true);
+
+    // カートに追加
+    addToCart(product, 1);
+
+    // 視覚的フィードバック
+    setTimeout(() => {
+      setIsAdding(false);
+      setJustAdded(true);
+
+      // 「追加済み」表示を2秒後にリセット
+      setTimeout(() => {
+        setJustAdded(false);
+      }, 2000);
+    }, 500);
+  };
+
   return (
     <Card className="group border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] overflow-hidden">
       <CardContent className="p-0">
         {/* 商品画像エリア */}
         <div className="relative aspect-square bg-gray-50 overflow-hidden">
           <Image
-            src={`/${product.image}`}
-            alt={product.name}
+            src={product.image.url}
+            alt={product.image.alt}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
@@ -126,31 +98,55 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* 商品詳細 */}
           <div className="space-y-1 text-xs text-gray-500">
-            {product.alcoholContent && (
-              <p>アルコール度数: {product.alcoholContent}</p>
-            )}
-            {product.riceMilling && <p>精米歩合: {product.riceMilling}</p>}
-            <p>推奨温度: {product.temperature}</p>
+            {getProductDetails(product)
+              .slice(0, 3)
+              .map(
+                (detail: { label: string; value: string }, index: number) => (
+                  <p key={index}>
+                    {detail.label}: {detail.value}
+                  </p>
+                )
+              )}
           </div>
 
           {/* 価格とボタン */}
           <div className="flex items-center justify-between pt-2">
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold text-gray-900">
-                {product.price}
+                {formatPrice(product.price)}
               </span>
               {product.originalPrice && (
                 <span className="text-sm text-gray-400 line-through">
-                  {product.originalPrice}
+                  {formatPrice(product.originalPrice)}
                 </span>
               )}
             </div>
             <Button
               size="sm"
-              className="bg-gray-900 hover:bg-gray-800 text-white"
+              onClick={handleAddToCart}
+              disabled={isAdding}
+              className={`transition-all duration-300 ${
+                justAdded
+                  ? "bg-green-600 hover:bg-green-700 text-white"
+                  : "bg-gray-900 hover:bg-gray-800 text-white"
+              }`}
             >
-              <ShoppingCart className="w-4 h-4 mr-1" />
-              カート
+              {isAdding ? (
+                <div className="flex items-center">
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1" />
+                  追加中
+                </div>
+              ) : justAdded ? (
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 mr-1" />
+                  追加済み
+                </div>
+              ) : (
+                <div className="flex items-center">
+                  <ShoppingCart className="w-4 h-4 mr-1" />
+                  追加
+                </div>
+              )}
             </Button>
           </div>
         </div>
@@ -162,32 +158,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 const ProductPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("すべて");
   const [sortBy, setSortBy] = useState("おすすめ順");
+  const { getTotalQuantity } = useCart();
 
   // フィルタリング
-  const filteredProducts = allProductsData.filter(
-    (product) =>
-      selectedCategory === "すべて" || product.category === selectedCategory
-  );
+  const filteredProducts = getProductsByCategory(selectedCategory);
 
   // ソート
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case "価格の安い順":
-        return (
-          parseInt(a.price.replace(/[¥,]/g, "")) -
-          parseInt(b.price.replace(/[¥,]/g, ""))
-        );
-      case "価格の高い順":
-        return (
-          parseInt(b.price.replace(/[¥,]/g, "")) -
-          parseInt(a.price.replace(/[¥,]/g, ""))
-        );
-      case "新着順":
-        return b.isNew ? 1 : -1;
-      default:
-        return 0;
-    }
-  });
+  const sortedProducts = sortProducts(filteredProducts, sortBy);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -201,6 +178,13 @@ const ProductPage = () => {
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               富士の麓で醸される、伝統と革新が融合した日本酒と特選品をご紹介いたします
             </p>
+            {/* カート情報表示 */}
+            {getTotalQuantity() > 0 && (
+              <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
+                <ShoppingCart className="w-4 h-4 mr-2" />
+                カート: {getTotalQuantity()}点
+              </div>
+            )}
           </div>
         </div>
       </section>
