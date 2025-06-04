@@ -107,13 +107,19 @@ export const Footer: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-gray-400">
               <p>&copy; 2025 天地星空. All rights reserved.</p>
               <div className="flex space-x-4">
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="/privacy"
+                  className="hover:text-white transition-colors"
+                >
                   プライバシーポリシー
                 </a>
-                <a href="#" className="hover:text-white transition-colors">
+                <a href="/terms" className="hover:text-white transition-colors">
                   利用規約
                 </a>
-                <a href="#" className="hover:text-white transition-colors">
+                <a
+                  href="/commerce"
+                  className="hover:text-white transition-colors"
+                >
                   特定商取引法
                 </a>
               </div>

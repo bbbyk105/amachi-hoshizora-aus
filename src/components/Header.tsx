@@ -21,9 +21,9 @@ export const Header = () => {
   const { getTotalQuantity } = useCart();
 
   const menuItems = [
+    { href: "/", label: "HOME", icon: HeadphonesIcon },
+    { href: "/q&a", label: "Q&A", icon: Info },
     { href: "/product", label: "PRODUCT", icon: Package },
-    { href: "/about", label: "ABOUT", icon: Info },
-    { href: "/support", label: "SUPPORT", icon: HeadphonesIcon },
   ];
 
   return (

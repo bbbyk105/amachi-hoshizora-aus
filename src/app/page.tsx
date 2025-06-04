@@ -59,21 +59,12 @@ const productsData = [
   },
   {
     id: 3,
-    name: "富士錦 純米酒",
-    description: "伝統の富士錦酒造",
-    price: "720ml ¥2,970 (税込)",
+    name: "抹茶",
+    description: "完全無農薬の静岡県抹茶",
+    price: "20g ¥5,500 (税込)",
     colorClass: "from-indigo-600 to-indigo-700",
     label: "富士錦",
-    image: null,
-  },
-  {
-    id: 4,
-    name: "富士の酒蔵 特別純米",
-    description: "富士山の伏流水使用",
-    price: "720ml ¥3,465 (税込)",
-    colorClass: "from-blue-600 to-blue-700",
-    label: "特別醸造",
-    image: null,
+    image: "maccha.webp",
   },
 ];
 
