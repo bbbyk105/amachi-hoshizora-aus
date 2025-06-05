@@ -9,8 +9,6 @@ import {
   Package,
   Info,
   HeadphonesIcon,
-  Globe,
-  ChevronDown,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
@@ -18,48 +16,19 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "./ui/sheet";
 import { useCart } from "@/store/cart";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useTranslations } from "next-intl";
-import { useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { routing } from "@/i18n/routing";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { LanguageSelector } from "./LanguageSelector";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { getTotalQuantity } = useCart();
   const t = useTranslations("navigation");
-  const tLang = useTranslations("language");
   const tHeader = useTranslations("header");
-  const locale = useLocale();
-  const router = useRouter();
 
   const menuItems = [
     { href: "/", label: t("home"), icon: HeadphonesIcon },
     { href: "/q&a", label: t("qa"), icon: Info },
     { href: "/product", label: t("product"), icon: Package },
   ];
-
-  const getLanguageDisplay = (loc: string) => {
-    const flags = {
-      ja: "🇯🇵",
-      en: "🇺🇸",
-    };
-    const names = {
-      ja: "日本語",
-      en: "English",
-    };
-    return {
-      flag: flags[loc as keyof typeof flags],
-      name: names[loc as keyof typeof names],
-    };
-  };
-
-  const currentLang = getLanguageDisplay(locale);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
@@ -158,37 +127,10 @@ export const Header = () => {
                 <div className="my-8 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
 
                 {/* Language Selector - Mobile */}
-                <div className="mb-6">
-                  <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wider mb-4">
-                    {tLang("select")}
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {routing.locales.map((loc) => {
-                      const langInfo = getLanguageDisplay(loc);
-                      return (
-                        <Button
-                          key={loc}
-                          variant={loc === locale ? "default" : "outline"}
-                          className={`h-12 rounded-xl transition-all duration-200 flex items-center gap-2 ${
-                            loc === locale
-                              ? "bg-gradient-to-r from-gray-900 to-gray-700 text-white shadow-lg"
-                              : "border-gray-200 hover:bg-gray-50 hover:border-gray-300"
-                          }`}
-                          onClick={() => {
-                            router.push(`/${loc}`);
-                            setIsOpen(false);
-                          }}
-                          disabled={loc === locale}
-                        >
-                          <span className="text-lg">{langInfo.flag}</span>
-                          <span className="text-sm font-medium">
-                            {langInfo.name}
-                          </span>
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </div>
+                <LanguageSelector
+                  variant="mobile"
+                  onLanguageChange={() => setIsOpen(false)}
+                />
 
                 {/* Quick Actions */}
                 <div className="space-y-3">
@@ -246,48 +188,7 @@ export const Header = () => {
           {/* Right Icons */}
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Language Selector - Desktop */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hidden lg:flex p-2 hover:bg-gray-100/80 rounded-xl transition-all duration-200 items-center gap-2"
-                >
-                  <Globe className="w-4 h-4 text-gray-600" />
-                  <span className="text-lg">{currentLang.flag}</span>
-                  <ChevronDown className="w-3 h-3 text-gray-600" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                align="end"
-                className="w-48 p-2 bg-white/95 backdrop-blur-md border border-gray-200/50 shadow-lg rounded-xl"
-              >
-                <DropdownMenuLabel className="text-xs text-gray-500 uppercase tracking-wider px-3 py-2">
-                  {tLang("select")}
-                </DropdownMenuLabel>
-                {routing.locales.map((loc) => {
-                  const langInfo = getLanguageDisplay(loc);
-                  return (
-                    <DropdownMenuItem
-                      key={loc}
-                      disabled={loc === locale}
-                      onClick={() => router.push(`/${loc}`)}
-                      className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-200 cursor-pointer ${
-                        loc === locale
-                          ? "bg-gradient-to-r from-gray-100 to-gray-50 text-gray-900 font-medium"
-                          : "hover:bg-gray-50"
-                      }`}
-                    >
-                      <span className="text-lg">{langInfo.flag}</span>
-                      <span className="flex-1">{langInfo.name}</span>
-                      {loc === locale && (
-                        <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                      )}
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <LanguageSelector variant="desktop" />
 
             <Button
               variant="ghost"

@@ -1,11 +1,13 @@
+// src/i18n/routing.ts
 import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
 
-// 利用可能な言語とデフォルト言語を設定
+// 言語検出を無効にしてデフォルト言語を強制
 export const routing = defineRouting({
   locales: ["ja", "en"],
-  defaultLocale: "ja",
+  defaultLocale: "en",
   localePrefix: "always",
+  localeDetection: false, // ブラウザ言語設定を無視
 });
 
 // ナビゲーション用のユーティリティを作成
