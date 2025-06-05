@@ -86,15 +86,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <Share2 className="w-4 h-4 text-gray-600" />
             </Button>
           </div>
-
-          {/* セール価格表示 */}
-          {product.originalPrice && (
-            <div className="absolute bottom-3 left-3">
-              <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded font-medium">
-                セール
-              </span>
-            </div>
-          )}
         </div>
 
         {/* 商品情報エリア */}

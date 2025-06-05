@@ -9,7 +9,6 @@ import {
   ShoppingCart,
   ArrowLeft,
   Share2,
-  Heart,
   Minus,
   Plus,
   Check,
@@ -26,7 +25,6 @@ const ProductDetailPage = () => {
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
-  const [isFavorite, setIsFavorite] = useState(false);
 
   // slugからproductを取得（実際の実装では、slugを使ってproductを特定する）
   // 今回は簡単のため、idで検索
@@ -114,18 +112,6 @@ const ProductDetailPage = () => {
 
               {/* アクションボタン */}
               <div className="absolute top-4 right-4 flex flex-col gap-2">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="w-10 h-10 rounded-full bg-white/90 hover:bg-white p-0"
-                  onClick={() => setIsFavorite(!isFavorite)}
-                >
-                  <Heart
-                    className={`w-5 h-5 ${
-                      isFavorite ? "fill-red-500 text-red-500" : "text-gray-600"
-                    }`}
-                  />
-                </Button>
                 <Button
                   size="sm"
                   variant="ghost"
