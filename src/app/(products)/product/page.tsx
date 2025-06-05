@@ -1,9 +1,10 @@
-// src/app/(products)/product/page.tsx
+// src/app/(products)/product/page.tsx - ProductCard部分の更新
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { ShoppingCart, Share2, SortDesc, Check } from "lucide-react";
 
 import { Product } from "@/types/products";
@@ -23,10 +24,14 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const router = useRouter();
   const [isAdding, setIsAdding] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (e: React.MouseEvent) => {
+    // イベントの伝播を停止（カード全体のクリックイベントを防ぐ）
+    e.stopPropagation();
+
     setIsAdding(true);
 
     // カートに追加
@@ -44,8 +49,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }, 500);
   };
 
+  const handleShareClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    // シェア機能の実装
+  };
+
+  const handleCardClick = () => {
+    // 商品詳細ページに遷移
+    router.push(`/product/${product.id}`);
+  };
+
   return (
-    <Card className="group border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] overflow-hidden">
+    <Card
+      className="group border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] overflow-hidden cursor-pointer"
+      onClick={handleCardClick}
+    >
       <CardContent className="p-0">
         {/* 商品画像エリア */}
         <div className="relative aspect-square bg-gray-50 overflow-hidden">
@@ -63,6 +81,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               size="sm"
               variant="ghost"
               className="w-8 h-8 rounded-full bg-white/90 hover:bg-white p-0"
+              onClick={handleShareClick}
             >
               <Share2 className="w-4 h-4 text-gray-600" />
             </Button>

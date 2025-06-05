@@ -1,8 +1,9 @@
-// src/app/(top-page)/ProductCard.tsx
+// src/app/(top-page)/ProductCard.tsx - 更新版
 "use client";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import React from "react";
+import { useRouter } from "next/navigation";
 import { LegacyProductData } from "@/types/products";
 
 interface ProductCardProps {
@@ -10,15 +11,30 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    // LegacyProductDataにidがある場合は詳細ページに遷移
+    // ない場合は商品一覧ページに遷移
+    if (product.id) {
+      router.push(`/product/${product.id}`);
+    } else {
+      router.push("/product");
+    }
+  };
+
   return (
-    <Card className="border-none shadow-lg hover:shadow-xl transition-shadow">
+    <Card
+      className="border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer group"
+      onClick={handleCardClick}
+    >
       <CardContent className="p-3 sm:p-4 lg:p-6">
         <div className="aspect-square bg-gray-50 rounded-lg mb-2 sm:mb-3 lg:mb-4 flex items-center justify-center overflow-hidden relative">
           <Image
             src={`/${product.image}`}
             alt={product.name}
             fill
-            className="object-cover rounded-lg"
+            className="object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
         </div>

@@ -1,8 +1,13 @@
 "use client";
 import { Instagram } from "lucide-react";
+import Link from "next/link";
 import React from "react";
+import { products } from "@/data";
 
 export const Footer: React.FC = () => {
+  // 商品データから主要な商品を取得（最初の4つまで）
+  const featuredProducts = products.slice(0, 4);
+
   return (
     <footer className="bg-gray-900 text-white">
       {/* Main Footer Content */}
@@ -22,25 +27,23 @@ export const Footer: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-medium mb-4">商品情報</h3>
             <ul className="space-y-2 text-sm text-gray-300">
+              {featuredProducts.map((product) => (
+                <li key={product.id}>
+                  <Link
+                    href={`/product/${product.id}`}
+                    className="hover:text-white transition-colors"
+                  >
+                    {product.name}
+                  </Link>
+                </li>
+              ))}
               <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  天地星空 純米大吟醸
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  富士錦 純米酒
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  特別純米酒
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:text-white transition-colors">
-                  季節限定商品
-                </a>
+                <Link
+                  href="/product"
+                  className="hover:text-white transition-colors font-medium"
+                >
+                  すべての商品を見る →
+                </Link>
               </li>
             </ul>
           </div>
@@ -50,19 +53,28 @@ export const Footer: React.FC = () => {
             <h3 className="text-lg font-medium mb-4">会社案内</h3>
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <Link
+                  href="/product"
+                  className="hover:text-white transition-colors"
+                >
                   Product
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <Link
+                  href="/about"
+                  className="hover:text-white transition-colors"
+                >
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="hover:text-white transition-colors">
+                <Link
+                  href="/support"
+                  className="hover:text-white transition-colors"
+                >
                   Support
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -76,6 +88,7 @@ export const Footer: React.FC = () => {
                   href="https://www.mtfuji-sake.jp/"
                   className="hover:text-white transition-colors"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   オフィシャルサイト
                 </a>
@@ -91,6 +104,7 @@ export const Footer: React.FC = () => {
                   className="text-gray-400 hover:text-white transition-colors"
                   aria-label="Instagram"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   <Instagram className="w-5 h-5" />
                 </a>
@@ -107,21 +121,24 @@ export const Footer: React.FC = () => {
             <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-6 text-sm text-gray-400">
               <p>&copy; 2025 天地星空. All rights reserved.</p>
               <div className="flex space-x-4">
-                <a
+                <Link
                   href="/privacy"
                   className="hover:text-white transition-colors"
                 >
                   プライバシーポリシー
-                </a>
-                <a href="/terms" className="hover:text-white transition-colors">
+                </Link>
+                <Link
+                  href="/terms"
+                  className="hover:text-white transition-colors"
+                >
                   利用規約
-                </a>
-                <a
+                </Link>
+                <Link
                   href="/commerce"
                   className="hover:text-white transition-colors"
                 >
                   特定商取引法
-                </a>
+                </Link>
               </div>
             </div>
 

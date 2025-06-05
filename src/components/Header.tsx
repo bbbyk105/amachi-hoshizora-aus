@@ -172,7 +172,7 @@ export const Header = () => {
             className="text-lg sm:text-xl lg:text-2xl font-light tracking-wider text-gray-900 hover:text-gray-600 absolute left-1/2 transform -translate-x-1/2"
           >
             <span className="hidden sm:inline">Amachi-Hoshizora</span>
-            <span className="sm:hidden">天地星空</span>
+            <span className="sm:hidden">Amachi-Hoshizora</span>
           </Link>
 
           {/* Right Icons */}
