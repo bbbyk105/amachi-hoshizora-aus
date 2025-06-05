@@ -5,7 +5,7 @@ export const topicsData: TopicData[] = [
     id: 1,
     title: "富士の伏流水で醸す純米大吟醸",
     description: "山田錦100%使用の極上の逸品",
-    image: "river.webp",
+    image: "/river.webp",
   },
   {
     id: 2,
@@ -14,7 +14,7 @@ export const topicsData: TopicData[] = [
     bgColor: "from-gray-800 to-gray-900",
     productColor: "from-blue-200 to-blue-300",
     hasRings: true,
-    image: "rice.webp",
+    image: "/rice.webp",
   },
   {
     id: 3,
@@ -22,6 +22,6 @@ export const topicsData: TopicData[] = [
     description: "富士の神々の物語",
     bgColor: "from-indigo-50 to-blue-100",
     productColor: "from-indigo-100 to-indigo-200",
-    image: "star.webp",
+    image: "/star.webp",
   },
 ];

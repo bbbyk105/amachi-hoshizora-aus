@@ -1,0 +1,19 @@
+{
+    "language": {
+        "toggle": "Switch Language",
+        "current": "Current language: {locale}",
+        "select": "Language / 言語"
+    },
+    "navigation": {
+        "home": "HOME",
+        "qa": "Q&A",
+        "product": "PRODUCT",
+        "search": "Search",
+        "cart": "Cart",
+        "quickActions": "Quick Actions"
+    },
+    "header": {
+        "navigationMenu": "Navigation Menu",
+        "closeMenu": "Close menu"
+    }
+}

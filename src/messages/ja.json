@@ -1,0 +1,19 @@
+{
+    "language": {
+        "toggle": "言語を切り替える",
+        "current": "現在の言語: {locale}",
+        "select": "言語 / Language"
+    },
+    "navigation": {
+        "home": "ホーム",
+        "qa": "よくある質問",
+        "product": "商品",
+        "search": "検索",
+        "cart": "カート",
+        "quickActions": "クイックアクション"
+    },
+    "header": {
+        "navigationMenu": "ナビゲーションメニュー",
+        "closeMenu": "メニューを閉じる"
+    }
+}
