@@ -15,5 +15,86 @@
     "header": {
         "navigationMenu": "ナビゲーションメニュー",
         "closeMenu": "メニューを閉じる"
+    },
+    "common": {
+        "loading": "読み込み中...",
+        "processing": "処理中...",
+        "error": "エラー",
+        "success": "成功",
+        "cancel": "キャンセル",
+        "delete": "削除",
+        "edit": "編集",
+        "save": "保存",
+        "back": "戻る",
+        "continue": "続ける",
+        "close": "閉じる",
+        "confirm": "確認",
+        "retry": "再試行"
+    },
+    "cart": {
+        "title": "ショッピングカート",
+        "backToProducts": "商品一覧に戻る",
+        "backToProductsShort": "戻る",
+        "itemsCount": "{count}点",
+        "empty": {
+            "title": "カートは空です",
+            "description": "お気に入りの商品を見つけて、カートに追加してください",
+            "viewProducts": "商品を見る"
+        },
+        "items": {
+            "title": "カート内商品",
+            "removeAll": "すべて削除",
+            "remove": "削除",
+            "quantity": "数量"
+        },
+        "summary": {
+            "title": "注文サマリー",
+            "itemCount": "商品点数",
+            "subtotal": "小計",
+            "shipping": "送料",
+            "shippingFree": "無料",
+            "total": "合計",
+            "checkout": "決済",
+            "continueShopping": "買い物を続ける"
+        },
+        "confirmDialog": {
+            "deleteItem": {
+                "title": "商品を削除",
+                "message": "この商品をカートから削除しますか？"
+            },
+            "clearCart": {
+                "title": "カートをクリア",
+                "message": "カート内のすべての商品を削除しますか？この操作は取り消せません。"
+            },
+            "deleteAll": "すべて削除"
+        },
+        "errors": {
+            "checkoutFailed": "チェックアウトに失敗しました"
+        }
+    },
+    "success": {
+        "title": "ご注文ありがとうございます！",
+        "message": "決済が正常に完了しました。注文確認メールをお送りいたします。",
+        "orderDetails": "注文詳細",
+        "orderId": "注文ID",
+        "paymentStatus": "支払い状況",
+        "paymentCompleted": "決済完了",
+        "paymentProcessing": "決済中",
+        "totalAmount": "合計金額",
+        "email": "メールアドレス",
+        "loadingOrderInfo": "注文情報を読み込み中...",
+        "orderInfoFailed": "注文情報の取得に失敗しました",
+        "sessionNotFound": "セッションIDが見つかりません",
+        "backToProducts": "商品一覧に戻る",
+        "backToHome": "ホームに戻る",
+        "additionalInfo": "ご質問がございましたら、お気軽にお問い合わせください。"
+    },
+    "cancel": {
+        "title": "決済がキャンセルされました",
+        "message": "決済処理が中断されました。カート内の商品は保持されています。",
+        "backToCart": "カートに戻る",
+        "viewProducts": "商品一覧を見る",
+        "backToHome": "ホームに戻る",
+        "additionalInfo": "決済に関してご不明な点がございましたら、お気軽にお問い合わせください。"
     }
 }

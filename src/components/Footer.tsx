@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
               {featuredProducts.map((product) => (
                 <li key={product.id}>
                   <Link
-                    href={`/product/${product.id}`}
+                    href={`/products/${product.id}`}
                     className="hover:text-white transition-colors"
                   >
                     {product.name}
@@ -39,7 +39,7 @@ export const Footer: React.FC = () => {
               ))}
               <li>
                 <Link
-                  href="/product"
+                  href="/products"
                   className="hover:text-white transition-colors font-medium"
                 >
                   すべての商品を見る →
@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2 text-sm text-gray-300">
               <li>
                 <Link
-                  href="/product"
+                  href="/products"
                   className="hover:text-white transition-colors"
                 >
                   Product

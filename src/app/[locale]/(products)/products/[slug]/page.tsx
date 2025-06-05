@@ -38,7 +38,7 @@ const ProductDetailPage = () => {
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             商品が見つかりません
           </h1>
-          <Button onClick={() => router.push("/product")} variant="outline">
+          <Button onClick={() => router.push("/products")} variant="outline">
             <ArrowLeft className="w-4 h-4 mr-2" />
             商品一覧に戻る
           </Button>
@@ -75,7 +75,7 @@ const ProductDetailPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button
-              onClick={() => router.push("/product")}
+              onClick={() => router.push("/products")}
               className="flex items-center hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
@@ -292,7 +292,7 @@ const ProductDetailPage = () => {
                 <Card
                   key={relatedProduct.id}
                   className="border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-                  onClick={() => router.push(`/product/${relatedProduct.id}`)}
+                  onClick={() => router.push(`/products/${relatedProduct.id}`)}
                 >
                   <CardContent className="p-0">
                     <div className="relative aspect-square bg-gray-50 overflow-hidden">

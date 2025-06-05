@@ -1,4 +1,3 @@
-// app/cart/page.tsx
 "use client";
 
 import { useCart } from "@/store/cart";
@@ -18,6 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { formatPrice } from "@/data";
+import { useTranslations } from "next-intl";
 
 export default function CartPage() {
   const {
@@ -32,6 +32,10 @@ export default function CartPage() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+
+  // 翻訳フック
+  const t = useTranslations("cart");
+  const tCommon = useTranslations("common");
 
   const handleQuantityChange = (productId: number, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -91,7 +95,7 @@ export default function CartPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || "チェックアウトに失敗しました");
+        throw new Error(errorData.error || t("errors.checkoutFailed"));
       }
 
       const { url } = await response.json();
@@ -101,7 +105,7 @@ export default function CartPage() {
     } catch (error) {
       console.error("Checkout error:", error);
       alert(
-        error instanceof Error ? error.message : "チェックアウトに失敗しました"
+        error instanceof Error ? error.message : t("errors.checkoutFailed")
       );
     } finally {
       setLoading(false);
@@ -117,22 +121,22 @@ export default function CartPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
           <div className="flex items-center gap-2 sm:gap-4 mb-4">
             <Link
-              href="/product"
+              href="/products"
               className="flex items-center text-gray-600 hover:text-gray-900 transition-colors text-sm sm:text-base"
             >
               <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2" />
-              <span className="hidden sm:inline">商品一覧に戻る</span>
-              <span className="sm:hidden">戻る</span>
+              <span className="hidden sm:inline">{t("backToProducts")}</span>
+              <span className="sm:hidden">{t("backToProductsShort")}</span>
             </Link>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <ShoppingCart className="w-6 h-6 sm:w-8 sm:h-8 text-gray-900" />
             <h1 className="text-xl sm:text-2xl lg:text-3xl font-light text-gray-900">
-              ショッピングカート
+              {t("title")}
             </h1>
             {!isCartEmpty && (
               <span className="bg-gray-900 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full">
-                {getTotalQuantity()}点
+                {t("itemsCount", { count: getTotalQuantity() })}
               </span>
             )}
           </div>
@@ -149,14 +153,14 @@ export default function CartPage() {
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-2">
-                  カートは空です
+                  {t("empty.title")}
                 </h2>
                 <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6 px-4">
-                  お気に入りの商品を見つけて、カートに追加してください
+                  {t("empty.description")}
                 </p>
-                <Link href="/product">
+                <Link href="/products">
                   <Button className="bg-gray-900 hover:bg-gray-800 text-white w-full sm:w-auto">
-                    商品を見る
+                    {t("empty.viewProducts")}
                   </Button>
                 </Link>
               </div>
@@ -168,7 +172,7 @@ export default function CartPage() {
             <div className="xl:col-span-2 xl:order-1 space-y-3 sm:space-y-4">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl font-medium text-gray-900">
-                  カート内商品
+                  {t("items.title")}
                 </h2>
                 <Button
                   variant="ghost"
@@ -177,7 +181,7 @@ export default function CartPage() {
                   className="text-red-600 hover:text-red-700 hover:bg-red-50 self-start sm:self-auto"
                 >
                   <Trash2 className="w-4 h-4 mr-2" />
-                  すべて削除
+                  {t("items.removeAll")}
                 </Button>
               </div>
 
@@ -277,25 +281,35 @@ export default function CartPage() {
               <Card className="xl:sticky xl:top-24">
                 <CardContent className="p-4 sm:p-6">
                   <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-4">
-                    注文サマリー
+                    {t("summary.title")}
                   </h3>
 
                   <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">商品点数</span>
-                      <span>{getTotalQuantity()}点</span>
+                      <span className="text-gray-600">
+                        {t("summary.itemCount")}
+                      </span>
+                      <span>
+                        {t("itemsCount", { count: getTotalQuantity() })}
+                      </span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">小計</span>
+                      <span className="text-gray-600">
+                        {t("summary.subtotal")}
+                      </span>
                       <span>{formatPrice(getTotalPrice())}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">送料</span>
-                      <span className="text-green-600">無料</span>
+                      <span className="text-gray-600">
+                        {t("summary.shipping")}
+                      </span>
+                      <span className="text-green-600">
+                        {t("summary.shippingFree")}
+                      </span>
                     </div>
                     <div className="border-t pt-2 sm:pt-3">
                       <div className="flex justify-between font-medium text-base sm:text-lg">
-                        <span>合計</span>
+                        <span>{t("summary.total")}</span>
                         <span className="text-gray-900">
                           {formatPrice(getTotalPrice())}
                         </span>
@@ -311,22 +325,22 @@ export default function CartPage() {
                     {loading ? (
                       <div className="flex items-center">
                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                        処理中...
+                        {tCommon("processing")}
                       </div>
                     ) : (
                       <div className="flex items-center">
                         <CreditCard className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                        決済
+                        {t("summary.checkout")}
                       </div>
                     )}
                   </Button>
 
                   <div className="mt-3 sm:mt-4 text-center">
                     <Link
-                      href="/product"
+                      href="/products"
                       className="text-xs sm:text-sm text-gray-600 hover:text-gray-900 underline"
                     >
-                      買い物を続ける
+                      {t("summary.continueShopping")}
                     </Link>
                   </div>
                 </CardContent>
@@ -346,14 +360,16 @@ export default function CartPage() {
                   <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
                 </div>
                 <h3 className="text-base sm:text-lg font-medium text-gray-900">
-                  {showClearConfirm ? "カートをクリア" : "商品を削除"}
+                  {showClearConfirm
+                    ? t("confirmDialog.clearCart.title")
+                    : t("confirmDialog.deleteItem.title")}
                 </h3>
               </div>
 
               <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6">
                 {showClearConfirm
-                  ? "カート内のすべての商品を削除しますか？この操作は取り消せません。"
-                  : "この商品をカートから削除しますか？"}
+                  ? t("confirmDialog.clearCart.message")
+                  : t("confirmDialog.deleteItem.message")}
               </p>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
@@ -362,7 +378,7 @@ export default function CartPage() {
                   onClick={cancelDelete}
                   className="px-4 py-2 w-full sm:w-auto order-2 sm:order-1"
                 >
-                  キャンセル
+                  {tCommon("cancel")}
                 </Button>
                 <Button
                   onClick={
@@ -370,7 +386,9 @@ export default function CartPage() {
                   }
                   className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 w-full sm:w-auto order-1 sm:order-2"
                 >
-                  {showClearConfirm ? "すべて削除" : "削除"}
+                  {showClearConfirm
+                    ? t("confirmDialog.deleteAll")
+                    : tCommon("delete")}
                 </Button>
               </div>
             </CardContent>

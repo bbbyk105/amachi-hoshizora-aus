@@ -17,9 +17,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     // LegacyProductDataにidがある場合は詳細ページに遷移
     // ない場合は商品一覧ページに遷移
     if (product.id) {
-      router.push(`/product/${product.id}`);
+      router.push(`/products/${product.id}`);
     } else {
-      router.push("/product");
+      router.push("/products");
     }
   };
 

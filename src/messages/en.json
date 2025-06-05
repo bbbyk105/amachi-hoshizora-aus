@@ -15,5 +15,86 @@
     "header": {
         "navigationMenu": "Navigation Menu",
         "closeMenu": "Close menu"
+    },
+    "common": {
+        "loading": "Loading...",
+        "processing": "Processing...",
+        "error": "Error",
+        "success": "Success",
+        "cancel": "Cancel",
+        "delete": "Delete",
+        "edit": "Edit",
+        "save": "Save",
+        "back": "Back",
+        "continue": "Continue",
+        "close": "Close",
+        "confirm": "Confirm",
+        "retry": "Retry"
+    },
+    "cart": {
+        "title": "Shopping Cart",
+        "backToProducts": "Back to Products",
+        "backToProductsShort": "Back",
+        "itemsCount": "{count} item(s)",
+        "empty": {
+            "title": "Your cart is empty",
+            "description": "Find your favorite products and add them to your cart",
+            "viewProducts": "View Products"
+        },
+        "items": {
+            "title": "Cart Items",
+            "removeAll": "Remove All",
+            "remove": "Remove",
+            "quantity": "Quantity"
+        },
+        "summary": {
+            "title": "Order Summary",
+            "itemCount": "Items",
+            "subtotal": "Subtotal",
+            "shipping": "Shipping",
+            "shippingFree": "Free",
+            "total": "Total",
+            "checkout": "Checkout",
+            "continueShopping": "Continue Shopping"
+        },
+        "confirmDialog": {
+            "deleteItem": {
+                "title": "Remove Item",
+                "message": "Are you sure you want to remove this item from your cart?"
+            },
+            "clearCart": {
+                "title": "Clear Cart",
+                "message": "Are you sure you want to remove all items from your cart? This action cannot be undone."
+            },
+            "deleteAll": "Remove All"
+        },
+        "errors": {
+            "checkoutFailed": "Checkout failed"
+        }
+    },
+    "success": {
+        "title": "Thank you for your order!",
+        "message": "Your payment has been completed successfully. We will send you an order confirmation email.",
+        "orderDetails": "Order Details",
+        "orderId": "Order ID",
+        "paymentStatus": "Payment Status",
+        "paymentCompleted": "Payment Completed",
+        "paymentProcessing": "Payment Processing",
+        "totalAmount": "Total Amount",
+        "email": "Email Address",
+        "loadingOrderInfo": "Loading order information...",
+        "orderInfoFailed": "Failed to fetch order information",
+        "sessionNotFound": "Session ID not found",
+        "backToProducts": "Back to Products",
+        "backToHome": "Back to Home",
+        "additionalInfo": "If you have any questions, please feel free to contact us."
+    },
+    "cancel": {
+        "title": "Payment Cancelled",
+        "message": "Payment process was interrupted. Your cart items have been preserved.",
+        "backToCart": "Back to Cart",
+        "viewProducts": "View Products",
+        "backToHome": "Back to Home",
+        "additionalInfo": "If you have any questions regarding payment, please feel free to contact us."
     }
 }

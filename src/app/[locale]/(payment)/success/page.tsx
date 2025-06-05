@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Package, ArrowLeft } from "lucide-react";
 import { useCart } from "@/store/cart";
+import { useTranslations } from "next-intl";
 
 // ✅ Stripeセッションデータの型定義
 interface StripeSessionData {
@@ -29,6 +30,9 @@ function SuccessPageContent() {
   );
   const [loading, setLoading] = useState(true);
   const { clearCart } = useCart();
+
+  // 翻訳フック
+  const t = useTranslations("success");
 
   // useRefで一度だけの実行を保証
   const hasInitialized = useRef(false);
@@ -78,72 +82,74 @@ function SuccessPageContent() {
             {/* メッセージ */}
             <div className="space-y-3">
               <h1 className="text-2xl font-medium text-gray-900">
-                ご注文ありがとうございます！
+                {t("title")}
               </h1>
-              <p className="text-gray-600">
-                決済が正常に完了しました。注文確認メールをお送りいたします。
-              </p>
+              <p className="text-gray-600">{t("message")}</p>
             </div>
 
             {/* セッション情報 */}
             {loading ? (
               <div className="text-sm text-gray-500">
-                注文情報を読み込み中...
+                {t("loadingOrderInfo")}
               </div>
             ) : sessionData ? (
               <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                <h3 className="font-medium text-gray-900">注文詳細</h3>
+                <h3 className="font-medium text-gray-900">
+                  {t("orderDetails")}
+                </h3>
                 <div className="text-sm text-gray-600 space-y-1">
-                  <p>注文ID: {sessionData.id}</p>
                   <p>
-                    支払い状況:{" "}
+                    {t("orderId")}: {sessionData.id}
+                  </p>
+                  <p>
+                    {t("paymentStatus")}:{" "}
                     {sessionData.payment_status === "paid"
-                      ? "決済完了"
-                      : "決済中"}
+                      ? t("paymentCompleted")
+                      : t("paymentProcessing")}
                   </p>
                   {sessionData.amount_total && (
                     <p>
-                      合計金額: ${(sessionData.amount_total / 100).toFixed(2)}{" "}
+                      {t("totalAmount")}: $
+                      {(sessionData.amount_total / 100).toFixed(2)}{" "}
                       {sessionData.currency?.toUpperCase()}
                     </p>
                   )}
                   {sessionData.customer_details?.email && (
-                    <p>メールアドレス: {sessionData.customer_details.email}</p>
+                    <p>
+                      {t("email")}: {sessionData.customer_details.email}
+                    </p>
                   )}
                 </div>
               </div>
             ) : sessionId ? (
               <div className="text-sm text-gray-500">
-                注文情報の取得に失敗しました
+                {t("orderInfoFailed")}
               </div>
             ) : (
               <div className="text-sm text-gray-500">
-                セッションIDが見つかりません
+                {t("sessionNotFound")}
               </div>
             )}
 
             {/* アクションボタン */}
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/product">
+              <Link href="/products">
                 <Button variant="outline" className="w-full sm:w-auto">
                   <Package className="w-4 h-4 mr-2" />
-                  商品一覧に戻る
+                  {t("backToProducts")}
                 </Button>
               </Link>
               <Link href="/">
                 <Button className="bg-gray-900 hover:bg-gray-800 text-white w-full sm:w-auto">
                   <ArrowLeft className="w-4 h-4 mr-2" />
-                  ホームに戻る
+                  {t("backToHome")}
                 </Button>
               </Link>
             </div>
 
             {/* 追加情報 */}
             <div className="text-xs text-gray-500 pt-4 border-t">
-              <p>
-                ご質問がございましたら、お気軽にお問い合わせください。
-                商品の発送につきましては、別途ご連絡いたします。
-              </p>
+              <p>{t("additionalInfo")}</p>
             </div>
           </CardContent>
         </Card>
@@ -154,13 +160,15 @@ function SuccessPageContent() {
 
 // メインのページコンポーネント（Suspenseで囲む）
 export default function SuccessPage() {
+  const tCommon = useTranslations("common");
+
   return (
     <Suspense
       fallback={
         <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">読み込み中...</p>
+            <p className="text-gray-600">{tCommon("loading")}</p>
           </div>
         </div>
       }
