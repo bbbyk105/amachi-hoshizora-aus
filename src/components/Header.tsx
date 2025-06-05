@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   ShoppingCart,
-  Search,
   Menu,
   X,
   Package,
@@ -27,7 +26,7 @@ export const Header = () => {
   const menuItems = [
     { href: "/", label: t("home"), icon: HeadphonesIcon },
     { href: "/q&a", label: t("qa"), icon: Info },
-    { href: "/product", label: t("product"), icon: Package },
+    { href: "/products", label: t("product"), icon: Package },
   ];
 
   return (
@@ -139,15 +138,6 @@ export const Header = () => {
                   </h3>
 
                   <div className="grid grid-cols-2 gap-3">
-                    <Button
-                      variant="outline"
-                      className="h-12 rounded-xl border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 flex items-center gap-2"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      <Search className="w-4 h-4" />
-                      <span className="text-sm">{t("search")}</span>
-                    </Button>
-
                     <Link
                       href="/cart"
                       onClick={() => setIsOpen(false)}
@@ -189,15 +179,6 @@ export const Header = () => {
           <div className="flex items-center space-x-2 sm:space-x-3">
             {/* Language Selector - Desktop */}
             <LanguageSelector variant="desktop" />
-
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-2 hover:bg-gray-100 rounded-xl transition-all duration-200"
-              aria-label="Search"
-            >
-              <Search className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-            </Button>
 
             <Link
               href="/cart"
