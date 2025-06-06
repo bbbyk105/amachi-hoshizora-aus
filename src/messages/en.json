@@ -119,5 +119,196 @@
         "adding": "Adding...",
         "added": "Added",
         "add": "Add"
+    },
+    "commerceLaw": {
+        "title": "Specified Commercial Transaction Law",
+        "subtitle": "AMACHIHOSHISORA",
+        "lastUpdated": "Last Updated: June 4, 2025",
+        "intro": "We hereby provide the following information in accordance with the Specified Commercial Transaction Law.",
+        "seller": "Seller",
+        "sellerInfo": "Kondo Pharmacy Co., Ltd.",
+        "representative": "Representative",
+        "representativeInfo": "Representative Director Hiroto Kondo",
+        "address": "Address",
+        "addressInfo": "〒417-0051\n2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
+        "contact": "Contact Information",
+        "contactInfo": "TEL: 0545-52-0011\nBusiness Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)\nEmail: [Email Address]",
+        "prices": "Product Prices",
+        "pricesInfo": "Prices listed on each product page (tax included)",
+        "mainPrices": "Main Product Prices:",
+        "priceList": [
+            "AMACHIHOSHISORA Junmai Daiginjo 720ml: $200.00 AUD (tax included)",
+            "AMACHIHOSHISORA Junmai Daiginjo 500ml: $150.00 AUD (tax included)",
+            "Matcha 20g: $55.0 AUD (tax included)"
+        ],
+        "additionalFees": "Additional Fees",
+        "shipping": "Shipping:",
+        "shippingFees": [
+            "Nationwide flat rate: ¥1,100 (tax included)",
+            "Free shipping for purchases over ¥10,000",
+            "Cool delivery (refrigerated): Additional ¥330 (tax included)"
+        ],
+        "codFee": "Cash on Delivery Fee:",
+        "codFeeAmount": "¥330 (tax included)",
+        "bankTransferFee": "Bank Transfer Fee:",
+        "bankTransferFeeInfo": "Customer's responsibility",
+        "paymentMethods": "Payment Methods",
+        "paymentMethodsList": [
+            "Credit Card (VISA, MasterCard, JCB, American Express, Diners Club, Discover)",
+            "Apple Pay",
+            "Google Pay"
+        ],
+        "paymentTiming": "Payment Timing",
+        "paymentTimingList": [
+            "Credit Card: At order confirmation",
+            "Apple Pay: At order confirmation",
+            "Google Pay: At order confirmation"
+        ],
+        "deliveryTiming": "Product Delivery Timing",
+        "deliveryTimingList": [
+            "In-stock items: Shipped within 3-5 business days after order confirmation",
+            "Pre-order items: Shipping date as listed on product page",
+            "Bank Transfer: Shipped within 3-5 business days after payment confirmation"
+        ],
+        "deliveryNote": "※Excluding weekends, holidays, year-end and New Year holidays, Golden Week, and Obon period\n※May be delayed due to weather or traffic conditions",
+        "returns": "Returns & Exchanges",
+        "returnsAccepted": "Returns & exchanges accepted in the following cases:",
+        "returnsAcceptedList": [
+            "When there is clear defect or damage to the product",
+            "When a different product from your order is delivered",
+            "When contacted within 7 days of product arrival"
+        ],
+        "returnsNotAccepted": "Returns & exchanges not accepted in the following cases:",
+        "returnsNotAcceptedList": [
+            "Returns due to customer's convenience (food products)",
+            "When 8 or more days have passed since product arrival",
+            "Opened or used products",
+            "Products damaged or soiled due to customer's responsibility"
+        ],
+        "returnShipping": "Return & Exchange Shipping Costs:",
+        "returnShippingList": [
+            "When due to our responsibility: We bear the cost",
+            "When due to customer's convenience: Customer bears the cost"
+        ],
+        "alcoholSales": "Alcohol Sales",
+        "alcoholLicense": "Alcohol Sales License: Shizuoka Prefecture Fuji City No. 〇〇",
+        "alcoholConditions": "Sales Conditions: Persons 20 years of age or older only",
+        "alcoholWarnings": "Important Notices:",
+        "alcoholWarningsList": [
+            "Drinking during pregnancy or breastfeeding may adversely affect fetal or infant development",
+            "Drunk driving is prohibited by law",
+            "Please drink in moderation and enjoy alcohol responsibly"
+        ],
+        "privacy": "Personal Information Handling",
+        "privacyInfo": "Personal information received from customers will only be used for product shipping, contact, and company notifications, and will not be transferred or provided to third parties. Please refer to our 'Privacy Policy' for details.",
+        "other": "Other",
+        "otherList": [
+            "Product colors may appear different from actual products depending on your monitor",
+            "Product specifications and prices may be changed without notice",
+            "Service may be temporarily suspended due to system maintenance",
+            "Matters not covered in this notice shall be governed by the Consumer Contract Act and other laws"
+        ],
+        "companyFooter": "Kondo Pharmacy Co., Ltd.\nAMACHIHOSHISORA"
+    },
+    "privacyPolicy": {
+        "title": "Privacy Policy",
+        "subtitle": "AMACHIHOSHISORA",
+        "enacted": "Enacted: January 1, 2025",
+        "lastUpdated": "Last Updated: June 4, 2025",
+        "basicPolicy": "1. Basic Policy",
+        "basicPolicyText1": "Kondo Pharmacy Co., Ltd. (hereinafter referred to as 'the Company') fully recognizes its social responsibility for protecting customers' personal information, and collects and uses personal information within the scope necessary for the smooth operation of services provided on this website, taking appropriate measures for its protection.",
+        "basicPolicyText2": "The Company complies with the Personal Information Protection Act and other laws and regulations related to personal information protection, and implements appropriate handling of personal information.",
+        "definition": "2. Definition of Personal Information",
+        "definitionText": "Personal information refers to 'personal information' as defined in the Personal Information Protection Act, which is information about living individuals that can identify specific individuals through names, dates of birth, addresses, telephone numbers, contact information, and other descriptions contained in such information.",
+        "collection": "3. Collection of Personal Information",
+        "collectionText": "The Company may collect personal information in the following cases:",
+        "collectionList": [
+            "When entering information in inquiry forms",
+            "When purchasing or ordering products",
+            "When participating in campaigns or events",
+            "When making purchases at exhibitions"
+        ],
+        "usage": "4. Purpose of Use of Personal Information",
+        "usageText": "The Company uses personal information for the following purposes:",
+        "usageList": [
+            "Product shipping and billing",
+            "Responding to customer inquiries",
+            "Distribution of newsletters",
+            "Campaign and event notifications",
+            "Creating statistical materials for product development and service improvement",
+            "Providing other information deemed beneficial to customers"
+        ],
+        "thirdParty": "5. Third-Party Provision of Personal Information",
+        "thirdPartyText": "The Company will not provide personal information to third parties without obtaining prior consent from customers, except in the following cases:",
+        "thirdPartyList": [
+            "When required by law",
+            "When necessary for the protection of human life, body, or property",
+            "When particularly necessary for improving public health or promoting the sound development of children",
+            "When cooperation is necessary for national institutions, local governments, or their commissioned parties to perform duties stipulated by law"
+        ],
+        "disclosure": "6. Disclosure, Correction, and Deletion of Personal Information",
+        "disclosureText": "When customers request disclosure, correction, deletion, etc. of personal information, we will respond after confirming the identity of the person. Please contact our inquiry desk.",
+        "cookies": "7. About Cookies",
+        "cookiesText": "Our website may use cookies to provide better services to customers. If you do not wish to use cookies, you can disable cookies in your browser settings.",
+        "management": "8. Personal Information Management",
+        "managementText": "The Company takes necessary and appropriate measures for the secure management of personal information to prevent leakage, loss, or damage of personal information. We also provide necessary and appropriate supervision to employees and contractors who handle personal information.",
+        "changes": "9. Changes to Privacy Policy",
+        "changesText": "The Company may change this privacy policy as necessary. The revised privacy policy shall take effect from the time it is posted on the Company's website.",
+        "contact": "10. Contact Information",
+        "contactCompany": "Kondo Pharmacy Co., Ltd.",
+        "contactAddress": "〒417-0051 2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
+        "contactPhone": "TEL: 0545-52-0011",
+        "contactHours": "Business Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)",
+        "companyFooter": "Kondo Pharmacy Co., Ltd.\nAMACHIHOSHISORA"
+    },
+    "qa": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "We have compiled frequently asked questions from customers about AMACHIHOSHISORA.",
+        "subtitleNote": "If you have questions not resolved here, please feel free to contact us.",
+        "all": "All",
+        "categories": {
+            "商品について": "About Products",
+            "製造・原料": "Manufacturing & Ingredients",
+            "購入・配送": "Purchase & Delivery",
+            "飲み方・保存": "How to Drink & Storage"
+        },
+        "questions": [
+            {
+                "question": "What are the characteristics of AMACHIHOSHISORA?",
+                "answer": "AMACHIHOSHISORA is a junmai daiginjo made with 100% Yamada-nishiki rice and underground water from Mount Fuji. Brewed by a brewery with 300 years of history, it combines traditional brewing techniques with the natural blessings of Fuji. Created as a true sake made only from rice and water, it embodies our determination to challenge the world."
+            },
+            {
+                "question": "What is the difference between 720ml and 500ml?",
+                "answer": "Both are the same AMACHIHOSHISORA Junmai Daiginjo, using underground water from Fuji and 100% Yamada-nishiki rice. The only difference is the volume. The 720ml is recommended for gifts or those who want to enjoy it slowly, while the 500ml is recommended for first-time purchases or small groups."
+            },
+            {
+                "question": "Do you also sell matcha?",
+                "answer": "Yes, we also sell completely pesticide-free matcha from Shizuoka Prefecture (20g $55.00 AUD). Like our sake, we offer it as a high-quality product that values nature's blessings. You can also enjoy it in combination with our sake."
+            },
+            {
+                "question": "Please tell me about the rice you use",
+                "answer": "AMACHIHOSHISORA uses 100% Yamada-nishiki, the finest sake brewing rice. Yamada-nishiki is known for its large grains and large shinpaku (white core), making it ideal for brewing elegant sake with little off-flavor, and is an important element supporting the quality of junmai daiginjo."
+            },
+            {
+                "question": "What is underground water from Fuji?",
+                "answer": "It is clear groundwater that has been filtered through volcanic rock layers over many years after rain and snow that fell on Mount Fuji penetrated underground. It is soft water with good mineral balance, ideal for sake brewing, and forms the foundation of AMACHIHOSHISORA's taste."
+            },
+            {
+                "question": "How is delivery handled?",
+                "answer": "We deliver under appropriate temperature control to maintain product quality. You can also specify delivery date and time."
+            },
+            {
+                "question": "Please tell me the recommended way to drink",
+                "answer": "We recommend drinking it chilled (about 10-15°C). You can enjoy the delicate aroma and taste of junmai daiginjo to the fullest."
+            },
+            {
+                "question": "Please tell me about storage methods",
+                "answer": "Please store in a cool place away from direct sunlight. After opening, store in the refrigerator and drink as soon as possible. With proper storage, you can enjoy the original taste of AMACHIHOSHISORA for a long time."
+            },
+            {
+                "question": "What is the alcohol content?",
+                "answer": "AMACHIHOSHISORA has an alcohol content of 16%. This is a standard level for junmai daiginjo, and you can enjoy a solid taste while having a refreshing drinking experience."
+            }
+        ]
     }
 }

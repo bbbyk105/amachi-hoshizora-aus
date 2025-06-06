@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Header } from "@/components/Header";
+import { useTranslations } from "next-intl";
 
 // 型定義
 interface QAItem {
@@ -12,88 +13,51 @@ interface QAItem {
   answer: string;
 }
 
+// 翻訳データの型定義
+interface TranslationQAItem {
+  question: string;
+  answer: string;
+}
+
 type GroupedQA = Record<string, QAItem[]>;
 type OpenItems = Record<number, boolean>;
 
-// Q&Aデータ
-const qaData: QAItem[] = [
-  {
-    id: 1,
-    category: "商品について",
-    question: "天地星空の特徴は何ですか？",
-    answer:
-      "天地星空は富士山の伏流水と山田錦100%を使用した純米大吟醸です。三百年の歴史を持つ蔵元が、伝統的な醸造技術と富士の自然の恵みを活かして醸造しています。米と水だけで醸した真の日本酒として、世界に挑戦する意志を込めて作られています。",
-  },
-  {
-    id: 2,
-    category: "商品について",
-    question: "720mlと500mlの違いは何ですか？",
-    answer:
-      "どちらも同じ天地星空 純米大吟醸で、富士の伏流水と山田錦100%を使用しています。容量の違いのみで、720ml（¥8,800）は贈答用やじっくり楽しみたい方に、500ml（¥6,600）は初回購入や少人数で楽しみたい方におすすめです。",
-  },
-  {
-    id: 3,
-    category: "商品について",
-    question: "抹茶も販売されているのですか？",
-    answer:
-      "はい、完全無農薬の静岡県産抹茶（20g ¥5,500）も販売しております。日本酒と同様に、自然の恵みを大切にした高品質な商品として提供しています。日本酒との組み合わせもお楽しみいただけます。",
-  },
-  {
-    id: 4,
-    category: "製造・原料",
-    question: "使用している米について教えてください",
-    answer:
-      "天地星空には酒造好適米の最高峰である山田錦を100%使用しています。山田錦は大粒で心白が大きく、雑味の少ない上品な日本酒を醸すのに最適な米として知られており、純米大吟醸の品質を支える重要な要素です。",
-  },
-  {
-    id: 5,
-    category: "製造・原料",
-    question: "富士の伏流水とは何ですか？",
-    answer:
-      "富士山に降った雨や雪が長い年月をかけて地下に浸透し、火山岩層でろ過された清らかな地下水です。ミネラルバランスが良く、日本酒醸造に最適な軟水で、天地星空の味わいの基盤となっています。",
-  },
-  {
-    id: 7,
-    category: "購入・配送",
-    question: "配送はどのように行われますか？",
-    answer:
-      "商品の品質を保つため、適切な温度管理の下で配送いたします。配送日時のご指定も可能です。ギフト包装も承っておりますので、贈り物としてもご利用いただけます。",
-  },
-  {
-    id: 8,
-    category: "飲み方・保存",
-    question: "おすすめの飲み方を教えてください",
-    answer:
-      "冷やしてお飲みいただくのがおすすめです（10-15℃程度）。純米大吟醸の繊細な香りと味わいを最大限にお楽しみいただけます。また、ぬる燗（40℃程度）でも違った味わいをお楽しみいただけます。",
-  },
-  {
-    id: 9,
-    category: "飲み方・保存",
-    question: "保存方法について教えてください",
-    answer:
-      "直射日光を避け、涼しい場所で保存してください。開封後は冷蔵庫で保存し、なるべく早めにお飲みください。適切な保存により、天地星空本来の味わいを長くお楽しみいただけます。",
-  },
-  {
-    id: 10,
-    category: "商品について",
-    question: "アルコール度数はどのくらいですか？",
-    answer:
-      "天地星空のアルコール度数は16度です。純米大吟醸として標準的な度数で、すっきりとした飲み口でありながら、しっかりとした味わいをお楽しみいただけます。",
-  },
-];
-
-// カテゴリーごとにデータをグループ化
-const groupedQA: GroupedQA = qaData.reduce((acc: GroupedQA, item: QAItem) => {
-  if (!acc[item.category]) {
-    acc[item.category] = [];
-  }
-  acc[item.category].push(item);
-  return acc;
-}, {});
-
 const QAPage: React.FC = () => {
+  const t = useTranslations("qa");
   const [openItems, setOpenItems] = useState<OpenItems>({});
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+
+  // 質問内容に基づいた適切なカテゴリマッピング
+  const categoryMapping = [
+    "商品について", // Q1: 天地星空の特徴は何ですか？
+    "商品について", // Q2: 720mlと500mlの違いは何ですか？
+    "商品について", // Q3: 抹茶も販売されているのですか？
+    "製造・原料", // Q4: 使用している米について教えてください
+    "製造・原料", // Q5: 富士の伏流水とは何ですか？
+    "購入・配送", // Q6: 配送はどのように行われますか？
+    "飲み方・保存", // Q7: おすすめの飲み方を教えてください
+    "飲み方・保存", // Q8: 保存方法について教えてください
+    "商品について", // Q9: アルコール度数はどのくらいですか？
+  ];
+
+  // Q&Aデータを翻訳から取得
+  const qaData: QAItem[] = (t.raw("questions") as TranslationQAItem[]).map(
+    (item: TranslationQAItem, index: number) => ({
+      id: index + 1,
+      category: categoryMapping[index] || "商品について", // 適切なカテゴリを割り当て
+      question: item.question,
+      answer: item.answer,
+    })
+  );
+
+  // カテゴリーごとにデータをグループ化
+  const groupedQA: GroupedQA = qaData.reduce((acc: GroupedQA, item: QAItem) => {
+    if (!acc[item.category]) {
+      acc[item.category] = [];
+    }
+    acc[item.category].push(item);
+    return acc;
+  }, {});
 
   const toggleItem = (id: number): void => {
     setOpenItems((prev) => ({
@@ -109,6 +73,11 @@ const QAPage: React.FC = () => {
       ? qaData
       : qaData.filter((item) => item.category === selectedCategory);
 
+  const getCategoryLabel = (category: string): string => {
+    if (category === "all") return t("all");
+    return t(`categories.${category}` as Parameters<typeof t>[0]);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Header />
@@ -117,12 +86,12 @@ const QAPage: React.FC = () => {
       <section className="pt-24 pb-4 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-4">
-            よくあるご質問
+            {t("title")}
           </h1>
           <p className="text-sm sm:text-base text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            天地星空について、お客様からよくいただくご質問をまとめました。
+            {t("subtitle")}
             <br />
-            こちらで解決しないご質問は、お気軽にお問い合わせください。
+            {t("subtitleNote")}
           </p>
         </div>
       </section>
@@ -143,7 +112,7 @@ const QAPage: React.FC = () => {
                       : "bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-50 hover:shadow-md"
                   }`}
                 >
-                  {category === "all" ? "すべて" : category}
+                  {getCategoryLabel(category)}
                 </button>
               ))}
             </div>
@@ -165,7 +134,7 @@ const QAPage: React.FC = () => {
                     <div className="flex-1 pr-4">
                       <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                         <span className="inline-flex items-center px-2.5 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                          {item.category}
+                          {getCategoryLabel(item.category)}
                         </span>
                         <span className="text-sm sm:text-base font-semibold text-blue-900 bg-blue-50 rounded-full w-6 h-6 flex items-center justify-center">
                           Q

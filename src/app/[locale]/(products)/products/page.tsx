@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleCardClick = () => {
     // 商品詳細ページに遷移
-    router.push(`/product/${product.id}`);
+    router.push(`/products/${product.id}`);
   };
 
   return (
