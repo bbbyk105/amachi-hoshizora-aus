@@ -192,7 +192,7 @@
         ],
         "alcoholSales": "Alcohol Sales",
         "alcoholLicense": "Alcohol Sales License: Shizuoka Prefecture Fuji City No. 〇〇",
-        "alcoholConditions": "Sales Conditions: Persons 20 years of age or older only",
+        "alcoholConditions": "Sales Conditions: Persons 18 years of age or older only",
         "alcoholWarnings": "Important Notices:",
         "alcoholWarningsList": [
             "Drinking during pregnancy or breastfeeding may adversely affect fetal or infant development",
@@ -334,7 +334,7 @@
             "title": "Article 3 (Terms of Use)",
             "intro": "To use this Site, users must meet the following conditions:",
             "conditions": [
-                "Must be 20 years of age or older (as it contains information about alcoholic beverages)",
+                "Must be 18 years of age or older (as it contains information about alcoholic beverages)",
                 "Must understand and agree to the contents of these Terms of Service",
                 "Must not be an antisocial force",
                 "Must comply with Japanese law"
@@ -356,9 +356,9 @@
         },
         "article5": {
             "title": "Article 5 (Age Restrictions)",
-            "intro": "This Site handles information about alcoholic beverages. The purchase of alcoholic beverages and viewing of information about alcoholic beverages is limited to persons 20 years of age or older.",
+            "intro": "This Site handles information about alcoholic beverages. The purchase of alcoholic beverages and viewing of information about alcoholic beverages is limited to persons 18 years of age or older.",
             "restrictions": [
-                "Persons under 20 years of age may not use this Site",
+                "Persons under 18 years of age may not use this Site",
                 "Drinking during pregnancy or breastfeeding may adversely affect fetal or infant development",
                 "Drunk driving is prohibited by law",
                 "Please drink in moderation and enjoy alcohol responsibly"
@@ -401,5 +401,37 @@
             "hours": "Business Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)"
         },
         "companyFooter": "Kondo Pharmacy Co., Ltd.\nAMACHIHOSHISORA"
+    },
+    "footer": {
+        "companyName": "AMACHIHOSHISORA",
+        "address": {
+            "postalCode": "〒417-0051",
+            "street": "2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
+            "phone": "TEL: 0545-52-0011"
+        },
+        "sections": {
+            "products": {
+                "title": "Products",
+                "viewAll": "View All Products →"
+            },
+            "company": {
+                "title": "Company"
+            },
+            "contact": {
+                "title": "Contact",
+                "officialSite": "Official Website",
+                "socialMedia": "Social Media"
+            }
+        },
+        "legal": {
+            "copyright": "© 2025 AMACHIHOSHISORA. All rights reserved.",
+            "privacyPolicy": "Privacy Policy",
+            "termsOfService": "Terms of Service",
+            "commerceLaw": "Commercial Law"
+        },
+        "ageVerification": {
+            "drinking": "※Must be 18 years or older to drink alcohol",
+            "driving": "※Drunk driving is prohibited by law"
+        }
     }
 }

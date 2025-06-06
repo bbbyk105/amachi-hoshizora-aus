@@ -401,5 +401,37 @@
             "hours": "受付時間：平日 9:00-17:00（土日祝日を除く）"
         },
         "companyFooter": "株式会社 近藤薬局\n天地星空 - AMACHIHOSHISORA"
+    },
+    "footer": {
+        "companyName": "天地星空",
+        "address": {
+            "postalCode": "〒417-0051",
+            "street": "静岡県富士市吉原２丁目８−２１",
+            "phone": "TEL: 0545-52-0011"
+        },
+        "sections": {
+            "products": {
+                "title": "商品情報",
+                "viewAll": "すべての商品を見る →"
+            },
+            "company": {
+                "title": "会社案内"
+            },
+            "contact": {
+                "title": "お問い合わせ",
+                "officialSite": "オフィシャルサイト",
+                "socialMedia": "SNS"
+            }
+        },
+        "legal": {
+            "copyright": "© 2025 天地星空. All rights reserved.",
+            "privacyPolicy": "プライバシーポリシー",
+            "termsOfService": "利用規約",
+            "commerceLaw": "特定商取引法"
+        },
+        "ageVerification": {
+            "drinking": "※お酒は20歳になってから",
+            "driving": "※飲酒運転は法律で禁止されています"
+        }
     }
 }
