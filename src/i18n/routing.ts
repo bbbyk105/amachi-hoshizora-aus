@@ -2,12 +2,11 @@
 import { defineRouting } from "next-intl/routing";
 import { createNavigation } from "next-intl/navigation";
 
-// 言語検出を無効にしてデフォルト言語を強制
 export const routing = defineRouting({
   locales: ["ja", "en"],
-  defaultLocale: "en",
+  defaultLocale: "en", // デフォルト言語は英語のまま
   localePrefix: "always",
-  localeDetection: false, // ブラウザ言語設定を無視
+  localeDetection: false, // ブラウザ言語設定は無効のまま
 });
 
 // ナビゲーション用のユーティリティを作成

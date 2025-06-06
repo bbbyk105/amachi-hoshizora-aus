@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/routing";
 import { useLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
+import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,6 +29,13 @@ export const LanguageSelector = ({
   const router = useRouter();
   const pathname = usePathname();
 
+  // 現在の言語設定をローカルストレージに保存
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("preferred-language", locale);
+    }
+  }, [locale]);
+
   const getLanguageDisplay = (loc: string) => {
     const names = {
       ja: "日本語",
@@ -39,6 +47,14 @@ export const LanguageSelector = ({
   const currentLang = getLanguageDisplay(locale);
 
   const handleLanguageChange = (loc: string) => {
+    // クッキーに保存（ミドルウェアと連携）
+    if (typeof window !== "undefined") {
+      document.cookie = `preferred-locale=${loc}; path=/; max-age=${
+        365 * 24 * 60 * 60
+      }; SameSite=Lax`;
+      localStorage.setItem("preferred-language", loc);
+    }
+
     router.replace(pathname, { locale: loc });
     onLanguageChange?.();
   };

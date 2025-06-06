@@ -1,6 +1,6 @@
 "use client";
 import { Instagram } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import React from "react";
 import { products } from "@/data";
 
