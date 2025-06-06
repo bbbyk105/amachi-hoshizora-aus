@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import React from "react";
 
@@ -68,18 +67,6 @@ export const Hero: React.FC<HeroProps> = ({ heroData }) => {
                 <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-white">
                   {heroData.productName}
                 </p>
-              </div>
-
-              <div
-                className="animate-fade-in-up"
-                style={{ animationDelay: "0.8s" }}
-              >
-                <Button
-                  variant="outline"
-                  className="px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base font-medium border-2 border-white text-white bg-transparent hover:bg-white hover:text-black transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-                >
-                  DISCOVER MORE
-                </Button>
               </div>
             </div>
 
