@@ -17,6 +17,7 @@ import {
   sortOptions,
   sortProducts,
 } from "@/data";
+import { useTranslations } from "next-intl";
 
 interface ProductCardProps {
   product: Product;
@@ -27,6 +28,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const router = useRouter();
   const [isAdding, setIsAdding] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+
+  // 翻訳フック
+  const tCommon = useTranslations("productList");
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     // イベントの伝播を停止（カード全体のクリックイベントを防ぐ）
@@ -145,17 +149,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {isAdding ? (
                 <div className="flex items-center">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-1" />
-                  追加中
+                  {tCommon("adding")}
                 </div>
               ) : justAdded ? (
                 <div className="flex items-center">
                   <Check className="w-4 h-4 mr-1" />
-                  追加済み
+                  {tCommon("added")}
                 </div>
               ) : (
                 <div className="flex items-center">
                   <ShoppingCart className="w-4 h-4 mr-1" />
-                  追加
+                  {tCommon("add")}
                 </div>
               )}
             </Button>
@@ -167,6 +171,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 };
 
 const ProductPage = () => {
+  // 翻訳フック
+  const t = useTranslations("productList");
+
   const [selectedCategory, setSelectedCategory] = useState("すべて");
   const [sortBy, setSortBy] = useState("おすすめ順");
   const { getTotalQuantity } = useCart();
@@ -187,13 +194,13 @@ const ProductPage = () => {
               PRODUCT
             </h1>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-              富士の麓で醸される、伝統と革新が融合した日本酒と特選品をご紹介いたします
+              {t("heroDescription")}
             </p>
             {/* カート情報表示 */}
             {getTotalQuantity() > 0 && (
               <div className="inline-flex items-center bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 text-sm">
                 <ShoppingCart className="w-4 h-4 mr-2" />
-                カート: {getTotalQuantity()}点
+                {t("cartInfo", { count: getTotalQuantity() })}
               </div>
             )}
           </div>
@@ -243,7 +250,8 @@ const ProductPage = () => {
               </div>
 
               <span className="text-sm text-gray-600">
-                {sortedProducts.length}件の商品
+                {sortedProducts.length}
+                {t("itemsCount")}
               </span>
             </div>
           </div>
@@ -262,15 +270,13 @@ const ProductPage = () => {
           {/* 商品が見つからない場合 */}
           {sortedProducts.length === 0 && (
             <div className="text-center py-16">
-              <p className="text-gray-500 text-lg">
-                選択されたカテゴリの商品は見つかりませんでした
-              </p>
+              <p className="text-gray-500 text-lg">{t("noProductsFound")}</p>
               <Button
                 variant="outline"
                 onClick={() => setSelectedCategory("すべて")}
                 className="mt-4"
               >
-                すべての商品を表示
+                {t("showAllProducts")}
               </Button>
             </div>
           )}

@@ -96,5 +96,36 @@
         "viewProducts": "商品一覧を見る",
         "backToHome": "ホームに戻る",
         "additionalInfo": "決済に関してご不明な点がございましたら、お気軽にお問い合わせください。"
-    }
+    },
+    "productDetail": {
+        "productNotFound": "商品が見つかりません",
+        "backToProducts": "商品一覧に戻る",
+        "productList": "商品一覧",
+        "onSale": "セール中",
+        "quantity": "数量",
+        "subtotal": "小計",
+        "addToCart": "カートに追加",
+        "adding": "追加中...",
+        "addedToCart": "カートに追加済み",
+        "productDetails": "商品詳細",
+        "relatedProducts": "関連商品"
+    },
+    "productList": {
+        "heroDescription": "富士の麓で醸される、伝統と革新が融合した日本酒と特選品をご紹介いたします",
+        "cartInfo": "カート: {count}点",
+        "itemsCount": "件の商品",
+        "noProductsFound": "選択されたカテゴリの商品は見つかりませんでした",
+        "showAllProducts": "すべての商品を表示",
+        "adding": "追加中",
+        "added": "追加済み",
+        "add": "追加"
+    },
+    "heroDescription": "富士の麓で醸される、伝統と革新が融合した日本酒と特選品をご紹介いたします",
+    "cartInfo": "カート: {count}点",
+    "itemsCount": "件の商品",
+    "noProductsFound": "選択されたカテゴリの商品は見つかりませんでした",
+    "showAllProducts": "すべての商品を表示",
+    "adding": "追加中",
+    "added": "追加済み",
+    "add": "追加"
 }

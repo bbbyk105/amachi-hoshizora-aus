@@ -16,11 +16,15 @@ import {
 
 import { useCart } from "@/store/cart";
 import { products, formatPrice, getProductDetails } from "@/data";
+import { useTranslations } from "next-intl";
 
 const ProductDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const { addToCart } = useCart();
+
+  // 翻訳フック
+  const t = useTranslations("productDetail");
 
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
@@ -36,11 +40,11 @@ const ProductDetailPage = () => {
       <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            商品が見つかりません
+            {t("productNotFound")}
           </h1>
           <Button onClick={() => router.push("/products")} variant="outline">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            商品一覧に戻る
+            {t("backToProducts")}
           </Button>
         </div>
       </div>
@@ -79,7 +83,7 @@ const ProductDetailPage = () => {
               className="flex items-center hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
-              商品一覧
+              {t("productList")}
             </button>
             <span>/</span>
             <span className="text-gray-900">{product.name}</span>
@@ -105,7 +109,7 @@ const ProductDetailPage = () => {
               {product.originalPrice && (
                 <div className="absolute top-4 left-4">
                   <span className="bg-orange-500 text-white text-sm px-3 py-1 rounded-full font-medium">
-                    セール中
+                    {t("onSale")}
                   </span>
                 </div>
               )}
@@ -159,7 +163,9 @@ const ProductDetailPage = () => {
 
             {/* 数量選択 */}
             <div className="space-y-4">
-              <span className="text-sm font-medium text-gray-900">数量</span>
+              <span className="text-sm font-medium text-gray-900">
+                {t("quantity")}
+              </span>
 
               <div className="flex items-center gap-3">
                 <div className="flex items-center border border-gray-300 rounded-lg">
@@ -186,7 +192,7 @@ const ProductDetailPage = () => {
                 </div>
 
                 <div className="text-sm text-gray-600">
-                  小計: {formatPrice(product.price * quantity)}
+                  {t("subtotal")}: {formatPrice(product.price * quantity)}
                 </div>
               </div>
             </div>
@@ -204,17 +210,17 @@ const ProductDetailPage = () => {
               {isAdding ? (
                 <div className="flex items-center">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  追加中...
+                  {t("adding")}
                 </div>
               ) : justAdded ? (
                 <div className="flex items-center">
                   <Check className="w-5 h-5 mr-2" />
-                  カートに追加済み
+                  {t("addedToCart")}
                 </div>
               ) : (
                 <div className="flex items-center">
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  カートに追加
+                  {t("addToCart")}
                 </div>
               )}
             </Button>
@@ -223,7 +229,7 @@ const ProductDetailPage = () => {
             <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  商品詳細
+                  {t("productDetails")}
                 </h3>
                 <div className="space-y-3">
                   {productDetails.map((detail, index) => (
@@ -247,30 +253,30 @@ const ProductDetailPage = () => {
             {/* <Card>
               <CardContent className="p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  配送・返品について
+                  {t("shippingReturns")}
                 </h3>
                 <div className="space-y-3 text-sm text-gray-600">
                   <div className="flex items-start gap-3">
                     <Truck className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-medium text-gray-900">送料無料</p>
-                      <p>2-3営業日でお届け</p>
+                      <p className="font-medium text-gray-900">{t("freeShipping")}</p>
+                      <p>{t("deliveryTime")}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <RotateCcw className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <p className="font-medium text-gray-900">
-                        30日間返品保証
+                        {t("returnPolicy")}
                       </p>
-                      <p>未開封品に限り返品可能</p>
+                      <p>{t("returnCondition")}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
                     <Shield className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
                     <div>
-                      <p className="font-medium text-gray-900">品質保証</p>
-                      <p>厳選された素材のみを使用</p>
+                      <p className="font-medium text-gray-900">{t("qualityAssurance")}</p>
+                      <p>{t("premiumMaterials")}</p>
                     </div>
                   </div>
                 </div>
@@ -281,7 +287,9 @@ const ProductDetailPage = () => {
 
         {/* 関連商品セクション */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">関連商品</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">
+            {t("relatedProducts")}
+          </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {products
               .filter(

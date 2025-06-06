@@ -96,5 +96,28 @@
         "viewProducts": "View Products",
         "backToHome": "Back to Home",
         "additionalInfo": "If you have any questions regarding payment, please feel free to contact us."
+    },
+    "productDetail": {
+        "productNotFound": "Product Not Found",
+        "backToProducts": "Back to Products",
+        "productList": "Products",
+        "onSale": "On Sale",
+        "quantity": "Quantity",
+        "subtotal": "Subtotal",
+        "addToCart": "Add to Cart",
+        "adding": "Adding...",
+        "addedToCart": "Added to Cart",
+        "productDetails": "Product Details",
+        "relatedProducts": "Related Products"
+    },
+    "productList": {
+        "heroDescription": "Introducing traditional and innovative Japanese sake and specialty products brewed at the foot of Mount Fuji",
+        "cartInfo": "Cart: {count} items",
+        "itemsCount": " items",
+        "noProductsFound": "No products found in the selected category",
+        "showAllProducts": "Show All Products",
+        "adding": "Adding...",
+        "added": "Added",
+        "add": "Add"
     }
 }
