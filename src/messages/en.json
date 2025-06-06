@@ -310,5 +310,96 @@
                 "answer": "AMACHIHOSHISORA has an alcohol content of 16%. This is a standard level for junmai daiginjo, and you can enjoy a solid taste while having a refreshing drinking experience."
             }
         ]
+    },
+    "termsOfService": {
+        "title": "Terms of Service",
+        "subtitle": "AMACHIHOSHISORA",
+        "enacted": "Enacted: January 1, 2025",
+        "lastUpdated": "Last Updated: June 4, 2025",
+        "article1": {
+            "title": "Article 1 (Application)",
+            "text1": "These Terms of Service are intended to define the rights and obligations between users and Kondo Pharmacy Co., Ltd. (hereinafter referred to as 'the Company') regarding the use of the 'AMACHIHOSHISORA' website (hereinafter referred to as 'this Site') operated by the Company, and shall apply to all relationships related to the use of this Service between users and the Company.",
+            "text2": "When a user uses this Site, they shall be deemed to have agreed to these Terms of Service."
+        },
+        "article2": {
+            "title": "Article 2 (Definitions)",
+            "intro": "The definitions of terms used in these Terms of Service are as follows:",
+            "definitions": [
+                "'This Service' refers to all services related to 'AMACHIHOSHISORA' provided by the Company.",
+                "'Users' refers to all persons who use this Service.",
+                "'Intellectual Property Rights' refers to copyrights, patent rights, utility model rights, trademark rights, design rights, and other intellectual property rights (including the rights to acquire such rights or to file applications for registration of such rights)."
+            ]
+        },
+        "article3": {
+            "title": "Article 3 (Terms of Use)",
+            "intro": "To use this Site, users must meet the following conditions:",
+            "conditions": [
+                "Must be 20 years of age or older (as it contains information about alcoholic beverages)",
+                "Must understand and agree to the contents of these Terms of Service",
+                "Must not be an antisocial force",
+                "Must comply with Japanese law"
+            ]
+        },
+        "article4": {
+            "title": "Article 4 (Prohibited Acts)",
+            "intro": "Users shall not engage in the following acts when using this Service:",
+            "prohibitedActs": [
+                "Acts that violate laws or public order and morals",
+                "Acts related to criminal activities",
+                "Acts that destroy or interfere with the functions of the Company's servers or networks",
+                "Acts that may interfere with the operation of the Company's services",
+                "Acts of collecting or accumulating personal information about other users",
+                "Acts of impersonating other users",
+                "Acts of providing benefits directly or indirectly to antisocial forces in connection with the Company's services",
+                "Other acts that the Company deems inappropriate"
+            ]
+        },
+        "article5": {
+            "title": "Article 5 (Age Restrictions)",
+            "intro": "This Site handles information about alcoholic beverages. The purchase of alcoholic beverages and viewing of information about alcoholic beverages is limited to persons 20 years of age or older.",
+            "restrictions": [
+                "Persons under 20 years of age may not use this Site",
+                "Drinking during pregnancy or breastfeeding may adversely affect fetal or infant development",
+                "Drunk driving is prohibited by law",
+                "Please drink in moderation and enjoy alcohol responsibly"
+            ]
+        },
+        "article6": {
+            "title": "Article 6 (Intellectual Property Rights)",
+            "text1": "Intellectual property rights related to content included in this Site (text, images, videos, audio, design, etc.) belong to the Company or rights holders who have licensed their use to the Company.",
+            "text2": "Users may not reproduce, reuse, sell, or otherwise use the content of this Site without prior written permission from the Company."
+        },
+        "article7": {
+            "title": "Article 7 (Disclaimer)",
+            "disclaimers": [
+                "The Company shall not be liable for any damages caused by changes, interruptions, or termination of this Service.",
+                "The Company shall not be liable for any disputes that arise between users and third parties.",
+                "The Company makes no warranties regarding the accuracy, completeness, usefulness, etc. of the information provided on this Site.",
+                "The Company shall not be liable for any damages caused by users' use of this Service, except in cases of willful misconduct or gross negligence by the Company."
+            ]
+        },
+        "article8": {
+            "title": "Article 8 (Changes to Service Content)",
+            "text": "The Company may change, add, or discontinue the content of this Service without notice to users, and users agree to this."
+        },
+        "article9": {
+            "title": "Article 9 (Changes to Terms of Service)",
+            "text": "The Company may change these Terms of Service at any time without notice to users when deemed necessary. The revised Terms of Service shall take effect when displayed on this Site."
+        },
+        "article10": {
+            "title": "Article 10 (Governing Law and Jurisdiction)",
+            "text1": "Japanese law shall be the governing law for the interpretation of these Terms of Service.",
+            "text2": "In the event of disputes arising in connection with this Service, the Shizuoka District Court shall have exclusive agreed jurisdiction as the court of first instance."
+        },
+        "article11": {
+            "title": "Article 11 (Contact)"
+        },
+        "contact": {
+            "company": "Kondo Pharmacy Co., Ltd.",
+            "address": "〒417-0051 2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
+            "phone": "TEL: 0545-52-0011",
+            "hours": "Business Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)"
+        },
+        "companyFooter": "Kondo Pharmacy Co., Ltd.\nAMACHIHOSHISORA"
     }
 }
