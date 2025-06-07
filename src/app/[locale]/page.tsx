@@ -1,27 +1,45 @@
-// src/app/page.tsx
+// src/app/[locale]/page.tsx - ロケール対応版
 "use client";
-import React from "react";
+import React, { use } from "react"; // useをインポート
+import {
+  getProducts,
+  formatPriceWithVolume,
+  getHeroData,
+  getTopicsData,
+} from "@/data";
+import { Loader } from "@/components/Loader";
+import { useLoading } from "@/hooks/use-loading";
 import { Hero } from "./(top-page)/Hero";
 import { About } from "./(top-page)/About";
 import { Product } from "./(top-page)/Product";
-import { products } from "@/data/products";
-import { formatPriceWithVolume, heroData, topicsData } from "@/data";
-import { Loader } from "@/components/Loader";
-import { useLoading } from "@/hooks/use-loading";
 
-// products データを既存のコンポーネントと互換性のある形式に変換
-const compatibleProductsData = products.map((product) => ({
-  id: product.id,
-  name: product.name,
-  description: product.description,
-  price: formatPriceWithVolume(product),
-  colorClass: product.colorClass || "from-gray-600 to-gray-700",
-  label: product.label,
-  image: product.image.url.replace("/", ""), // Remove leading slash for compatibility
-}));
+// 型定義を修正：paramsはPromiseになる
+interface TopPageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
 
-const TopPage = () => {
+const TopPage = ({ params }: TopPageProps) => {
+  // React.use()を使ってPromiseを解決
+  const { locale } = use(params);
   const { isLoading } = useLoading({ duration: 1500 });
+
+  // ロケール別のデータを取得
+  const products = getProducts(locale);
+  const heroData = getHeroData(locale);
+  const topicsData = getTopicsData(locale);
+
+  // products データを既存のコンポーネントと互換性のある形式に変換
+  const compatibleProductsData = products.map((product) => ({
+    id: product.id,
+    name: product.name,
+    description: product.description,
+    price: formatPriceWithVolume(product, locale),
+    colorClass: product.colorClass || "from-gray-600 to-gray-700",
+    label: product.label,
+    image: product.image.url.replace("/", ""), // Remove leading slash for compatibility
+  }));
 
   if (isLoading) {
     return <Loader text="loading..." />;

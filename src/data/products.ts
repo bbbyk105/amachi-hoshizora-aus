@@ -1,85 +1,15 @@
-// data/products.ts - 商品データ
-import { Product } from "./types";
+// src/data/products.ts - 後方互換性のため作成
+// 既存のコードが @/data/products からimportしているためのファイル
 
-export const products: Product[] = [
-  {
-    id: 1,
-    name: "天地星空 純米大吟醸 720ml",
-    description: "富士の伏流水・山田錦100%使用",
-    price: 200,
-    originalPrice: null,
-    category: "純米大吟醸",
-    label: "天地星空",
-    image: {
-      url: "/720.webp",
-      alt: "天地星空 純米大吟醸 720ml",
-      width: 400,
-      height: 400,
-    },
-    details: {
-      alcoholContent: "16%",
-      riceMilling: "40%",
-      brewery: "富士錦酒造",
-      region: "静岡県富士市",
-      taste: "芳醇で上品な香り、なめらかな口当たり",
-      temperature: "10-15℃",
-    },
-    stock: 50,
-    stripeProductId: "prod_amachi_720ml_au",
-    stripePriceId: "price_amachi_720ml_aud",
-    colorClass: "from-blue-800 to-blue-900",
-  },
-  {
-    id: 2,
-    name: "天地星空 純米大吟醸 500ml",
-    description: "富士の伏流水使用",
-    price: 150,
-    originalPrice: null,
-    category: "純米大吟醸",
-    label: "天地星空",
-    image: {
-      url: "/500.webp",
-      alt: "天地星空 純米大吟醸 500ml",
-      width: 400,
-      height: 400,
-    },
-    details: {
-      alcoholContent: "16%",
-      riceMilling: "40%",
-      brewery: "富士錦酒造",
-      region: "静岡県富士市",
-      taste: "上品な香りと深い味わい",
-      temperature: "10-15℃",
-    },
-    stock: 75,
-    stripeProductId: "prod_amachi_500ml_au",
-    stripePriceId: "price_amachi_500ml_aud",
-    colorClass: "from-blue-700 to-blue-800",
-  },
-  {
-    id: 3,
-    name: "抹茶",
-    description: "完全無農薬の静岡県抹茶",
-    price: 55,
-    originalPrice: null,
-    category: "抹茶",
-    label: "富士錦",
-    image: {
-      url: "/maccha.webp",
-      alt: "抹茶",
-      width: 400,
-      height: 400,
-    },
-    details: {
-      brewery: "富士錦酒造",
-      region: "静岡県",
-      taste: "濃厚で上品な苦味と甘み",
-      temperature: "70-80℃",
-      weight: "20g",
-    },
-    stock: 100,
-    stripeProductId: "prod_matcha_premium_au",
-    stripePriceId: "price_matcha_premium_aud",
-    colorClass: "from-indigo-600 to-indigo-700",
-  },
-];
+import { products as jaProducts } from "./locales/ja";
+import { products as enProducts } from "./locales/en";
+
+// デフォルトエクスポート（日本語）
+export const products = jaProducts;
+
+// ロケール別のエクスポート
+export const productsJa = jaProducts;
+export const productsEn = enProducts;
+
+// 型定義も再エクスポート
+export type { Product } from "./types";

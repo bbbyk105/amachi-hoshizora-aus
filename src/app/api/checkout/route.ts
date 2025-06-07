@@ -1,7 +1,7 @@
-// src/app/api/checkout/route.ts
+// src/app/api/checkout/route.ts - ロケール対応版
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
-import { products } from "@/data/products";
+import { getProducts } from "@/data";
 
 // Stripe初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
@@ -23,12 +23,20 @@ interface StripeProductData {
 
 export async function POST(request: Request) {
   try {
-    const { items }: { items: Array<{ id: number; quantity: number }> } =
-      await request.json();
+    const {
+      items,
+      locale = "ja",
+    }: {
+      items: Array<{ id: number; quantity: number }>;
+      locale?: string;
+    } = await request.json();
 
     if (!items || items.length === 0) {
       return NextResponse.json({ error: "No items provided" }, { status: 400 });
     }
+
+    // ロケール別の商品データを取得
+    const products = getProducts(locale);
 
     // 商品データの検証とライン項目の作成
     const lineItems = items.map((item) => {
@@ -79,7 +87,7 @@ export async function POST(request: Request) {
       mode: "payment",
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE_URL}/cancel`,
-      locale: "en", // 英語で表示
+      locale: locale === "ja" ? "ja" : "en", // ロケールに応じてStripeの言語を設定
       // 領収書自動送信を有効化
       invoice_creation: {
         enabled: true,
@@ -96,10 +104,12 @@ export async function POST(request: Request) {
       metadata: {
         order_type: "in_person_purchase", // 対面決済
         currency: "aud",
+        locale: locale, // ロケール情報をmetadataに保存
       },
       custom_text: {
         submit: {
-          message: "Complete your purchase", // 英語でのボタンテキスト
+          message:
+            locale === "ja" ? "購入を完了する" : "Complete your purchase",
         },
       },
       // 自動的な税金計算（必要に応じて）

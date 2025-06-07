@@ -1,4 +1,4 @@
-// src/app/(products)/product/[slug]/page.tsx
+// src/app/[locale]/(products)/products/[slug]/page.tsx - 国際化対応版
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -15,13 +15,20 @@ import {
 } from "lucide-react";
 
 import { useCart } from "@/store/cart";
-import { products, formatPrice, getProductDetails } from "@/data";
+import {
+  getProducts,
+  formatPrice,
+  getProductDetails,
+  getProductById,
+} from "@/data/utils";
 import { useTranslations } from "next-intl";
 
 const ProductDetailPage = () => {
   const params = useParams();
   const router = useRouter();
   const { addToCart } = useCart();
+
+  const locale = params.locale as string;
 
   // 翻訳フック
   const t = useTranslations("productDetail");
@@ -30,10 +37,9 @@ const ProductDetailPage = () => {
   const [isAdding, setIsAdding] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
 
-  // slugからproductを取得（実際の実装では、slugを使ってproductを特定する）
-  // 今回は簡単のため、idで検索
+  // slugからproductを取得（ロケール対応）
   const productId = parseInt(params.slug as string);
-  const product = products.find((p) => p.id === productId);
+  const product = getProductById(productId, locale);
 
   if (!product) {
     return (
@@ -42,7 +48,10 @@ const ProductDetailPage = () => {
           <h1 className="text-2xl font-bold text-gray-900 mb-4">
             {t("productNotFound")}
           </h1>
-          <Button onClick={() => router.push("/products")} variant="outline">
+          <Button
+            onClick={() => router.push(`/${locale}/products`)}
+            variant="outline"
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             {t("backToProducts")}
           </Button>
@@ -70,7 +79,7 @@ const ProductDetailPage = () => {
     }
   };
 
-  const productDetails = getProductDetails(product);
+  const productDetails = getProductDetails(product, locale);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -79,7 +88,7 @@ const ProductDetailPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <button
-              onClick={() => router.push("/products")}
+              onClick={() => router.push(`/${locale}/products`)}
               className="flex items-center hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
@@ -135,7 +144,7 @@ const ProductDetailPage = () => {
                 <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
                   {product.category}
                 </span>
-                <span className="text-sm text-gray-500 bg-blue-100  px-3 py-1 rounded-full">
+                <span className="text-sm text-gray-500 bg-blue-100 px-3 py-1 rounded-full">
                   {product.label}
                 </span>
               </div>
@@ -248,40 +257,6 @@ const ProductDetailPage = () => {
                 </div>
               </CardContent>
             </Card>
-
-            {/* 配送・返品情報 */}
-            {/* <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {t("shippingReturns")}
-                </h3>
-                <div className="space-y-3 text-sm text-gray-600">
-                  <div className="flex items-start gap-3">
-                    <Truck className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-gray-900">{t("freeShipping")}</p>
-                      <p>{t("deliveryTime")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <RotateCcw className="w-4 h-4 text-purple-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-gray-900">
-                        {t("returnPolicy")}
-                      </p>
-                      <p>{t("returnCondition")}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <Shield className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" />
-                    <div>
-                      <p className="font-medium text-gray-900">{t("qualityAssurance")}</p>
-                      <p>{t("premiumMaterials")}</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card> */}
           </div>
         </div>
 
@@ -291,7 +266,7 @@ const ProductDetailPage = () => {
             {t("relatedProducts")}
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {products
+            {getProducts(locale)
               .filter(
                 (p) => p.id !== product.id && p.category === product.category
               )
@@ -300,7 +275,9 @@ const ProductDetailPage = () => {
                 <Card
                   key={relatedProduct.id}
                   className="border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-                  onClick={() => router.push(`/products/${relatedProduct.id}`)}
+                  onClick={() =>
+                    router.push(`/${locale}/products/${relatedProduct.id}`)
+                  }
                 >
                   <CardContent className="p-0">
                     <div className="relative aspect-square bg-gray-50 overflow-hidden">

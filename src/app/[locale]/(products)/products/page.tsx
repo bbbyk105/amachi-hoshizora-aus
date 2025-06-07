@@ -1,29 +1,30 @@
-// src/app/(products)/product/page.tsx - ProductCard部分の更新
+// src/app/[locale]/(products)/products/page.tsx - 国際化対応版
 "use client";
 import React, { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ShoppingCart, Share2, SortDesc, Check } from "lucide-react";
 
-import { Product } from "@/types/products";
+import { Product } from "@/data/types";
 import { useCart } from "@/store/cart";
 import {
-  categories,
+  getCategories,
   formatPrice,
   getProductDetails,
   getProductsByCategory,
-  sortOptions,
+  getSortOptions,
   sortProducts,
-} from "@/data";
+} from "@/data/utils";
 import { useTranslations } from "next-intl";
 
 interface ProductCardProps {
   product: Product;
+  locale: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, locale }) => {
   const { addToCart } = useCart();
   const router = useRouter();
   const [isAdding, setIsAdding] = useState(false);
@@ -33,20 +34,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const tCommon = useTranslations("productList");
 
   const handleAddToCart = async (e: React.MouseEvent) => {
-    // イベントの伝播を停止（カード全体のクリックイベントを防ぐ）
     e.stopPropagation();
-
     setIsAdding(true);
-
-    // カートに追加
     addToCart(product, 1);
 
-    // 視覚的フィードバック
     setTimeout(() => {
       setIsAdding(false);
       setJustAdded(true);
-
-      // 「追加済み」表示を2秒後にリセット
       setTimeout(() => {
         setJustAdded(false);
       }, 2000);
@@ -59,8 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleCardClick = () => {
-    // 商品詳細ページに遷移
-    router.push(`/products/${product.id}`);
+    router.push(`/${locale}/products/${product.id}`);
   };
 
   return (
@@ -94,10 +87,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
         {/* 商品情報エリア */}
         <div className="p-4 space-y-3">
-          {/* カテゴリ・評価 */}
+          {/* カテゴリ・ラベル */}
           <div className="flex items-center justify-between">
             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
               {product.category}
+            </span>
+            <span className="text-xs text-blue-600 bg-blue-100 px-2 py-1 rounded">
+              {product.label}
             </span>
           </div>
 
@@ -113,15 +109,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
           {/* 商品詳細 */}
           <div className="space-y-1 text-xs text-gray-500">
-            {getProductDetails(product)
+            {getProductDetails(product, locale)
               .slice(0, 3)
-              .map(
-                (detail: { label: string; value: string }, index: number) => (
-                  <p key={index}>
-                    {detail.label}: {detail.value}
-                  </p>
-                )
-              )}
+              .map((detail, index) => (
+                <p key={index}>
+                  {detail.label}: {detail.value}
+                </p>
+              ))}
           </div>
 
           {/* 価格とボタン */}
@@ -171,18 +165,32 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 };
 
 const ProductPage = () => {
+  const params = useParams();
+  const locale = params.locale as string;
+
   // 翻訳フック
   const t = useTranslations("productList");
 
-  const [selectedCategory, setSelectedCategory] = useState("すべて");
-  const [sortBy, setSortBy] = useState("おすすめ順");
+  const [selectedCategory, setSelectedCategory] = useState(() => {
+    const categories = getCategories(locale);
+    return categories[0]; // "すべて" or "All"
+  });
+  const [sortBy, setSortBy] = useState(() => {
+    const sortOptions = getSortOptions(locale);
+    return sortOptions[0]; // "おすすめ順" or "Recommended"
+  });
+
   const { getTotalQuantity } = useCart();
 
+  // ロケール対応データの取得
+  const categories = getCategories(locale);
+  const sortOptions = getSortOptions(locale);
+
   // フィルタリング
-  const filteredProducts = getProductsByCategory(selectedCategory);
+  const filteredProducts = getProductsByCategory(selectedCategory, locale);
 
   // ソート
-  const sortedProducts = sortProducts(filteredProducts, sortBy);
+  const sortedProducts = sortProducts(filteredProducts, sortBy, locale);
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -191,7 +199,7 @@ const ProductPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-4">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-light tracking-wider">
-              PRODUCT
+              {locale === "en" ? "PRODUCTS" : "PRODUCT"}
             </h1>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
               {t("heroDescription")}
@@ -263,7 +271,7 @@ const ProductPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 lg:gap-8">
             {sortedProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={product} locale={locale} />
             ))}
           </div>
 
@@ -273,7 +281,7 @@ const ProductPage = () => {
               <p className="text-gray-500 text-lg">{t("noProductsFound")}</p>
               <Button
                 variant="outline"
-                onClick={() => setSelectedCategory("すべて")}
+                onClick={() => setSelectedCategory(categories[0])}
                 className="mt-4"
               >
                 {t("showAllProducts")}
