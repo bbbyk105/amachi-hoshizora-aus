@@ -14,6 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
+import { useLoading } from "@/hooks/use-loading";
+import { Loader } from "./Loader";
 
 interface LanguageSelectorProps {
   variant?: "desktop" | "mobile";
@@ -58,6 +60,12 @@ export const LanguageSelector = ({
     router.replace(pathname, { locale: loc });
     onLanguageChange?.();
   };
+
+  const { isLoading } = useLoading({ duration: 1500 });
+
+  if (isLoading) {
+    return <Loader text="loading..." />;
+  }
 
   if (variant === "mobile") {
     return (

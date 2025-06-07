@@ -6,6 +6,8 @@ import { About } from "./(top-page)/About";
 import { Product } from "./(top-page)/Product";
 import { products } from "@/data/products";
 import { formatPriceWithVolume, heroData, topicsData } from "@/data";
+import { Loader } from "@/components/Loader";
+import { useLoading } from "@/hooks/use-loading";
 
 // products データを既存のコンポーネントと互換性のある形式に変換
 const compatibleProductsData = products.map((product) => ({
@@ -19,6 +21,12 @@ const compatibleProductsData = products.map((product) => ({
 }));
 
 const TopPage = () => {
+  const { isLoading } = useLoading({ duration: 1500 });
+
+  if (isLoading) {
+    return <Loader text="loading..." />;
+  }
+
   return (
     <div className="min-h-screen bg-white">
       <Hero heroData={heroData} />
