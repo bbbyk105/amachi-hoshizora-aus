@@ -83,7 +83,7 @@ export const Header = () => {
                       天地星空
                     </h2>
                     <p className="text-sm text-white/70 mt-1">
-                      Amachi-Hoshizora
+                      Amachi-Hoshisora
                     </p>
                   </div>
                   <Button
@@ -159,7 +159,7 @@ export const Header = () => {
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-gray-50 to-transparent">
                 <div className="text-center">
                   <p className="text-xs text-gray-400">
-                    © 2024 Amachi-Hoshizora
+                    © 2024 Amachi-Hoshisora
                   </p>
                 </div>
               </div>
@@ -171,8 +171,8 @@ export const Header = () => {
             href="/"
             className="text-lg sm:text-xl lg:text-2xl font-light tracking-wider text-gray-900 hover:text-gray-600 absolute left-1/2 transform -translate-x-1/2"
           >
-            <span className="hidden sm:inline">Amachi-Hoshizora</span>
-            <span className="sm:hidden">Amachi-Hoshizora</span>
+            <span className="hidden sm:inline">Amachi-Hoshisora</span>
+            <span className="sm:hidden">Amachi-Hoshisora</span>
           </Link>
 
           {/* Right Icons */}

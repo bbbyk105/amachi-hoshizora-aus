@@ -92,7 +92,7 @@ export async function POST(request: Request) {
       invoice_creation: {
         enabled: true,
         invoice_data: {
-          description: "Purchase from Amachi-Hoshizora",
+          description: "Purchase from Amachi-Hoshisora",
           metadata: {
             order_type: "in_person_purchase",
           },

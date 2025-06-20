@@ -4,16 +4,16 @@ import { Product, HeroData, TopicData } from "../types";
 export const products: Product[] = [
   {
     id: 1,
-    name: "Amachi Hoshizora Junmai Daiginjo 720ml",
+    name: "Amachi Hoshisora Junmai Daiginjo 720ml",
     description:
       "Made with Mt. Fuji underground water & 100% Yamada Nishiki rice",
     price: 200,
     originalPrice: null,
     category: "Junmai Daiginjo",
-    label: "Amachi Hoshizora",
+    label: "Amachi Hoshisora",
     image: {
       url: "/720.webp",
-      alt: "Amachi Hoshizora Junmai Daiginjo 720ml",
+      alt: "Amachi Hoshisora Junmai Daiginjo 720ml",
       width: 400,
       height: 400,
     },
@@ -32,15 +32,15 @@ export const products: Product[] = [
   },
   {
     id: 2,
-    name: "Amachi Hoshizora Junmai Daiginjo 500ml",
+    name: "Amachi Hoshisora Junmai Daiginjo 500ml",
     description: "Made with Mt. Fuji underground water",
     price: 150,
     originalPrice: null,
     category: "Junmai Daiginjo",
-    label: "Amachi Hoshizora",
+    label: "Amachi Hoshisora",
     image: {
       url: "/500.webp",
-      alt: "Amachi Hoshizora Junmai Daiginjo 500ml",
+      alt: "Amachi Hoshisora Junmai Daiginjo 500ml",
       width: 400,
       height: 400,
     },
@@ -92,7 +92,7 @@ export const heroData: HeroData = {
     "The starry sky was nurtured.",
   ],
   subtitle: "Junmai Daiginjo",
-  productName: "Amachi Hoshizora - Heaven Earth Starry Sky",
+  productName: "Amachi Hoshisora - Heaven Earth Starry Sky",
   heroImage: "/mt-fuji.gif",
 };
 
