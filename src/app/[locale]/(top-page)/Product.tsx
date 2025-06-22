@@ -1,8 +1,8 @@
 // src/app/(top-page)/Product.tsx
 "use client";
-import { ProductCard } from "./ProductCard";
 import React from "react";
 import { LegacyProductData } from "@/types/products";
+import { ProductCard } from "./ProductCard";
 
 interface ProductProps {
   productsData: LegacyProductData[];
