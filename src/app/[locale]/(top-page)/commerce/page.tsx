@@ -127,12 +127,6 @@ const CommerceLaw = () => {
                     <ul className="list-disc list-inside mb-4 space-y-1">
                       <li>{t("codFeeAmount")}</li>
                     </ul>
-                    <p className="mb-3">
-                      <strong>{t("bankTransferFee")}</strong>
-                    </p>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>{t("bankTransferFeeInfo")}</li>
-                    </ul>
                   </div>
                 </div>
               </section>

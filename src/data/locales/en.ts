@@ -7,7 +7,7 @@ export const products: Product[] = [
     name: "Amachi Hoshisora Junmai Daiginjo 720ml",
     description:
       "Made with Mt. Fuji underground water & 100% Yamada Nishiki rice",
-    price: 200,
+    price: 120,
     originalPrice: null,
     category: "Junmai Daiginjo",
     label: "Amachi Hoshisora",
@@ -34,7 +34,7 @@ export const products: Product[] = [
     id: 2,
     name: "Amachi Hoshisora Junmai Daiginjo 500ml",
     description: "Made with Mt. Fuji underground water",
-    price: 150,
+    price: 95,
     originalPrice: null,
     category: "Junmai Daiginjo",
     label: "Amachi Hoshisora",

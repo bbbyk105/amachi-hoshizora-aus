@@ -132,13 +132,13 @@
         "address": "Address",
         "addressInfo": "〒417-0051\n2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
         "contact": "Contact Information",
-        "contactInfo": "TEL: 0545-52-0011\nBusiness Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)\nEmail: [Email Address]",
+        "contactInfo": "TEL: 070-9333-6575\nBusiness Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)",
         "prices": "Product Prices",
         "pricesInfo": "Prices listed on each product page (tax included)",
         "mainPrices": "Main Product Prices:",
         "priceList": [
-            "AMACHIHOSHISORA Junmai Daiginjo 720ml: $200.00 AUD (tax included)",
-            "AMACHIHOSHISORA Junmai Daiginjo 500ml: $150.00 AUD (tax included)",
+            "AMACHIHOSHISORA Junmai Daiginjo 720ml: $120.00 AUD (tax included)",
+            "AMACHIHOSHISORA Junmai Daiginjo 500ml: $95.00 AUD (tax included)",
             "Matcha 20g: $55.0 AUD (tax included)"
         ],
         "additionalFees": "Additional Fees",
@@ -257,7 +257,7 @@
         "contact": "10. Contact Information",
         "contactCompany": "Kondo Pharmacy Co., Ltd.",
         "contactAddress": "〒417-0051 2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
-        "contactPhone": "TEL: 0545-52-0011",
+        "contactPhone": "TEL: 070-9333-6575",
         "contactHours": "Business Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)",
         "companyFooter": "Kondo Pharmacy Co., Ltd.\nAMACHIHOSHISORA"
     },
@@ -397,7 +397,7 @@
         "contact": {
             "company": "Kondo Pharmacy Co., Ltd.",
             "address": "〒417-0051 2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
-            "phone": "TEL: 0545-52-0011",
+            "phone": "TEL: 070-9333-6575",
             "hours": "Business Hours: Weekdays 9:00-17:00 (excluding weekends and holidays)"
         },
         "companyFooter": "Kondo Pharmacy Co., Ltd.\nAMACHIHOSHISORA"
@@ -407,7 +407,7 @@
         "address": {
             "postalCode": "〒417-0051",
             "street": "2-8-21 Yoshiwara, Fuji City, Shizuoka Prefecture",
-            "phone": "TEL: 0545-52-0011"
+            "phone": "TEL: 070-9333-6575"
         },
         "sections": {
             "products": {

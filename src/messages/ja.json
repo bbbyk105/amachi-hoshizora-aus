@@ -132,26 +132,23 @@
         "address": "所在地",
         "addressInfo": "〒417-0051\n静岡県富士市吉原２丁目８−２１",
         "contact": "連絡先",
-        "contactInfo": "TEL: 0545-52-0011\n受付時間：平日 9:00-17:00（土日祝日を除く）\nメールアドレス：[メールアドレス]",
+        "contactInfo": "TEL: 070-9333-6575\n受付時間：平日 9:00-17:00（土日祝日を除く)",
         "prices": "販売価格",
         "pricesInfo": "各商品ページに記載された価格（税込価格）",
         "mainPrices": "主要商品価格：",
         "priceList": [
-            "天地星空 純米大吟醸 720ml：$200.00 AUD（税込）",
-            "天地星空 純米大吟醸 500ml：$150.00 AUD（税込）",
+            "天地星空 純米大吟醸 720ml：$120.00 AUD（税込）",
+            "天地星空 純米大吟醸 500ml：$95.00 AUD（税込）",
             "抹茶 20g：$55.0 AUD（税込）"
         ],
-        "additionalFees": "商品代金以外の必要料金",
+        "additionalFees": "商品代金以外の必要料金(配送の場合)",
         "shipping": "送料：",
         "shippingFees": [
             "全国一律 ¥1,100（税込）",
-            "¥10,000以上のご購入で送料無料",
             "クール便（冷蔵）：追加¥330（税込）"
         ],
         "codFee": "代金引換手数料：",
         "codFeeAmount": "¥330（税込）",
-        "bankTransferFee": "銀行振込手数料：",
-        "bankTransferFeeInfo": "お客様負担",
         "paymentMethods": "支払方法",
         "paymentMethodsList": [
             "クレジットカード（VISA、MasterCard、JCB、American Express、Diners Club, Discover）",
@@ -168,7 +165,7 @@
         "deliveryTimingList": [
             "在庫商品：ご注文確認後、3-5営業日以内に発送",
             "予約商品：商品ページに記載の発送予定日",
-            "銀行振込：ご入金確認後、3-5営業日以内に発送"
+            "展示会・イベント等：当日引き渡し"
         ],
         "deliveryNote": "※土日祝日、年末年始、ゴールデンウィーク、お盆期間は除きます\n※天候や交通事情により遅延する場合があります",
         "returns": "返品・交換について",
@@ -257,7 +254,7 @@
         "contact": "10. お問い合わせ窓口",
         "contactCompany": "株式会社 近藤薬局",
         "contactAddress": "〒417-0051 静岡県富士市吉原２丁目８−２１",
-        "contactPhone": "TEL: 0545-52-0011",
+        "contactPhone": "TEL: 070-9333-6575",
         "contactHours": "受付時間：平日 9:00-17:00（土日祝日を除く）",
         "companyFooter": "株式会社 近藤薬局\n天地星空 - AMACHIHOSHISORA"
     },
@@ -397,7 +394,7 @@
         "contact": {
             "company": "株式会社近藤薬局",
             "address": "〒417-0051 静岡県富士市吉原２丁目８−２１",
-            "phone": "TEL: 0545-52-0011",
+            "phone": "TEL: 070-9333-6575",
             "hours": "受付時間：平日 9:00-17:00（土日祝日を除く）"
         },
         "companyFooter": "株式会社 近藤薬局\n天地星空 - AMACHIHOSHISORA"
@@ -407,7 +404,7 @@
         "address": {
             "postalCode": "〒417-0051",
             "street": "静岡県富士市吉原２丁目８−２１",
-            "phone": "TEL: 0545-52-0011"
+            "phone": "TEL: 070-9333-6575"
         },
         "sections": {
             "products": {
