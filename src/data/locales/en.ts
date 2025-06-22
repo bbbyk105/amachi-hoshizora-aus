@@ -18,7 +18,7 @@ export const products: Product[] = [
       height: 400,
     },
     details: {
-      alcoholContent: "16%",
+      alcoholContent: "15%",
       riceMilling: "40%",
       brewery: "Fujinishiki Brewery",
       region: "Fuji City, Shizuoka Prefecture",
@@ -45,7 +45,7 @@ export const products: Product[] = [
       height: 400,
     },
     details: {
-      alcoholContent: "16%",
+      alcoholContent: "15%",
       riceMilling: "40%",
       brewery: "Fujinishiki Brewery",
       region: "Fuji City, Shizuoka Prefecture",

@@ -17,7 +17,7 @@ export const products: Product[] = [
       height: 400,
     },
     details: {
-      alcoholContent: "16%",
+      alcoholContent: "15%",
       riceMilling: "40%",
       brewery: "富士錦酒造",
       region: "静岡県富士市",
@@ -44,7 +44,7 @@ export const products: Product[] = [
       height: 400,
     },
     details: {
-      alcoholContent: "16%",
+      alcoholContent: "15%",
       riceMilling: "40%",
       brewery: "富士錦酒造",
       region: "静岡県富士市",
