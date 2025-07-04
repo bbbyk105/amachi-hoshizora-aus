@@ -58,9 +58,9 @@ export const products: Product[] = [
   },
   {
     id: 3,
-    name: "抹茶",
+    name: "抹茶 かがやき",
     description: "完全無農薬の静岡県抹茶",
-    price: 55,
+    price: 20,
     originalPrice: null,
     category: "抹茶",
     label: "富士錦",
@@ -71,7 +71,7 @@ export const products: Product[] = [
       height: 400,
     },
     details: {
-      brewery: "富士錦酒造",
+      brewery: "聚楽苑",
       region: "静岡県",
       taste: "濃厚で上品な苦味と甘み",
       temperature: "70-80℃",
