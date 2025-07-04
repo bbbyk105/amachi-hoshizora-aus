@@ -5,7 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useRouter, useParams } from "next/navigation";
-import { ShoppingCart, Share2, SortDesc, Check } from "lucide-react";
+import { ShoppingCart, SortDesc, Check } from "lucide-react";
 
 import { Product } from "@/data/types";
 import { useCart } from "@/store/cart";
@@ -47,11 +47,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, locale }) => {
     }, 500);
   };
 
-  const handleShareClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    // シェア機能の実装
-  };
-
   const handleCardClick = () => {
     router.push(`/${locale}/products/${product.id}`);
   };
@@ -71,18 +66,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, locale }) => {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
-
-          {/* アクションボタン */}
-          <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="w-8 h-8 rounded-full bg-white/90 hover:bg-white p-0"
-              onClick={handleShareClick}
-            >
-              <Share2 className="w-4 h-4 text-gray-600" />
-            </Button>
-          </div>
         </div>
 
         {/* 商品情報エリア */}
