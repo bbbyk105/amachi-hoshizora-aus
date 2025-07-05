@@ -1,4 +1,4 @@
-// src/app/api/checkout/route.ts - ロケール対応版
+// src/app/api/checkout/route.ts - English version
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getProducts } from "@/data";
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
       mode: "payment",
       success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${BASE_URL}/cancel`,
-      locale: locale === "ja" ? "ja" : "en", // ロケールに応じてStripeの言語を設定
+      locale: "en", // 英語固定に変更
       // 領収書自動送信を有効化
       invoice_creation: {
         enabled: true,
@@ -108,8 +108,7 @@ export async function POST(request: Request) {
       },
       custom_text: {
         submit: {
-          message:
-            locale === "ja" ? "購入を完了する" : "Complete your purchase",
+          message: "Complete your purchase", // 英語固定に変更
         },
       },
       // 自動的な税金計算（必要に応じて）
