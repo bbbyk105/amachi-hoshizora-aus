@@ -70,6 +70,16 @@
         },
         "errors": {
             "checkoutFailed": "Checkout failed"
+        },
+        "paymentMethod": {
+            "title": "Payment Method",
+            "inStore": "Pick up in person",
+            "inStoreDesc": "Free - Pay and collect directly",
+            "online": "Online Delivery",
+            "onlineDesc": "Shipping to your address"
+        },
+        "summary2": {
+            "freeShippingRemaining": "Add {amount} more for FREE shipping!"
         }
     },
     "success": {

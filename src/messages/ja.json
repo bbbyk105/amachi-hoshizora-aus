@@ -70,6 +70,16 @@
         },
         "errors": {
             "checkoutFailed": "チェックアウトに失敗しました"
+        },
+        "paymentMethod": {
+            "title": "お支払い方法",
+            "inStore": "対面で受け取る",
+            "inStoreDesc": "送料無料 - 直接お支払いと受け取り",
+            "online": "配送",
+            "onlineDesc": "ご自宅までお届け"
+        },
+        "summary2": {
+            "freeShippingRemaining": "あと{amount}で送料無料!"
         }
     },
     "success": {

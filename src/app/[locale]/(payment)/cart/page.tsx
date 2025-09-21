@@ -1,3 +1,5 @@
+// src/app/[locale]/cart/page.tsx
+
 "use client";
 
 import { useCart } from "@/store/cart";
@@ -15,9 +17,18 @@ import {
   CreditCard,
   Package,
   AlertTriangle,
+  Store,
+  Truck,
 } from "lucide-react";
 import { formatPrice } from "@/data";
 import { useTranslations } from "next-intl";
+
+// 支払い方法の型定義
+type PaymentMethod = "in-store" | "online";
+
+// 送料の定数
+const SHIPPING_COST = 50; // AUD
+const FREE_SHIPPING_THRESHOLD = 600; // AUD
 
 export default function CartPage() {
   const {
@@ -28,14 +39,30 @@ export default function CartPage() {
     getTotalPrice,
     getTotalQuantity,
   } = useCart();
+
   const [loading, setLoading] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("in-store");
 
   // 翻訳フック
   const t = useTranslations("cart");
   const tCommon = useTranslations("common");
+
+  // 送料計算
+  const calculateShipping = (): number => {
+    if (paymentMethod === "in-store") {
+      return 0; // 対面決済は送料無料
+    }
+    const subtotal = getTotalPrice();
+    return subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  };
+
+  // 合計金額計算
+  const calculateTotal = (): number => {
+    return getTotalPrice() + calculateShipping();
+  };
 
   const handleQuantityChange = (productId: number, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -74,23 +101,24 @@ export default function CartPage() {
     setItemToDelete(null);
   };
 
-  // ✅ 実際のStripeチェックアウトと連携
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      // カートアイテムをAPI用の形式に変換
       const items = cartItems.map((item) => ({
         id: item.product.id,
         quantity: item.quantity,
       }));
 
-      // チェックアウトセッションを作成
       const response = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ items }),
+        body: JSON.stringify({
+          items,
+          paymentMethod,
+          shippingCost: calculateShipping(),
+        }),
       });
 
       if (!response.ok) {
@@ -99,8 +127,6 @@ export default function CartPage() {
       }
 
       const { url } = await response.json();
-
-      // Stripeのチェックアウトページにリダイレクト
       window.location.href = url;
     } catch (error) {
       console.error("Checkout error:", error);
@@ -113,6 +139,8 @@ export default function CartPage() {
   };
 
   const isCartEmpty = cartItems.length === 0;
+  const shipping = calculateShipping();
+  const total = calculateTotal();
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
@@ -168,7 +196,7 @@ export default function CartPage() {
           </Card>
         ) : (
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
-            {/* カート内商品一覧 - モバイルでは最初に表示 */}
+            {/* カート内商品一覧 */}
             <div className="xl:col-span-2 xl:order-1 space-y-3 sm:space-y-4">
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
                 <h2 className="text-lg sm:text-xl font-medium text-gray-900">
@@ -276,13 +304,59 @@ export default function CartPage() {
               ))}
             </div>
 
-            {/* 注文サマリー - モバイルでは下部に表示 */}
+            {/* 注文サマリー */}
             <div className="xl:col-span-1 xl:order-2">
               <Card className="xl:sticky xl:top-24">
                 <CardContent className="p-4 sm:p-6">
                   <h3 className="text-base sm:text-lg font-medium text-gray-900 mb-4">
                     {t("summary.title")}
                   </h3>
+
+                  {/* 支払い方法選択 */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      {t("paymentMethod.title")}
+                    </label>
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => setPaymentMethod("in-store")}
+                        className={`w-full flex items-center p-3 border-2 rounded-lg transition-colors ${
+                          paymentMethod === "in-store"
+                            ? "border-gray-900 bg-gray-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <Store className="w-5 h-5 mr-3 text-gray-600" />
+                        <div className="flex-1 text-left">
+                          <div className="font-medium text-sm">
+                            {t("paymentMethod.inStore")}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {t("paymentMethod.inStoreDesc")}
+                          </div>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => setPaymentMethod("online")}
+                        className={`w-full flex items-center p-3 border-2 rounded-lg transition-colors ${
+                          paymentMethod === "online"
+                            ? "border-gray-900 bg-gray-50"
+                            : "border-gray-200 hover:border-gray-300"
+                        }`}
+                      >
+                        <Truck className="w-5 h-5 mr-3 text-gray-600" />
+                        <div className="flex-1 text-left">
+                          <div className="font-medium text-sm">
+                            {t("paymentMethod.online")}
+                          </div>
+                          <div className="text-xs text-gray-500">
+                            {t("paymentMethod.onlineDesc")}
+                          </div>
+                        </div>
+                      </button>
+                    </div>
+                  </div>
 
                   <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
                     <div className="flex justify-between text-sm">
@@ -303,15 +377,31 @@ export default function CartPage() {
                       <span className="text-gray-600">
                         {t("summary.shipping")}
                       </span>
-                      <span className="text-green-600">
-                        {t("summary.shippingFree")}
+                      <span className={shipping === 0 ? "text-green-600" : ""}>
+                        {shipping === 0
+                          ? t("summary.shippingFree")
+                          : formatPrice(shipping)}
                       </span>
                     </div>
+
+                    {/* 送料無料まであといくら表示 */}
+                    {paymentMethod === "online" && shipping > 0 && (
+                      <div className="bg-blue-50 border border-blue-200 rounded p-2">
+                        <p className="text-xs text-blue-800">
+                          {t("summary2.freeShippingRemaining", {
+                            amount: formatPrice(
+                              FREE_SHIPPING_THRESHOLD - getTotalPrice()
+                            ),
+                          })}
+                        </p>
+                      </div>
+                    )}
+
                     <div className="border-t pt-2 sm:pt-3">
                       <div className="flex justify-between font-medium text-base sm:text-lg">
                         <span>{t("summary.total")}</span>
                         <span className="text-gray-900">
-                          {formatPrice(getTotalPrice())}
+                          {formatPrice(total)}
                         </span>
                       </div>
                     </div>
