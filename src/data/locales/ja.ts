@@ -56,32 +56,6 @@ export const products: Product[] = [
     stripePriceId: "price_amachi_500ml_aud",
     colorClass: "from-blue-700 to-blue-800",
   },
-  {
-    id: 3,
-    name: "Shipping",
-    description: "shipping fee",
-    price: 30,
-    originalPrice: null,
-    category: "shipping",
-    label: "shipping",
-    image: {
-      url: "/image.png",
-      alt: "shipping",
-      width: 400,
-      height: 400,
-    },
-    details: {
-      brewery: "",
-      region: "",
-      taste: "",
-      temperature: "",
-      weight: "",
-    },
-    stock: 100,
-    stripeProductId: "prod_matcha_premium_au",
-    stripePriceId: "price_matcha_premium_aud",
-    colorClass: "from-indigo-600 to-indigo-700",
-  },
 ];
 
 export const heroData: HeroData = {
