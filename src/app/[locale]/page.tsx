@@ -7,8 +7,6 @@ import {
   getHeroData,
   getTopicsData,
 } from "@/data";
-import { Loader } from "@/components/Loader";
-import { useLoading } from "@/hooks/use-loading";
 import { Hero } from "./(top-page)/Hero";
 import { About } from "./(top-page)/About";
 import { Product } from "./(top-page)/Product";
@@ -23,7 +21,6 @@ interface TopPageProps {
 const TopPage = ({ params }: TopPageProps) => {
   // React.use()を使ってPromiseを解決
   const { locale } = use(params);
-  const { isLoading } = useLoading({ duration: 1500 });
 
   // ロケール別のデータを取得
   const products = getProducts(locale);
@@ -40,10 +37,6 @@ const TopPage = ({ params }: TopPageProps) => {
     label: product.label,
     image: product.image.url.replace("/", ""), // Remove leading slash for compatibility
   }));
-
-  if (isLoading) {
-    return <Loader text="loading..." />;
-  }
 
   return (
     <div className="min-h-screen bg-white">
