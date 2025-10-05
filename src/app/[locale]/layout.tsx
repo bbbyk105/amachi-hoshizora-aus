@@ -158,10 +158,7 @@ export async function generateMetadata({
               description: "Premium Japanese sake from Mt. Fuji",
             },
           },
-          sameAs: [
-            "https://www.instagram.com/amachihoshisora_au/",
-            "https://www.facebook.com/amachihoshisora.australia/",
-          ],
+          sameAs: ["https://www.instagram.com/amasora_mtfuji3776/"],
         },
         {
           "@context": "https://schema.org",

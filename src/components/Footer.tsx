@@ -111,7 +111,7 @@ export const Footer: React.FC = () => {
               </h4>
               <div className="flex space-x-4">
                 <a
-                  href="https://www.instagram.com/amasora_mtfujisake3776/"
+                  href="https://www.instagram.com/amasora_mtfuji3776/"
                   className="text-gray-400 hover:text-white transition-colors"
                   aria-label="Instagram"
                   target="_blank"
