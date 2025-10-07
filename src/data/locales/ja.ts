@@ -91,7 +91,7 @@ export const topicsData: TopicData[] = [
   },
 ];
 
-export const categories = ["すべて", "純米大吟醸", "抹茶"];
+export const categories = ["すべて", "純米大吟醸"];
 
 export const sortOptions = [
   "おすすめ順",

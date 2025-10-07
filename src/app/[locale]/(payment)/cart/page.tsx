@@ -19,6 +19,7 @@ import {
   AlertTriangle,
   Store,
   Truck,
+  ShieldAlert,
 } from "lucide-react";
 import { formatPrice } from "@/data";
 import { useTranslations } from "next-intl";
@@ -45,6 +46,11 @@ export default function CartPage() {
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("in-store");
+
+  // 年齢確認用のstate
+  const [showAgeVerification, setShowAgeVerification] = useState(false);
+  const [ageVerified, setAgeVerified] = useState(false);
+  const [ageCheckboxChecked, setAgeCheckboxChecked] = useState(false);
 
   // 翻訳フック
   const t = useTranslations("cart");
@@ -101,7 +107,32 @@ export default function CartPage() {
     setItemToDelete(null);
   };
 
-  const handleCheckout = async () => {
+  // 年齢確認を開始
+  const initiateCheckout = () => {
+    if (!ageVerified) {
+      setShowAgeVerification(true);
+    } else {
+      proceedToCheckout();
+    }
+  };
+
+  // 年齢確認を完了して決済へ
+  const confirmAgeVerification = () => {
+    if (ageCheckboxChecked) {
+      setAgeVerified(true);
+      setShowAgeVerification(false);
+      proceedToCheckout();
+    }
+  };
+
+  // 年齢確認キャンセル
+  const cancelAgeVerification = () => {
+    setShowAgeVerification(false);
+    setAgeCheckboxChecked(false);
+  };
+
+  // 実際の決済処理
+  const proceedToCheckout = async () => {
     setLoading(true);
     try {
       const items = cartItems.map((item) => ({
@@ -408,7 +439,7 @@ export default function CartPage() {
                   </div>
 
                   <Button
-                    onClick={handleCheckout}
+                    onClick={initiateCheckout}
                     disabled={loading || isCartEmpty}
                     className="w-full bg-gray-900 hover:bg-gray-800 text-white h-10 sm:h-12 text-sm sm:text-base disabled:opacity-50"
                   >
@@ -439,6 +470,66 @@ export default function CartPage() {
           </div>
         )}
       </div>
+
+      {/* 年齢確認ダイアログ */}
+      {showAgeVerification && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <Card className="w-full max-w-sm sm:max-w-md mx-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <ShieldAlert className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
+                </div>
+                <h3 className="text-lg sm:text-xl font-medium text-gray-900">
+                  {t("ageVerification.title")}
+                </h3>
+              </div>
+
+              <p className="text-sm sm:text-base text-gray-600 mb-6">
+                {t("ageVerification.message")}
+              </p>
+
+              {/* 年齢確認チェックボックス */}
+              <div className="mb-6">
+                <label className="flex items-start gap-3 cursor-pointer group">
+                  <input
+                    type="checkbox"
+                    checked={ageCheckboxChecked}
+                    onChange={(e) => setAgeCheckboxChecked(e.target.checked)}
+                    className="mt-1 w-5 h-5 rounded border-gray-300 text-gray-900 focus:ring-gray-900 focus:ring-offset-0 cursor-pointer"
+                  />
+                  <span className="text-sm sm:text-base text-gray-700 group-hover:text-gray-900 select-none">
+                    {t("ageVerification.checkbox")}
+                  </span>
+                </label>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button
+                  variant="outline"
+                  onClick={cancelAgeVerification}
+                  className="w-full sm:w-1/2 order-2 sm:order-1"
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  onClick={confirmAgeVerification}
+                  disabled={!ageCheckboxChecked}
+                  className="w-full sm:w-1/2 bg-gray-900 hover:bg-gray-800 text-white disabled:opacity-50 disabled:cursor-not-allowed order-1 sm:order-2"
+                >
+                  {t("ageVerification.confirm")}
+                </Button>
+              </div>
+
+              {!ageCheckboxChecked && (
+                <p className="text-xs text-red-600 mt-3 text-center">
+                  {t("ageVerification.required")}
+                </p>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       {/* 削除確認ダイアログ */}
       {(showDeleteConfirm || showClearConfirm) && (

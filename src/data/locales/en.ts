@@ -97,7 +97,7 @@ export const topicsData: TopicData[] = [
   },
 ];
 
-export const categories = ["All", "Junmai Daiginjo", "Matcha"];
+export const categories = ["All", "Junmai Daiginjo"];
 
 export const sortOptions = [
   "Recommended",

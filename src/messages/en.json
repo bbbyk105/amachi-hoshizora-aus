@@ -80,6 +80,13 @@
         },
         "summary2": {
             "freeShippingRemaining": "Add {amount} more for FREE shipping!"
+        },
+        "ageVerification": {
+            "title": "Age Verification",
+            "message": "This site sells alcoholic beverages.",
+            "checkbox": "I am 18 years or older",
+            "confirm": "Confirm and Continue",
+            "required": "Age verification is required"
         }
     },
     "success": {
@@ -290,10 +297,6 @@
             {
                 "question": "What is the difference between 720ml and 500ml?",
                 "answer": "Both are the same AMACHIHOSHISORA Junmai Daiginjo, using underground water from Fuji and 100% Yamada-nishiki rice. The only difference is the volume. The 720ml is recommended for gifts or those who want to enjoy it slowly, while the 500ml is recommended for first-time purchases or small groups."
-            },
-            {
-                "question": "Do you also sell matcha?",
-                "answer": "Yes, we also sell completely pesticide-free matcha from Shizuoka Prefecture (20g $55.00 AUD). Like our sake, we offer it as a high-quality product that values nature's blessings. You can also enjoy it in combination with our sake."
             },
             {
                 "question": "Please tell me about the rice you use",
