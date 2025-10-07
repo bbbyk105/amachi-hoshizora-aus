@@ -148,14 +148,12 @@
         "mainPrices": "主要商品価格：",
         "priceList": [
             "天地星空 純米大吟醸 720ml：$120.00 AUD（税込）",
-            "天地星空 純米大吟醸 500ml：$95.00 AUD（税込）",
-            "抹茶 20g：$55.0 AUD（税込）"
+            "天地星空 純米大吟醸 500ml：$95.00 AUD（税込）"
         ],
         "additionalFees": "商品代金以外の必要料金(配送の場合)",
         "shipping": "送料：",
         "shippingFees": [
-            "全国一律 ¥1,100（税込）",
-            "クール便（冷蔵）：追加¥330（税込）"
+            "全国一律 A$ 50（税込）"
         ],
         "codFee": "代金引換手数料：",
         "codFeeAmount": "¥330（税込）",
@@ -198,7 +196,6 @@
             "お客様のご都合による場合：お客様負担"
         ],
         "alcoholSales": "酒類販売について",
-        "alcoholLicense": "酒類販売業免許：静岡県富士市第〇〇号",
         "alcoholConditions": "販売条件：満20歳以上の方のみ",
         "alcoholWarnings": "注意事項：",
         "alcoholWarningsList": [
