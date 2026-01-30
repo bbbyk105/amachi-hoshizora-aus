@@ -6,14 +6,14 @@ type Locale = (typeof routing.locales)[number];
 
 const intlMiddleware = createMiddleware(routing);
 
-export default function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   // クッキーから前回選択した言語を取得
   const savedLocale = request.cookies.get("preferred-locale")?.value;
 
   // URLに言語プレフィックスがない場合の処理
   const pathname = request.nextUrl.pathname;
   const pathnameHasLocale = routing.locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
 
   if (!pathnameHasLocale && pathname === "/") {
@@ -23,16 +23,16 @@ export default function middleware(request: NextRequest) {
       return NextResponse.redirect(
         new URL(
           `/${savedLocale}${pathname === "/" ? "" : pathname}`,
-          request.url
-        )
+          request.url,
+        ),
       );
     }
     // 保存された言語がない場合はデフォルト言語（英語）にリダイレクト
     return NextResponse.redirect(
       new URL(
         `/${routing.defaultLocale}${pathname === "/" ? "" : pathname}`,
-        request.url
-      )
+        request.url,
+      ),
     );
   }
 
