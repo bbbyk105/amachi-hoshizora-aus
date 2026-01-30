@@ -112,6 +112,20 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+/* Hero背景: PCはcover＋fixed、スマホは拡大しすぎないように幅フィット */
+.hero-bg {
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+@media (max-width: 768px) {
+  .hero-bg {
+    background-size: 100% auto;
+    background-position: center top;
+    background-attachment: scroll;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

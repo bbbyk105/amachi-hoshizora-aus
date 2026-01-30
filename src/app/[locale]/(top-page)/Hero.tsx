@@ -19,15 +19,10 @@ export const Hero: React.FC<HeroProps> = ({ heroData }) => {
     <section className="relative min-h-screen w-full overflow-hidden">
       {/* Full screen background */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
+        className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 hero-bg"
         style={
           heroData.heroImage
-            ? {
-                backgroundImage: `url(${heroData.heroImage})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundAttachment: "fixed",
-              }
+            ? { backgroundImage: `url(${heroData.heroImage})` }
             : {}
         }
       />
