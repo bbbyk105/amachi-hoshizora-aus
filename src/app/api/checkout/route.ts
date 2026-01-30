@@ -7,7 +7,7 @@ import type { CheckoutRequest } from "@/types/checkout";
 
 // Stripe初期化
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
-  apiVersion: "2025-05-28.basil",
+  apiVersion: "2026-01-28.clover",
 });
 
 // ベースURL定数
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
           },
           quantity: item.quantity,
         };
-      }
+      },
     );
 
     // 送料をラインアイテムに追加（オンライン決済で送料がかかる場合）
@@ -164,7 +164,7 @@ export async function POST(request: NextRequest) {
       {
         error: error instanceof Error ? error.message : "Internal server error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -178,7 +178,7 @@ export async function GET(request: Request) {
     if (!sessionId) {
       return NextResponse.json(
         { error: "Session ID is required" },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -200,7 +200,7 @@ export async function GET(request: Request) {
     console.error("Session retrieval error:", error);
     return NextResponse.json(
       { error: "Failed to retrieve session" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
