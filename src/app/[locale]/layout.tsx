@@ -10,6 +10,7 @@ import "../globals.css";
 import { Header } from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
+import { AgeGate } from "@/components/AgeGate";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -297,6 +298,7 @@ export default async function RootLayout({
       <body className={inter.className}>
         <NextIntlClientProvider messages={messages}>
           <CartProvider>
+            <AgeGate />
             <Header />
             <main className="container mx-auto p-4">{children}</main>
             <Footer />

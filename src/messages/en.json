@@ -16,6 +16,18 @@
         "navigationMenu": "Navigation Menu",
         "closeMenu": "Close menu"
     },
+    "ageGate": {
+        "title": "Age verification",
+        "description": "This website includes content about alcoholic beverages. Under Australian law you must be 18 or older to view or buy alcohol here. Visitors of all backgrounds are welcome—please confirm you meet this age requirement to continue.",
+        "notice": "By continuing, you confirm you are legally allowed to view alcohol-related content where you are.",
+        "locationNotice": "After you confirm your age, your browser may ask to share your approximate location. This is optional; you can deny access and still use the site.",
+        "confirm": "I am 18 or older",
+        "decline": "I am under 18",
+        "confirming": "Confirming…",
+        "langLabel": "Language",
+        "langEnglish": "English",
+        "langJapanese": "日本語"
+    },
     "common": {
         "loading": "Loading...",
         "processing": "Processing...",
