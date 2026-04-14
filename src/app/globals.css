@@ -112,15 +112,16 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
-/* Hero背景: PCはcover＋fixed、スマホは拡大しすぎないように幅フィット */
+/* Hero背景: 1枚で全面に。repeat 無効（100% auto だと高さ不足で縦タイルになるため） */
 .hero-bg {
+  background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
 }
 @media (max-width: 768px) {
   .hero-bg {
-    background-size: 100% auto;
+    background-size: cover;
     background-position: center top;
     background-attachment: scroll;
   }
