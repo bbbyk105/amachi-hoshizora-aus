@@ -11,7 +11,7 @@ import { Header } from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
 import { AgeGate } from "@/components/AgeGate";
-import { siteUrl } from "@/lib/site";
+import { siteUrl, absoluteUrl } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -293,7 +293,7 @@ export default async function RootLayout({
         {/* 追加のSEOタグ */}
         <link
           rel="canonical"
-          href={`https://amachi-hoshizora-aus.vercel.app/${locale}`}
+          href={absoluteUrl(`/${locale}`)}
         />
       </head>
       <body className={inter.className}>

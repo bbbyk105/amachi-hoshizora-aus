@@ -3,6 +3,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getProducts } from "@/data";
+import { siteUrl } from "@/lib/site";
 import type { CheckoutRequest } from "@/types/checkout";
 
 // Stripe初期化
@@ -11,7 +12,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
 });
 
 // ベースURL定数
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://your-domain.com";
+const BASE_URL = siteUrl;
 
 // Product data type for Stripe
 interface StripeProductData {
