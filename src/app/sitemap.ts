@@ -1,19 +1,28 @@
 import type { MetadataRoute } from "next";
 import { getProducts } from "@/data";
 import { routing } from "@/i18n/routing";
-import { siteUrl } from "@/lib/site";
+import { absoluteUrl } from "@/lib/site";
 
 type SitemapEntry = MetadataRoute.Sitemap[number];
 
+function localizedPath(locale: string, path: string) {
+  return path ? `/${locale}${path}` : `/${locale}`;
+}
+
 function localizedAlternates(path: string) {
   const languages = Object.fromEntries(
-    routing.locales.map((locale) => [locale, `${siteUrl}/${locale}${path}`]),
+    routing.locales.map((locale) => [
+      locale,
+      absoluteUrl(localizedPath(locale, path)),
+    ]),
   );
 
   return {
     languages: {
       ...languages,
-      "x-default": `${siteUrl}/${routing.defaultLocale}${path}`,
+      "x-default": absoluteUrl(
+        localizedPath(routing.defaultLocale, path),
+      ),
     },
   };
 }
@@ -23,7 +32,7 @@ function createLocalizedEntries(
   options: Omit<SitemapEntry, "url" | "alternates">,
 ): SitemapEntry[] {
   return routing.locales.map((locale) => ({
-    url: `${siteUrl}/${locale}${path}`,
+    url: absoluteUrl(localizedPath(locale, path)),
     alternates: localizedAlternates(path),
     ...options,
   }));
