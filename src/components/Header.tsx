@@ -25,7 +25,7 @@ export const Header = () => {
 
   const menuItems = [
     { href: "/", label: t("home"), icon: HeadphonesIcon },
-    { href: "/q&a", label: t("qa"), icon: Info },
+    { href: "/faq", label: t("qa"), icon: Info },
     { href: "/products", label: t("product"), icon: Package },
   ];
 

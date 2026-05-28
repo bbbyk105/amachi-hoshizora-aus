@@ -11,6 +11,7 @@ import { Header } from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
 import { AgeGate } from "@/components/AgeGate";
+import { siteUrl } from "@/lib/site";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,7 +22,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const baseUrl = "https://amachi-hoshizora-aus.vercel.app";
+  const baseUrl = siteUrl;
 
   return {
     title: {

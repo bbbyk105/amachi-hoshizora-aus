@@ -12,6 +12,13 @@ export function proxy(request: NextRequest) {
 
   // URLに言語プレフィックスがない場合の処理
   const pathname = request.nextUrl.pathname;
+
+  // 旧Q&A URLから新URLへリダイレクト
+  if (pathname.endsWith("/q&a") || pathname.endsWith("/q%26a")) {
+    const nextPath = pathname.replace(/\/q(?:&a|%26a)$/, "/faq");
+    return NextResponse.redirect(new URL(nextPath, request.url), 301);
+  }
+
   const pathnameHasLocale = routing.locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
