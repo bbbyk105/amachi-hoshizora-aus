@@ -1,29 +1,23 @@
-// src/data/index.ts - 修正版
+// src/data/index.ts - 商品データと表示用ユーティリティの入口
 export * from "./types";
 
-// 国際化対応のユーティリティ関数をエクスポート
 export {
   getProducts,
   getHeroData,
   getTopicsData,
   getCategories,
   getSortOptions,
+  getSortChoices,
+  getProductDetails,
+  getProductById,
+} from "./utils";
+
+// 価格の表示・並び替え（Client Component からは @/data/format を直接 import する）
+export {
   formatPrice,
   formatPriceWithVolume,
   getVolume,
-  getProductDetails,
-  getProductById,
-  getProductsByCategory,
-  sortProducts,
-} from "./utils";
-
-// products のエクスポート - これが欠けていたためエラーが発生
-export { products } from "./locales/ja"; // デフォルトは日本語
-export { categories, sortOptions } from "./locales/ja";
-export { heroData, topicsData } from "./locales/ja";
-
-// 後方互換性のため、既存のコードで使用されているエクスポートも追加
-import { getProducts } from "./utils";
-
-// ロケール指定なしで使用される場合のデフォルト
-export const getDefaultProducts = () => getProducts("ja");
+  sortProductsBy,
+  SORT_KEYS,
+} from "./format";
+export type { SortKey } from "./format";

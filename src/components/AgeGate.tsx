@@ -1,24 +1,21 @@
 "use client";
 
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { useLocale, useTranslations } from "next-intl";
-import { usePathname, useRouter } from "@/i18n/routing";
-import { routing } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
+import { useState, useSyncExternalStore } from "react";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
 import {
-  AGE_VERIFIED_STORAGE_KEY,
   LOCATION_STORAGE_KEY,
+  markAgeVerified,
   readAgeVerified,
 } from "@/lib/ageGateStorage";
-import { saveLocalePreference } from "@/lib/localePreference";
+import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
+import { useLocaleSwitcher, type AppLocale } from "@/hooks/use-locale-switcher";
 
 const subscribeNoop = () => () => {};
 
 export function AgeGate() {
   const t = useTranslations("ageGate");
-  const locale = useLocale();
-  const router = useRouter();
-  const pathname = usePathname();
+  const { locale, locales, switchLocale } = useLocaleSwitcher();
   // localStorage はサーバーで読めないので、ハイドレーション中は null（未確定）
   const storedPassed = useSyncExternalStore<boolean | null>(
     subscribeNoop,
@@ -29,45 +26,15 @@ export function AgeGate() {
   const passed = passedNow || storedPassed === true;
   const ready = storedPassed !== null;
   const [confirming, setConfirming] = useState(false);
-  const scrollYRef = useRef(0);
 
-  useEffect(() => {
-    if (passed) return;
+  // 確認画面を出している間は後ろのページをスクロールさせない
+  useBodyScrollLock(ready && !passed);
 
-    const html = document.documentElement;
-    const body = document.body;
-    scrollYRef.current = window.scrollY;
-
-    const prevHtmlOverflow = html.style.overflow;
-    const prevBodyOverflow = body.style.overflow;
-    const prevBodyTouchAction = body.style.touchAction;
-    const prevHtmlOverscroll = html.style.overscrollBehavior;
-    const prevBodyOverscroll = body.style.overscrollBehavior;
-
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    body.style.touchAction = "none";
-    html.style.overscrollBehavior = "none";
-    body.style.overscrollBehavior = "none";
-
-    return () => {
-      html.style.overflow = prevHtmlOverflow;
-      body.style.overflow = prevBodyOverflow;
-      body.style.touchAction = prevBodyTouchAction;
-      html.style.overscrollBehavior = prevHtmlOverscroll;
-      body.style.overscrollBehavior = prevBodyOverscroll;
-      window.scrollTo(0, scrollYRef.current);
-    };
-  }, [passed]);
 
   const finalizeEntry = () => {
-    try {
-      window.localStorage.setItem(AGE_VERIFIED_STORAGE_KEY, "1");
-    } catch {
-      /* ignore */
-    }
     setConfirming(false);
     setPassed(true);
+    markAgeVerified();
   };
 
   const handleConfirm = () => {
@@ -118,20 +85,20 @@ export function AgeGate() {
     window.location.href = "https://www.google.com";
   };
 
-  const handleLanguageChange = (nextLocale: (typeof routing.locales)[number]) => {
-    if (nextLocale === locale || confirming) return;
-    saveLocalePreference(nextLocale);
-    router.replace(pathname, { locale: nextLocale });
+  const handleLanguageChange = (nextLocale: AppLocale) => {
+    if (confirming) return;
+    switchLocale(nextLocale);
   };
 
   if (passed) {
     return null;
   }
 
+  // ハイドレーション前の下地。通過済みの人には CSS で出さない（globals.css の age-gate-placeholder）
   if (!ready) {
     return (
       <div
-        className="fixed inset-0 z-100 bg-background"
+        className="age-gate-placeholder fixed inset-0 z-100 bg-night"
         aria-hidden="true"
       />
     );
@@ -139,76 +106,89 @@ export function AgeGate() {
 
   return (
     <div
-      className="fixed inset-0 z-100 flex items-center justify-center overflow-y-auto bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-100 overflow-y-auto bg-night text-white"
       role="dialog"
       aria-modal="true"
       lang={locale === "ja" ? "ja" : "en"}
       aria-labelledby="age-gate-title"
       aria-describedby="age-gate-desc"
     >
-      <div className="my-auto w-full max-w-md rounded-xl border border-border bg-card p-6 text-card-foreground shadow-lg">
-        <div className="mb-4 flex flex-col items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground">
-            {t("langLabel")}
-          </span>
-          <div
-            className="inline-flex rounded-lg border border-border bg-muted/40 p-0.5"
-            role="group"
-            aria-label={t("langLabel")}
-          >
-            {routing.locales.map((loc) => (
+      <Image
+        src="/hero/fuji-night-poster.webp"
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover object-[57%_50%] opacity-30"
+      />
+      <div className="relative flex min-h-full flex-col items-center justify-center px-6 py-16 text-center">
+        <p className="font-serif text-3xl tracking-[0.32em] mr-[-0.32em]">
+          天地星空
+        </p>
+        <p className="mt-2 mr-[-0.24em] text-xs tracking-[0.24em] text-moon">
+          Amachi Hoshisora
+        </p>
+
+        <div
+          className="mt-10 flex items-center gap-3 text-xs"
+          role="group"
+          aria-label={t("langLabel")}
+        >
+          {locales.map((loc, index) => (
+            <span key={loc} className="flex items-center gap-3">
+              {index > 0 && (
+                <span aria-hidden="true" className="h-3 w-px bg-white/30" />
+              )}
               <button
-                key={loc}
                 type="button"
+                lang={loc}
+                aria-pressed={loc === locale}
                 onClick={() => handleLanguageChange(loc)}
                 disabled={confirming}
-                className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-                  loc === locale
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground"
-                } disabled:opacity-50`}
+                className={`cursor-pointer py-1 tracking-[0.16em] transition-opacity disabled:cursor-default ${
+                  loc === locale ? "opacity-100" : "opacity-45 hover:opacity-100"
+                }`}
               >
                 {loc === "en" ? t("langEnglish") : t("langJapanese")}
               </button>
-            ))}
-          </div>
+            </span>
+          ))}
         </div>
-        <h2
-          id="age-gate-title"
-          className="text-center text-xl font-semibold tracking-tight"
-        >
-          {t("title")}
-        </h2>
-        <p
-          id="age-gate-desc"
-          className="mt-4 text-center text-sm leading-relaxed text-muted-foreground"
-        >
-          {t("description")}
-        </p>
-        <p className="mt-3 text-center text-xs text-muted-foreground">
-          {t("notice")}
-        </p>
-        <p className="mt-3 text-center text-xs leading-relaxed text-muted-foreground">
-          {t("locationNotice")}
-        </p>
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-          <Button
-            type="button"
-            className="sm:min-w-[160px]"
-            onClick={handleConfirm}
-            disabled={confirming}
+
+        <div className="mt-10 w-full max-w-md border-t border-white/15 pt-10">
+          <h2 id="age-gate-title" className="font-serif text-2xl">
+            {t("title")}
+          </h2>
+          <p
+            id="age-gate-desc"
+            className="mt-5 text-sm leading-relaxed text-white/80"
           >
-            {confirming ? t("confirming") : t("confirm")}
-          </Button>
-          <Button
-            type="button"
-            variant="outline"
-            className="sm:min-w-[160px]"
-            onClick={handleDecline}
-            disabled={confirming}
-          >
-            {t("decline")}
-          </Button>
+            {t("description")}
+          </p>
+          <p className="mt-4 text-xs leading-relaxed text-white/55">
+            {t("notice")}
+          </p>
+          <p className="mt-2 text-xs leading-relaxed text-white/55">
+            {t("locationNotice")}
+          </p>
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <button
+              type="button"
+              onClick={handleConfirm}
+              disabled={confirming}
+              className="h-12 cursor-pointer bg-white px-8 text-sm text-night transition-colors hover:bg-moon disabled:cursor-wait disabled:opacity-70 sm:min-w-[180px]"
+            >
+              {confirming ? t("confirming") : t("confirm")}
+            </button>
+            <button
+              type="button"
+              onClick={handleDecline}
+              disabled={confirming}
+              className="h-12 cursor-pointer border border-white/40 px-8 text-sm text-white transition-colors hover:border-white disabled:opacity-50 sm:min-w-[180px]"
+            >
+              {t("decline")}
+            </button>
+          </div>
         </div>
       </div>
     </div>

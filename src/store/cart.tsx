@@ -1,8 +1,16 @@
-// src/contexts/CartProvider.tsx
+// src/store/cart.tsx - カートの状態（中身は cart-store.ts が localStorage と同期して持つ）
 "use client";
 
-import { createContext, useContext, useState, ReactNode } from "react";
-import { Product, CartItem, CartContextType } from "@/types/products";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useSyncExternalStore,
+  type ReactNode,
+} from "react";
+import type { Product, CartContextType } from "@/types/products";
+import { cartStore } from "./cart-store";
 
 const CartContext = createContext<CartContextType>({
   cartItems: [],
@@ -15,74 +23,65 @@ const CartContext = createContext<CartContextType>({
 });
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  const cartItems = useSyncExternalStore(
+    cartStore.subscribe,
+    cartStore.getSnapshot,
+    cartStore.getServerSnapshot,
+  );
 
-  const addToCart = (product: Product, quantity = 1) => {
-    setCartItems((prev) => {
+  // 関数は作り直さない（useEffect の依存に入れても毎回走らないように）
+  const addToCart = useCallback((product: Product, quantity = 1) => {
+    cartStore.update((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
         // すでにある商品は数量を加算
         return prev.map((item) =>
           item.product.id === product.id
             ? { ...item, quantity: item.quantity + quantity }
-            : item
+            : item,
         );
-      } else {
-        // 新規追加
-        return [...prev, { product, quantity }];
       }
+      return [...prev, { product, quantity }];
     });
-  };
+  }, []);
 
-  const removeFromCart = (productId: number) => {
-    setCartItems((prev) =>
-      prev.filter((item) => item.product.id !== productId)
+  const removeFromCart = useCallback((productId: number) => {
+    cartStore.update((prev) => prev.filter((item) => item.product.id !== productId));
+  }, []);
+
+  const updateQuantity = useCallback((productId: number, quantity: number) => {
+    cartStore.update((prev) =>
+      quantity <= 0
+        ? prev.filter((item) => item.product.id !== productId)
+        : prev.map((item) =>
+            item.product.id === productId ? { ...item, quantity } : item,
+          ),
     );
-  };
+  }, []);
 
-  const updateQuantity = (productId: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(productId);
-      return;
-    }
+  const clearCart = useCallback(() => {
+    // 空のカートをもう一度空にしても再描画しない
+    cartStore.update((prev) => (prev.length === 0 ? prev : []));
+  }, []);
 
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      )
-    );
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
-  const getTotalPrice = () => {
-    return cartItems.reduce(
+  const value = useMemo<CartContextType>(() => {
+    const totalPrice = cartItems.reduce(
       (acc, item) => acc + item.product.price * item.quantity,
-      0
+      0,
     );
-  };
+    const totalQuantity = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+    return {
+      cartItems,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart,
+      getTotalPrice: () => totalPrice,
+      getTotalQuantity: () => totalQuantity,
+    };
+  }, [cartItems, addToCart, removeFromCart, updateQuantity, clearCart]);
 
-  const getTotalQuantity = () => {
-    return cartItems.reduce((acc, item) => acc + item.quantity, 0);
-  };
-
-  return (
-    <CartContext.Provider
-      value={{
-        cartItems,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        getTotalPrice,
-        getTotalQuantity,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
 
 // Contextを呼び出すためのカスタムフック

@@ -1,146 +1,82 @@
-"use client";
 import Image from "next/image";
-import React from "react";
-
-interface HeroData {
-  title: string[];
-  subtitle: string;
-  productName: string;
-  heroImage: string;
-  productGif?: string;
-}
+import type { HeroData } from "@/data/types";
+import { HeroVideo } from "./HeroVideo";
+import { SplitChars } from "@/components/motion/SplitChars";
 
 interface HeroProps {
   heroData: HeroData;
+  locale: string;
+  scrollLabel: string;
 }
 
-export const Hero: React.FC<HeroProps> = ({ heroData }) => {
+export function Hero({ heroData, locale, scrollLabel }: HeroProps) {
+  // 日本語はラベルと同じ縦組み、英語は横組み
+  const vertical = locale === "ja";
+  const [name, gloss] = heroData.productName.split(" - ");
+
   return (
-    <section className="relative min-h-screen w-full overflow-hidden">
-      {/* Full screen background */}
+    <section className="relative h-svh min-h-140 w-full overflow-hidden bg-night text-white">
+      {heroData.heroVideo ? (
+        <HeroVideo src={heroData.heroVideo} poster={heroData.heroImage} />
+      ) : (
+        <Image
+          src={heroData.heroImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-[57%_50%]"
+        />
+      )}
+      {/* 文字が乗る上下だけ夜空の色を重ねる */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 hero-bg"
-        style={
-          heroData.heroImage
-            ? { backgroundImage: `url(${heroData.heroImage})` }
-            : {}
-        }
+        aria-hidden="true"
+        className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(15_22_38/0.6)_0%,rgb(15_22_38/0)_30%,rgb(15_22_38/0)_52%,rgb(15_22_38/0.88)_100%)]"
       />
 
-      {/* Subtle overlay for better text readability */}
-      <div className="absolute inset-0 bg-black/20" />
+      <div
+        data-motion="intro hero-out"
+        data-motion-onload
+        data-motion-chars={vertical ? "brush" : undefined}
+        className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-5 pb-8 sm:px-10 sm:pb-12 lg:px-16"
+      >
+        {vertical ? (
+          <h1 className="text-vertical absolute right-[7vw] top-[17svh] font-serif text-[clamp(1.75rem,3.2vw,2.875rem)] leading-[2.1] tracking-[0.2em] lg:right-16">
+            {heroData.title.map((line) => (
+              <span key={line} className="block">
+                <SplitChars text={line} />
+              </span>
+            ))}
+          </h1>
+        ) : (
+          <h1 className="absolute top-[18svh] left-5 right-5 font-serif text-[clamp(1.875rem,3.2vw,3rem)] leading-tight sm:left-10 lg:left-16">
+            {heroData.title.map((line) => (
+              <span key={line} className="block">
+                <SplitChars text={line} />
+              </span>
+            ))}
+          </h1>
+        )}
 
-      {/* Content container */}
-      <div className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-screen py-20 lg:py-12">
-            {/* Left Content */}
-            <div className="space-y-4 lg:space-y-6 text-center lg:text-left order-2 lg:order-1">
-              <div className="space-y-3">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight tracking-tight">
-                  {heroData.title.map((line, index) => (
-                    <React.Fragment key={index}>
-                      <span
-                        className="inline-block animate-fade-in-up"
-                        style={{ animationDelay: `${index * 0.2}s` }}
-                      >
-                        {line}
-                      </span>
-                      {index < heroData.title.length - 1 && <br />}
-                    </React.Fragment>
-                  ))}
-                </h1>
-              </div>
-
-              <div
-                className="space-y-2 animate-fade-in-up"
-                style={{ animationDelay: "0.6s" }}
-              >
-                <p className="text-sm sm:text-base text-white/90 font-light tracking-wide">
-                  {heroData.subtitle}
-                </p>
-                <p className="text-lg sm:text-xl lg:text-2xl font-semibold text-white">
-                  {heroData.productName}
-                </p>
-              </div>
-            </div>
-
-            {/* Right Product Display */}
-            <div className="relative flex items-center justify-center order-1 lg:order-2 pt-16 lg:pt-0">
-              <div className="relative w-full max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-lg mx-auto">
-                {heroData.productGif && (
-                  <div
-                    className="relative z-10 group animate-fade-in-up"
-                    style={{ animationDelay: "1s" }}
-                  >
-                    {/* Subtle glow effect */}
-                    <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-pink-500/30 rounded-3xl blur-xl opacity-40 group-hover:opacity-60 transition-all duration-500" />
-
-                    {/* Main container */}
-                    <div className="relative bg-white/10 backdrop-blur-lg rounded-2xl p-2 shadow-2xl border border-white/20 group-hover:scale-105 transition-all duration-500">
-                      <div className="relative overflow-hidden rounded-xl w-full aspect-square">
-                        <Image
-                          src={heroData.productGif}
-                          alt={heroData.productName}
-                          fill
-                          className="object-contain rounded-xl"
-                          priority
-                          unoptimized={heroData.productGif
-                            .toLowerCase()
-                            .includes(".gif")}
-                          sizes="(max-width: 640px) 280px, (max-width: 768px) 400px, (max-width: 1024px) 500px, 600px"
-                        />
-                      </div>
-
-                      {/* Shimmer effect */}
-                      <div className="absolute inset-2 rounded-xl bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 translate-x-full group-hover:animate-shimmer pointer-events-none" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+        <div
+          data-motion-item
+          className="flex items-end justify-between gap-6 border-t border-white/20 pt-5"
+        >
+          <div>
+            <p className="text-xs tracking-[0.2em] text-white/70">
+              {heroData.subtitle}
+            </p>
+            <p className="mt-1.5 font-serif text-xl tracking-[0.14em] sm:text-2xl">
+              {name}
+            </p>
+            {gloss && <p className="mt-1 text-xs text-moon">{gloss}</p>}
+          </div>
+          <div className="hidden items-center gap-3 text-[11px] tracking-[0.2em] text-white/70 sm:flex">
+            {scrollLabel}
+            <span className="scroll-cue relative block h-12 w-px overflow-hidden bg-white/25" />
           </div>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce hidden lg:flex">
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse" />
-        </div>
-      </div>
-
-      {/* CSS animations */}
-      <style jsx>{`
-        @keyframes shimmer {
-          0% {
-            transform: translateX(-100%) skewX(-12deg);
-          }
-          100% {
-            transform: translateX(200%) skewX(-12deg);
-          }
-        }
-
-        @keyframes fade-in-up {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .animate-shimmer {
-          animation: shimmer 3s ease-in-out infinite;
-        }
-
-        .animate-fade-in-up {
-          animation: fade-in-up 1s ease-out forwards;
-          opacity: 0;
-        }
-      `}</style>
     </section>
   );
-};
+}

@@ -1,78 +1,59 @@
-// src/app/[locale]/(products)/products/[slug]/page.tsx - 国際化対応版
-"use client";
-import React, { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+// src/app/[locale]/(products)/products/[slug]/page.tsx - 商品詳細
+// 表示はサーバーで行い、数量とカート追加（PurchasePanel）だけを Client にする
+import type { Metadata } from "next";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
-import { ShoppingCart, ArrowLeft, Minus, Plus, Check } from "lucide-react";
-
-import { useCart } from "@/store/cart";
+import { notFound } from "next/navigation";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { Link } from "@/i18n/routing";
 import {
-  getProducts,
   formatPrice,
-  getProductDetails,
   getProductById,
-} from "@/data/utils";
-import { useTranslations } from "next-intl";
+  getProductDetails,
+  getProducts,
+} from "@/data";
+import { ProductTile } from "@/components/ProductTile";
+import { PurchasePanel } from "@/components/products/PurchasePanel";
+import { SectionHeading } from "@/components/shared/SectionHeading";
+import { SpecList } from "@/components/shared/SpecList";
+import { localizedAlternates } from "@/lib/site";
 
-const ProductDetailPage = () => {
-  const params = useParams();
-  const router = useRouter();
-  const { addToCart } = useCart();
+interface ProductDetailPageProps {
+  params: Promise<{ locale: string; slug: string }>;
+}
 
-  const locale = params.locale as string;
+// 商品は固定なので、全商品のページをビルド時に作る（locale は layout 側で展開）
+export function generateStaticParams() {
+  return getProducts().map((product) => ({ slug: String(product.id) }));
+}
 
-  // 翻訳フック
-  const t = useTranslations("productDetail");
+const findProduct = (slug: string, locale: string) =>
+  getProductById(Number(slug), locale);
 
-  const [quantity, setQuantity] = useState(1);
-  const [isAdding, setIsAdding] = useState(false);
-  const [justAdded, setJustAdded] = useState(false);
-
-  // slugからproductを取得（ロケール対応）
-  const productId = parseInt(params.slug as string);
-  const product = getProductById(productId, locale);
-
-  if (!product) {
-    return (
-      <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            {t("productNotFound")}
-          </h1>
-          <Button
-            onClick={() => router.push(`/${locale}/products`)}
-            variant="outline"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            {t("backToProducts")}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const handleAddToCart = async () => {
-    setIsAdding(true);
-    addToCart(product, quantity);
-
-    setTimeout(() => {
-      setIsAdding(false);
-      setJustAdded(true);
-      setTimeout(() => setJustAdded(false), 2000);
-    }, 500);
+export async function generateMetadata({
+  params,
+}: ProductDetailPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const product = findProduct(slug, locale);
+  if (!product) return {};
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: { images: [{ url: product.image.url, alt: product.image.alt }] },
+    alternates: localizedAlternates(locale, `/products/${slug}`),
   };
+}
 
-  const handleQuantityChange = (increment: boolean) => {
-    if (increment) {
-      setQuantity((prev) => prev + 1);
-    } else {
-      setQuantity((prev) => Math.max(prev - 1, 1));
-    }
-  };
+export default async function ProductDetailPage({
+  params,
+}: ProductDetailPageProps) {
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
 
-  const productDetails = getProductDetails(product, locale);
+  const product = findProduct(slug, locale);
+  if (!product) notFound();
+
+  const t = await getTranslations("productDetail");
+  const tCommon = await getTranslations("common");
 
   // 同カテゴリの他商品（1商品しかないカテゴリでは空になる）
   const relatedProducts = getProducts(locale)
@@ -80,214 +61,122 @@ const ProductDetailPage = () => {
     .slice(0, 4);
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16">
-      {/* ナビゲーション */}
-      <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <button
-              onClick={() => router.push(`/${locale}/products`)}
-              className="flex items-center hover:text-gray-900 transition-colors"
+    <div className="bg-white pt-16">
+      {/* パンくず */}
+      <nav
+        aria-label="Breadcrumb"
+        className="mx-auto max-w-6xl px-5 pt-8 text-xs text-muted-foreground sm:px-8"
+      >
+        <ol className="flex flex-wrap items-center gap-2">
+          <li>
+            <Link
+              href="/products"
+              className="underline-offset-4 hover:text-ink hover:underline"
             >
-              <ArrowLeft className="w-4 h-4 mr-1" />
               {t("productList")}
-            </button>
-            <span>/</span>
-            <span className="text-gray-900">{product.name}</span>
-          </div>
-        </div>
-      </div>
+            </Link>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li aria-current="page" className="text-ink">
+            {product.name}
+          </li>
+        </ol>
+      </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
-          {/* 画像セクション */}
-          <div className="space-y-4">
-            {/* メイン画像 */}
-            <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden relative">
+      <div className="mx-auto max-w-6xl px-5 pt-8 pb-24 sm:px-8 sm:pb-32">
+        <div className="grid grid-cols-1 items-start gap-10 md:grid-cols-12 md:gap-8">
+          {/* 画像 */}
+          <div className="md:sticky md:top-24 md:col-span-7">
+            <div
+              data-motion="reveal"
+              className="relative aspect-4/5 overflow-hidden bg-mist"
+            >
               <Image
                 src={product.image.url}
                 alt={product.image.alt}
                 fill
-                className="object-cover"
+                sizes="(min-width: 768px) 58vw, 100vw"
                 priority
+                className={
+                  product.image.cutout
+                    ? "object-contain py-[6%]"
+                    : "object-cover"
+                }
               />
-
-              {/* セール表示 */}
               {product.originalPrice && (
-                <div className="absolute top-4 left-4">
-                  <span className="bg-orange-500 text-white text-sm px-3 py-1 rounded-full font-medium">
-                    {t("onSale")}
-                  </span>
-                </div>
+                <span className="absolute top-5 left-5 bg-ink px-3 py-1 text-xs text-white">
+                  {t("onSale")}
+                </span>
               )}
             </div>
           </div>
 
-          {/* 商品情報セクション */}
-          <div className="space-y-6">
-            {/* 基本情報 */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  {product.category}
-                </span>
-                <span className="text-sm text-gray-500 bg-blue-100 px-3 py-1 rounded-full">
-                  {product.label}
-                </span>
-              </div>
-
-              <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+          {/* 商品情報 */}
+          <div className="md:col-span-4 md:col-start-9 md:pt-6">
+            <div data-motion="stagger">
+              <p className="text-xs tracking-[0.2em] text-ruri">
+                {product.category}
+              </p>
+              <h1 className="mt-3 font-serif text-3xl leading-snug text-ink sm:text-[2.125rem]">
                 {product.name}
               </h1>
-
-              <p className="text-gray-600 text-lg">{product.description}</p>
-            </div>
-
-            {/* 価格 */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold text-gray-900">
+              <p className="mt-4 text-sm text-muted-foreground sm:text-[15px]">
+                {product.description}
+              </p>
+              <div className="mt-8 flex items-baseline gap-3">
+                <span className="font-serif text-2xl tabular text-ink">
                   {formatPrice(product.price)}
                 </span>
                 {product.originalPrice && (
-                  <span className="text-xl text-gray-400 line-through">
+                  <span className="text-sm tabular text-muted-foreground line-through">
                     {formatPrice(product.originalPrice)}
                   </span>
                 )}
               </div>
             </div>
 
-            {/* 数量選択 */}
-            <div className="space-y-4">
-              <span className="text-sm font-medium text-gray-900">
-                {t("quantity")}
-              </span>
+            <PurchasePanel
+              product={product}
+              labels={{
+                quantity: t("quantity"),
+                subtotal: t("subtotal"),
+                add: t("addToCart"),
+                adding: t("adding"),
+                added: t("addedToCart"),
+                decrease: tCommon("decrease"),
+                increase: tCommon("increase"),
+              }}
+            />
 
-              <div className="flex items-center gap-3">
-                <div className="flex items-center border border-gray-300 rounded-lg">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleQuantityChange(false)}
-                    disabled={quantity <= 1}
-                    className="w-10 h-10 p-0"
-                  >
-                    <Minus className="w-4 h-4" />
-                  </Button>
-                  <span className="w-12 text-center font-medium">
-                    {quantity}
-                  </span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleQuantityChange(true)}
-                    className="w-10 h-10 p-0"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </Button>
-                </div>
-
-                <div className="text-sm text-gray-600">
-                  {t("subtotal")}: {formatPrice(product.price * quantity)}
-                </div>
-              </div>
-            </div>
-
-            {/* カートに追加ボタン */}
-            <Button
-              onClick={handleAddToCart}
-              disabled={isAdding}
-              className={`w-full h-12 text-base font-medium transition-all duration-300 ${
-                justAdded
-                  ? "bg-green-600 hover:bg-green-700"
-                  : "bg-gray-900 hover:bg-gray-800"
-              }`}
-            >
-              {isAdding ? (
-                <div className="flex items-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                  {t("adding")}
-                </div>
-              ) : justAdded ? (
-                <div className="flex items-center">
-                  <Check className="w-5 h-5 mr-2" />
-                  {t("addedToCart")}
-                </div>
-              ) : (
-                <div className="flex items-center">
-                  <ShoppingCart className="w-5 h-5 mr-2" />
-                  {t("addToCart")}
-                </div>
-              )}
-            </Button>
-
-            {/* 商品詳細情報 */}
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  {t("productDetails")}
-                </h3>
-                <div className="space-y-3">
-                  {productDetails.map((detail, index) => (
-                    <div
-                      key={index}
-                      className="flex justify-between items-center py-2 border-b border-gray-100 last:border-b-0"
-                    >
-                      <span className="text-sm text-gray-600">
-                        {detail.label}
-                      </span>
-                      <span className="text-sm font-medium text-gray-900">
-                        {detail.value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* 商品詳細 */}
+            <h2 className="mt-14 font-serif text-lg text-ink">
+              {t("productDetails")}
+            </h2>
+            <SpecList
+              items={getProductDetails(product, locale)}
+              className="mt-4"
+            />
           </div>
         </div>
 
-        {/* 関連商品セクション */}
+        {/* 関連商品 */}
         {relatedProducts.length > 0 && (
-          <div className="mt-16">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">
-              {t("relatedProducts")}
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <section className="mt-28 sm:mt-36">
+            <SectionHeading
+              text={t("relatedProducts")}
+              className="border-b border-border pb-5"
+            />
+            <div
+              data-motion="stagger"
+              className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-8 lg:grid-cols-3"
+            >
               {relatedProducts.map((relatedProduct) => (
-                <Card
-                  key={relatedProduct.id}
-                  className="border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer"
-                  onClick={() =>
-                    router.push(`/${locale}/products/${relatedProduct.id}`)
-                  }
-                >
-                  <CardContent className="p-0">
-                    <div className="relative aspect-square bg-gray-50 overflow-hidden">
-                      <Image
-                        src={relatedProduct.image.url}
-                        alt={relatedProduct.image.alt}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="p-4 space-y-2">
-                      <h3 className="font-medium text-gray-900 text-sm line-clamp-2">
-                        {relatedProduct.name}
-                      </h3>
-                      <p className="text-lg font-bold text-gray-900">
-                        {formatPrice(relatedProduct.price)}
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
+                <ProductTile key={relatedProduct.id} product={relatedProduct} />
               ))}
             </div>
-          </div>
+          </section>
         )}
       </div>
     </div>
   );
-};
-
-export default ProductDetailPage;
+}

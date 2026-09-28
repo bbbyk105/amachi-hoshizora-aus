@@ -1,49 +1,48 @@
-// src/app/[locale]/page.tsx - ロケール対応版
-"use client";
-import React, { use } from "react"; // useをインポート
-import {
-  getProducts,
-  formatPriceWithVolume,
-  getHeroData,
-  getTopicsData,
-} from "@/data";
+// src/app/[locale]/page.tsx - トップページ
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { getProducts, getHeroData, getTopicsData } from "@/data";
 import { Hero } from "./(top-page)/Hero";
 import { About } from "./(top-page)/About";
 import { Product } from "./(top-page)/Product";
+import { HeritageTeaser } from "./(top-page)/HeritageTeaser";
+import { localizedAlternates } from "@/lib/site";
 
-// 型定義を修正：paramsはPromiseになる
 interface TopPageProps {
   params: Promise<{
     locale: string;
   }>;
 }
 
-const TopPage = ({ params }: TopPageProps) => {
-  // React.use()を使ってPromiseを解決
-  const { locale } = use(params);
+// タイトルや説明は layout の既定値を使い、canonical と hreflang だけをここで付ける
+export async function generateMetadata({
+  params,
+}: TopPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  return { alternates: localizedAlternates(locale) };
+}
 
-  // ロケール別のデータを取得
-  const products = getProducts(locale);
-  const heroData = getHeroData(locale);
-  const topicsData = getTopicsData(locale);
+const TopPage = async ({ params }: TopPageProps) => {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
-  // products データを既存のコンポーネントと互換性のある形式に変換
-  const compatibleProductsData = products.map((product) => ({
-    id: product.id,
-    name: product.name,
-    description: product.description,
-    price: formatPriceWithVolume(product),
-    colorClass: product.colorClass || "from-gray-600 to-gray-700",
-    label: product.label,
-    image: product.image.url.replace("/", ""), // Remove leading slash for compatibility
-  }));
+  const t = await getTranslations("home");
 
   return (
-    <div className="min-h-screen bg-white">
-      <Hero heroData={heroData} />
-      <About topicsData={topicsData} />
-      <Product productsData={compatibleProductsData} />
-    </div>
+    <>
+      <Hero
+        heroData={getHeroData(locale)}
+        locale={locale}
+        scrollLabel={t("scroll")}
+      />
+      <About topicsData={getTopicsData(locale)} title={t("aboutTitle")} />
+      <HeritageTeaser />
+      <Product
+        products={getProducts(locale)}
+        title={t("productsTitle")}
+        viewAllLabel={t("viewAll")}
+      />
+    </>
   );
 };
 

@@ -1,18 +1,21 @@
 // src/app/api/checkout/route.ts
 
 import { NextRequest, NextResponse } from "next/server";
-import Stripe from "stripe";
+import type Stripe from "stripe";
+import { hasLocale } from "next-intl";
 import { getProducts } from "@/data";
+import type { Product } from "@/data/types";
+import { routing } from "@/i18n/routing";
+import { calculateShipping } from "@/lib/cart";
 import { siteUrl } from "@/lib/site";
-import type { CheckoutRequest } from "@/types/checkout";
-
-// Stripe初期化
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? "", {
-  apiVersion: "2026-01-28.clover",
-});
+import { getStripe } from "@/lib/stripe";
+import { PAYMENT_METHODS, type PaymentMethod } from "@/types/checkout";
 
 // ベースURL定数
 const BASE_URL = siteUrl;
+
+// 1 商品あたりの上限（誤入力や改ざんされたリクエストを弾く）
+const MAX_QUANTITY = 99;
 
 // Product data type for Stripe
 interface StripeProductData {
@@ -24,27 +27,71 @@ interface StripeProductData {
   images?: string[];
 }
 
+interface ValidOrder {
+  lines: { product: Product; quantity: number }[];
+  paymentMethod: PaymentMethod;
+  locale: (typeof routing.locales)[number];
+}
+
+// ブラウザから来た値は信用せず、商品・数量・受け取り方法・言語をここで確かめる
+function parseOrder(body: unknown): ValidOrder | string {
+  if (typeof body !== "object" || body === null) return "Invalid request";
+  const { items, paymentMethod, locale } = body as Record<string, unknown>;
+
+  if (
+    typeof paymentMethod !== "string" ||
+    !(PAYMENT_METHODS as readonly string[]).includes(paymentMethod)
+  ) {
+    return "Invalid payment method";
+  }
+  const validLocale = hasLocale(routing.locales, locale)
+    ? locale
+    : routing.defaultLocale;
+
+  if (!Array.isArray(items) || items.length === 0) return "No items in cart";
+
+  const products = getProducts(validLocale);
+  const lines: ValidOrder["lines"] = [];
+  for (const item of items) {
+    const { id, quantity } = (item ?? {}) as Record<string, unknown>;
+    const product = products.find((p) => p.id === id);
+    if (!product) return `Product with id ${String(id)} not found`;
+    if (
+      typeof quantity !== "number" ||
+      !Number.isInteger(quantity) ||
+      quantity < 1 ||
+      quantity > MAX_QUANTITY
+    ) {
+      return `Invalid quantity for product ${product.id}`;
+    }
+    lines.push({ product, quantity });
+  }
+
+  return {
+    lines,
+    paymentMethod: paymentMethod as PaymentMethod,
+    locale: validLocale,
+  };
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const body: CheckoutRequest & { locale?: string } = await request.json();
-    const { items, paymentMethod, shippingCost, locale = "ja" } = body;
-
-    if (!items || items.length === 0) {
-      return NextResponse.json({ error: "No items in cart" }, { status: 400 });
+    const order = parseOrder(await request.json().catch(() => null));
+    if (typeof order === "string") {
+      return NextResponse.json({ error: order }, { status: 400 });
     }
+    const { lines, paymentMethod, locale } = order;
 
-    // ロケール別の商品データを取得
-    const products = getProducts(locale);
+    // 送料はサーバー側の価格から計算する（ブラウザの値は使わない）
+    const subtotal = lines.reduce(
+      (sum, { product, quantity }) => sum + product.price * quantity,
+      0,
+    );
+    const shippingCost = calculateShipping(subtotal, paymentMethod);
 
-    // 商品データの検証とライン項目の作成
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = items.map(
-      (item) => {
-        const product = products.find((p) => p.id === item.id);
-
-        if (!product) {
-          throw new Error(`Product with id ${item.id} not found`);
-        }
-
+    // ライン項目の作成
+    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = lines.map(
+      ({ product, quantity }) => {
         // 本番環境または ngrok 使用時のみ画像を含める
         const isProduction = process.env.NODE_ENV === "production";
         const isNgrok =
@@ -76,13 +123,13 @@ export async function POST(request: NextRequest) {
             product_data: productData,
             unit_amount: Math.round(product.price * 100), // AUDをセントに変換
           },
-          quantity: item.quantity,
+          quantity,
         };
       },
     );
 
     // 送料をラインアイテムに追加（オンライン決済で送料がかかる場合）
-    if (paymentMethod === "online" && shippingCost > 0) {
+    if (shippingCost > 0) {
       lineItems.push({
         price_data: {
           currency: "aud",
@@ -101,8 +148,8 @@ export async function POST(request: NextRequest) {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: `${BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${BASE_URL}/cancel`,
+      success_url: `${BASE_URL}/${locale}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${BASE_URL}/${locale}/cancel`,
       locale: "en", // 常に英語で表示
       metadata: {
         paymentMethod,
@@ -153,7 +200,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Stripeセッションを作成
-    const session = await stripe.checkout.sessions.create(sessionOptions);
+    const session = await getStripe().checkout.sessions.create(sessionOptions);
 
     return NextResponse.json({
       url: session.url,
@@ -165,42 +212,6 @@ export async function POST(request: NextRequest) {
       {
         error: error instanceof Error ? error.message : "Internal server error",
       },
-      { status: 500 },
-    );
-  }
-}
-
-// セッション詳細取得用のGETメソッド
-export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url);
-    const sessionId = searchParams.get("session_id");
-
-    if (!sessionId) {
-      return NextResponse.json(
-        { error: "Session ID is required" },
-        { status: 400 },
-      );
-    }
-
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
-      expand: ["invoice"],
-    });
-
-    return NextResponse.json({
-      session: {
-        id: session.id,
-        payment_status: session.payment_status,
-        customer_details: session.customer_details,
-        amount_total: session.amount_total,
-        currency: session.currency,
-        invoice: session.invoice,
-      },
-    });
-  } catch (error) {
-    console.error("Session retrieval error:", error);
-    return NextResponse.json(
-      { error: "Failed to retrieve session" },
       { status: 500 },
     );
   }

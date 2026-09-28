@@ -1,27 +1,37 @@
-// src/app/(top-page)/Product.tsx
-"use client";
-import React from "react";
-import { LegacyProductData } from "@/types/products";
-import { ProductCard } from "./ProductCard";
+import { Link } from "@/i18n/routing";
+import type { Product as ProductType } from "@/data/types";
+import { ProductTile } from "@/components/ProductTile";
+import { SectionHeading } from "@/components/shared/SectionHeading";
 
 interface ProductProps {
-  productsData: LegacyProductData[];
+  products: ProductType[];
+  title: string;
+  viewAllLabel: string;
 }
 
-export const Product: React.FC<ProductProps> = ({ productsData }) => {
+export function Product({ products, title, viewAllLabel }: ProductProps) {
   return (
-    <section className="py-8 sm:py-12 lg:py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-lg sm:text-xl lg:text-2xl font-light text-gray-900 mb-6 sm:mb-8 lg:mb-12 border-b border-gray-300 pb-3 sm:pb-4">
-          PRODUCT
-        </h2>
+    <section className="bg-white py-24 sm:py-32 lg:py-40">
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <div className="flex items-end justify-between gap-6 border-b border-border pb-5">
+          <SectionHeading text={title} />
+          <Link
+            href="/products"
+            className="text-sm text-ink underline decoration-gray-300 underline-offset-[6px] transition-colors hover:decoration-ink"
+          >
+            {viewAllLabel}
+          </Link>
+        </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
-          {productsData.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <div
+          data-motion="stagger"
+          className="mt-10 grid grid-cols-2 gap-x-4 gap-y-12 sm:gap-x-8 lg:grid-cols-3"
+        >
+          {products.map((product) => (
+            <ProductTile key={product.id} product={product} />
           ))}
         </div>
       </div>
     </section>
   );
-};
+}

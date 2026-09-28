@@ -3,6 +3,8 @@ export interface Image {
   alt: string;
   width: number;
   height: number;
+  /** 背景が透過の切り抜き画像（余白を取って contain で置く） */
+  cutout?: boolean;
 }
 
 export interface Product {
@@ -34,6 +36,12 @@ export interface HeroData {
   subtitle: string;
   productName: string;
   heroImage: string;
+  heroVideo?: string;
+}
+
+export interface TopicFact {
+  label: string;
+  value: string;
 }
 
 export interface TopicData {
@@ -41,6 +49,10 @@ export interface TopicData {
   title: string;
   description: string;
   image: string;
+  /** 本文（段落ごと）。出典: 富士錦酒造・天地星空の公式サイト */
+  body?: string[];
+  /** 数値で見せる事実（ろ過の年月・硬度など） */
+  facts?: TopicFact[];
   bgColor?: string;
   productColor?: string;
   hasRings?: boolean;

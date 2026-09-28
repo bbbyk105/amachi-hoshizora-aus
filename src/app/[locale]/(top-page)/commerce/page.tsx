@@ -1,36 +1,44 @@
-"use client";
-import React from "react";
-import { ArrowLeft } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
+// src/app/[locale]/(top-page)/commerce/page.tsx
+// 本文はすべてサーバーで描画する（戻るボタンだけ Client。LegalHeader 内の BackButton）
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
+import { LegalHeader } from "@/components/shared/LegalHeader";
+import { localizedAlternates } from "@/lib/site";
 
-const CommerceLaw = () => {
-  const t = useTranslations("commerceLaw");
+interface CommercePageProps {
+  params: Promise<{ locale: string }>;
+}
 
-  const handleBack = () => {
-    window.history.back();
+export async function generateMetadata({
+  params,
+}: CommercePageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "commerceLaw" });
+  return {
+    title: t("title"),
+    alternates: localizedAlternates(locale, "/commerce"),
   };
+}
+
+const CommerceLaw = async ({ params }: CommercePageProps) => {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("commerceLaw");
+  const tCommon = await getTranslations("common");
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-white">
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-        <div className="bg-white rounded-lg shadow-sm p-8">
-          <div className="flex items-center space-x-4 mb-8 pb-6 border-b border-gray-200">
-            <Button
-              variant="ghost"
-              onClick={handleBack}
-              className="p-2 hover:bg-gray-100 rounded-full"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">{t("title")}</h1>
-              <p className="text-sm text-gray-600 mt-1">{t("subtitle")}</p>
-            </div>
-          </div>
+      <div className="mx-auto max-w-3xl px-5 pt-32 pb-28 sm:px-8 sm:pt-40 sm:pb-40">
+        <div className="text-[15px]">
+          <LegalHeader
+            title={t("title")}
+            subtitle={t("subtitle")}
+            backLabel={tCommon("back")}
+          />
 
-          <div className="prose prose-gray max-w-none">
+          <div className="max-w-none">
             <p className="text-sm text-gray-600 mb-8">
               {t("intro")}
               <br />
@@ -39,10 +47,10 @@ const CommerceLaw = () => {
 
             <div className="space-y-8">
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("seller")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <p className="text-gray-700 leading-relaxed">
                     {t("sellerInfo")}
                   </p>
@@ -50,10 +58,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("representative")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <p className="text-gray-700 leading-relaxed">
                     {t("representativeInfo")}
                   </p>
@@ -61,10 +69,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("address")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {t("addressInfo")}
                   </p>
@@ -72,10 +80,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("contact")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <p className="text-gray-700 leading-relaxed whitespace-pre-line">
                     {t("contactInfo")}
                   </p>
@@ -83,10 +91,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("prices")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <p className="text-gray-700 leading-relaxed mb-4">
                     {t("pricesInfo")}
                   </p>
@@ -106,10 +114,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("additionalFees")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <p className="mb-3">
                       <strong>{t("shipping")}</strong>
@@ -132,10 +140,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("paymentMethods")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <ul className="list-disc list-inside space-y-2">
                       {t
@@ -149,10 +157,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("paymentTiming")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <ul className="list-disc list-inside space-y-2">
                       {t
@@ -166,10 +174,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("deliveryTiming")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <ul className="list-disc list-inside space-y-2">
                       {t
@@ -186,10 +194,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("returns")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <p className="mb-4">
                       <strong>{t("returnsAccepted")}</strong>
@@ -228,10 +236,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("alcoholSales")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <ul className="list-disc list-inside space-y-2">
                       <li>
@@ -256,10 +264,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("privacy")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <p className="text-gray-700 leading-relaxed">
                     {t("privacyInfo")}
                   </p>
@@ -267,10 +275,10 @@ const CommerceLaw = () => {
               </section>
 
               <section>
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 border-b border-gray-200 pb-2">
+                <h2 className="mb-4 font-serif text-xl text-ink">
                   {t("other")}
                 </h2>
-                <div className="bg-gray-50 p-6 rounded-lg">
+                <div className="bg-mist p-6">
                   <div className="text-gray-700 leading-relaxed">
                     <ul className="list-disc list-inside space-y-2">
                       {t.raw("otherList").map((item: string, index: number) => (

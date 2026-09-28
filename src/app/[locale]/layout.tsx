@@ -1,19 +1,43 @@
 // src/app/[locale]/layout.tsx
 
-import { Inter } from "next/font/google";
+import { Noto_Serif, Noto_Serif_JP, Shippori_Mincho } from "next/font/google";
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
+import { notFound } from "next/navigation";
+import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { getMessages, setRequestLocale } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 import { CartProvider } from "@/store/cart";
 import "../globals.css";
 import { Header } from "@/components/Header";
-import { Toaster } from "@/components/ui/toaster";
 import { Footer } from "@/components/Footer";
 import { AgeGate } from "@/components/AgeGate";
-import { siteUrl, absoluteUrl } from "@/lib/site";
+import { MotionProvider } from "@/components/motion/MotionProvider";
+import { siteUrl } from "@/lib/site";
+import { AGE_VERIFIED_BOOT_SCRIPT } from "@/lib/ageGateStorage";
 
-const inter = Inter({ subsets: ["latin"] });
+// フォントは fujisan と同じ構成（本文: Noto Serif + Noto Serif JP / 見出し: Shippori Mincho）
+const notoSerif = Noto_Serif({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-noto-serif",
+  adjustFontFallback: true,
+  preload: true,
+});
+const notoSerifJp = Noto_Serif_JP({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600"],
+  variable: "--font-noto-serif-jp",
+  adjustFontFallback: true,
+  preload: false,
+});
+const shipporiMincho = Shippori_Mincho({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-shippori-mincho",
+  adjustFontFallback: true,
+  preload: false,
+});
 
 // 動的ルートでのメタデータ生成
 export async function generateMetadata({
@@ -60,14 +84,8 @@ export async function generateMetadata({
       address: false,
       telephone: false,
     },
+    // canonical と hreflang は各ページの generateMetadata で付ける（localizedAlternates）
     metadataBase: new URL(baseUrl),
-    alternates: {
-      canonical: `/${locale}`,
-      languages: {
-        en: "/en",
-        ja: "/ja",
-      },
-    },
     robots: {
       index: true,
       follow: true,
@@ -272,6 +290,22 @@ export async function generateMetadata({
   };
 }
 
+// Client Component が useTranslations で使う名前空間だけをブラウザに送る
+// （規約などの長い本文はサーバーで描画済みなので送らない）
+const CLIENT_MESSAGE_NAMESPACES = [
+  "ageGate",
+  "cart",
+  "common",
+  "header",
+  "language",
+  "navigation",
+] as const;
+
+// 全言語のページをビルド時に生成する（next-intl の静的レンダリング）
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
 export default async function RootLayout({
   children,
   params,
@@ -280,30 +314,39 @@ export default async function RootLayout({
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) notFound();
 
-  // SSG対応
+  // 静的レンダリングのため、このリクエストの言語を登録する
   setRequestLocale(locale);
 
-  // 言語ファイルの読み込み
   const messages = await getMessages();
+  const clientMessages = Object.fromEntries(
+    CLIENT_MESSAGE_NAMESPACES.map((namespace) => [namespace, messages[namespace]]),
+  );
 
   return (
-    <html lang={locale}>
+    // <html> の class は下のスクリプトが付けるので、ハイドレーション差分の警告を抑える
+    <html lang={locale} suppressHydrationWarning>
       <head>
-        {/* 追加のSEOタグ */}
-        <link
-          rel="canonical"
-          href={absoluteUrl(`/${locale}`)}
+        {/* 最初の描画より前に <html> へ印を付ける。
+            motion: 動きを減らす設定でなければ、GSAP の演出前に要素を隠しておく
+            age-verified: 年齢確認を通過済みなら、確認画面の下地を出さない */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');${AGE_VERIFIED_BOOT_SCRIPT}`,
+          }}
         />
       </head>
-      <body className={inter.className}>
-        <NextIntlClientProvider messages={messages}>
+      <body
+        className={`${notoSerif.variable} ${notoSerifJp.variable} ${shipporiMincho.variable}`}
+      >
+        <NextIntlClientProvider messages={clientMessages}>
           <CartProvider>
             <AgeGate />
             <Header />
-            <main className="container mx-auto p-4">{children}</main>
+            <main>{children}</main>
             <Footer />
-            <Toaster />
+            <MotionProvider />
           </CartProvider>
         </NextIntlClientProvider>
       </body>

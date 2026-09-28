@@ -5,10 +5,11 @@
         "select": "Language / 言語"
     },
     "navigation": {
-        "home": "HOME",
+        "home": "Home",
         "details": "Details",
+        "heritage": "Heritage",
         "qa": "Q&A",
-        "product": "PRODUCTS",
+        "product": "Products",
         "search": "Search",
         "cart": "Cart",
         "quickActions": "Quick Actions"
@@ -42,7 +43,9 @@
         "continue": "Continue",
         "close": "Close",
         "confirm": "Confirm",
-        "retry": "Retry"
+        "retry": "Retry",
+        "decrease": "Decrease quantity",
+        "increase": "Increase quantity"
     },
     "cart": {
         "title": "Shopping Cart",
@@ -141,6 +144,7 @@
         "relatedProducts": "Related Products"
     },
     "productList": {
+        "title": "Products",
         "heroDescription": "Introducing traditional and innovative Japanese sake and specialty products brewed at the foot of Mount Fuji",
         "cartInfo": "Cart: {count} items",
         "itemsCount": " items",
@@ -148,7 +152,7 @@
         "showAllProducts": "Show All Products",
         "adding": "Adding...",
         "added": "Added",
-        "add": "Add"
+        "add": "Add to cart"
     },
     "commerceLaw": {
         "title": "Specified Commercial Transaction Law",
@@ -487,7 +491,7 @@
         "sections": {
             "products": {
                 "title": "Products",
-                "viewAll": "View All Products →"
+                "viewAll": "View all products"
             },
             "company": {
                 "title": "Company"
@@ -507,6 +511,239 @@
         "ageVerification": {
             "drinking": "※Must be 18 years or older to drink alcohol",
             "driving": "※Drunk driving is prohibited by law"
+        }
+    },
+    "home": {
+        "aboutTitle": "About Amachi Hoshisora",
+        "productsTitle": "Products",
+        "viewAll": "View all products",
+        "scroll": "Scroll"
+    },
+    "heritage": {
+        "metaTitle": "Heritage | Fujinishiki Brewery",
+        "metaDescription": "Fujinishiki Brewery, maker of Amachi Hoshisora, was founded in the Genroku era at the foot of Mt. Fuji. How statesman Yukio Ozaki named its sake, photographs from the Meiji era, a timeline of three centuries, and the brewery today.",
+        "title": "Three centuries at the foot of Mt. Fuji",
+        "lead": "Fujinishiki Brewery, which makes Amachi Hoshisora, was founded in the Genroku era (1688–1704) in Yuno, a village at the foot of Mt. Fuji. It began with a landowning family who grew rice and brewed sake from it.",
+        "heroCaption": "The Fujinishiki brewery, with Mt. Fuji behind it",
+        "origin": {
+            "title": "How Fujinishiki got its name",
+            "quote": "“Fuji ni nishiki nari”",
+            "quoteBy": "Yukio Ozaki, 1914",
+            "body": [
+                "Born in 1874 as the fourth son of the Sei family, Kintaro worked as a newspaper reporter before becoming secretary to Yukio Ozaki, and was later elected to the House of Representatives. In 1911, inspired by America’s national parks, he petitioned the Imperial Diet to create a Fuji National Park.",
+                "In 1914 Kintaro invited Ozaki, by then Minister of Justice, to the family home in Yuno. Moved by Mt. Fuji glowing like brocade in the evening sun, and by Kintaro’s return home in glory as a member of parliament, Ozaki is said to have remarked, “Fuji ni nishiki nari”: brocade upon Mt. Fuji.",
+                "Until then the family’s sake had no brand name. They took his words and named it Fujinishiki."
+            ],
+            "portraitCaption": "Kintaro Sei (1874–1921)"
+        },
+        "archive": {
+            "title": "The brewery in the Meiji era",
+            "body": "Photographs from the Meiji era, kept by Fujinishiki Brewery: the main house under construction in 1887, and the front gate, with a stable below and a room for raising silkworms above. They show a family that farmed as well as brewed.",
+            "photos": [
+                {
+                    "image": "/heritage/archive-main-house-1887.webp",
+                    "caption": "Building the main house, 1887"
+                },
+                {
+                    "image": "/heritage/archive-gate-meiji.webp",
+                    "caption": "The front gate in the early Meiji era. The ground floor was a stable; silkworms were raised upstairs."
+                }
+            ]
+        },
+        "timelineTitle": "Timeline",
+        "eras": [
+            {
+                "name": "Genroku",
+                "span": "1688–1704",
+                "items": [
+                    {
+                        "wareki": "Genroku era",
+                        "year": "1688–1704",
+                        "text": "The first generation founds the brewery. A local landowner who farmed rice with many tenant farmers, he begins brewing with the rice paid as rent."
+                    }
+                ]
+            },
+            {
+                "name": "Meiji",
+                "span": "1868–1912",
+                "items": [
+                    {
+                        "wareki": "Meiji 7",
+                        "year": "1874",
+                        "text": "Kintaro is born, fourth son of the 14th generation."
+                    },
+                    {
+                        "wareki": "Meiji 20",
+                        "year": "1887",
+                        "text": "The main house is built."
+                    },
+                    {
+                        "wareki": "Meiji 41",
+                        "year": "1908",
+                        "text": "Kintaro is elected to the House of Representatives."
+                    },
+                    {
+                        "wareki": "Meiji 44",
+                        "year": "1911",
+                        "text": "Kintaro petitions the Imperial Diet to create a Fuji National Park."
+                    }
+                ]
+            },
+            {
+                "name": "Taisho",
+                "span": "1912–1926",
+                "items": [
+                    {
+                        "wareki": "Taisho 3",
+                        "year": "1914",
+                        "text": "Minister of Justice Yukio Ozaki visits Yuno. His words, “Fuji ni nishiki nari”, give the sake its name: Fujinishiki."
+                    },
+                    {
+                        "wareki": "Taisho 10",
+                        "year": "1921",
+                        "text": "Kintaro dies in office at the age of 47."
+                    }
+                ]
+            },
+            {
+                "name": "Showa",
+                "span": "1926–1989",
+                "items": [
+                    {
+                        "wareki": "Showa 11",
+                        "year": "1936",
+                        "text": "Mt. Fuji is designated part of the Fuji-Hakone National Park."
+                    },
+                    {
+                        "wareki": "Showa 23",
+                        "year": "1948",
+                        "text": "Post-war land reform ends the family’s work as landowners, and brewing is suspended."
+                    },
+                    {
+                        "wareki": "Showa 24",
+                        "year": "1949",
+                        "text": "After a six-year pause, the family reopens the brewery as its main business."
+                    },
+                    {
+                        "wareki": "Showa 30",
+                        "year": "1955",
+                        "text": "The 17th generation becomes head of the brewery."
+                    },
+                    {
+                        "wareki": "Showa 38",
+                        "year": "1963",
+                        "text": "The brewery is incorporated as Fujinishiki Shuzo Co., Ltd."
+                    },
+                    {
+                        "wareki": "Showa 49",
+                        "year": "1974",
+                        "text": "Ahead of the rest of Japan, it releases Fuji Tennen Jozoshu, brewed from rice alone with no added sugar or distilled alcohol."
+                    }
+                ]
+            },
+            {
+                "name": "Heisei",
+                "span": "1989–2019",
+                "items": [
+                    {
+                        "wareki": "Heisei 2",
+                        "year": "1990",
+                        "text": "When Japan abolishes its sake grading system, the brewery focuses on premium special-designation sake."
+                    },
+                    {
+                        "wareki": "Heisei 8",
+                        "year": "1996",
+                        "text": "The first kura-biraki (brewery open day) welcomes 400 visitors."
+                    },
+                    {
+                        "wareki": "Heisei 18",
+                        "year": "2006",
+                        "text": "Shinichi Sei becomes the 18th-generation head."
+                    },
+                    {
+                        "wareki": "Heisei 26",
+                        "year": "2014",
+                        "text": "A hundred years after the name was given, the brewery releases Gakudo, a commemorative sake named after Ozaki’s pen name."
+                    },
+                    {
+                        "wareki": "Heisei 28",
+                        "year": "2016",
+                        "text": "Fujinishiki begins exporting its sake."
+                    }
+                ]
+            },
+            {
+                "name": "Reiwa",
+                "span": "2019–",
+                "items": [
+                    {
+                        "wareki": "Reiwa 8",
+                        "year": "2026",
+                        "text": "The 26th kura-biraki is held."
+                    }
+                ]
+            }
+        ],
+        "sourceNote": "Based on Fujinishiki Brewery’s company history and “Fuji ni nishiki nari”, an essay by the 18th-generation head.",
+        "craft": {
+            "title": "The work of the brewery",
+            "items": [
+                {
+                    "image": "/heritage/craft-field.webp",
+                    "title": "Fields",
+                    "text": "Yuno is a cold valley swept by the fuji-oroshi wind from the mountain. Its mineral-rich spring water nurtures organically grown Yamada-nishiki rice."
+                },
+                {
+                    "image": "/heritage/craft-water.webp",
+                    "title": "Water",
+                    "text": "Rain and snow on Mt. Fuji filter through lava rock for about 70 years and emerge as very soft water, with a hardness of just 32."
+                },
+                {
+                    "image": "/heritage/craft-hands.webp",
+                    "title": "Hands",
+                    "text": "In 1974, ahead of the rest of Japan, the brewery released a sake brewed from rice alone, with no added sugar or distilled alcohol."
+                }
+            ],
+            "quote": "Brewing sake takes a great deal of work, but I want to keep doing it with single-minded honesty, without ever cutting corners.",
+            "quoteBy": "Shinichi Sei, 18th-generation head"
+        },
+        "shizuoka": {
+            "title": "Shizuoka, the ginjo kingdom",
+            "body": [
+                "Between 1975 and 1984, Denbei Kawamura and fellow researchers at Shizuoka’s prefectural industrial research institute worked with local brewers to develop Shizuoka yeast.",
+                "Sake brewed with it is light and clean, with fruity aromas that recall melon and banana, and it is known for bringing out the flavour of food. Shizuoka came to be called the “ginjo kingdom”."
+            ],
+            "source": "Source: Shizuoka Prefecture official website"
+        },
+        "kurabiraki": {
+            "title": "Kura-biraki: celebrating the new sake",
+            "body": [
+                "Kura-biraki, the brewery’s open day, is a yearly celebration of the new season’s sake. Fujinishiki holds it with the Yuno village association, pouring new sake brewed with Mt. Fuji spring water.",
+                "Visitors tour the brewery, taste the new sake, shop for local produce and enjoy a children’s area. The 26th kura-biraki was held in March 2026, and the brewery wants it to be a day everyone can simply enjoy."
+            ],
+            "photos": [
+                {
+                    "image": "/heritage/kurabiraki-pour.webp",
+                    "caption": "Tasting the new sake"
+                },
+                {
+                    "image": "/heritage/kurabiraki-ayu.webp",
+                    "caption": "Local produce stalls"
+                },
+                {
+                    "image": "/heritage/kurabiraki-market.webp",
+                    "caption": "The sake sale"
+                }
+            ]
+        },
+        "photoCredit": "Photographs: Fujinishiki Brewery",
+        "cta": {
+            "title": "Amachi Hoshisora, from a 300-year-old brewery",
+            "button": "View products"
+        },
+        "teaser": {
+            "title": "A brewery since the Genroku era",
+            "link": "Read our heritage"
         }
     }
 }

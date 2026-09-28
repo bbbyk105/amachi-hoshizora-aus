@@ -1,60 +1,47 @@
-// src/data/utils.ts - 国際化対応版
-import { Product } from "./types";
+// src/data/utils.ts - 言語別の商品・トップページデータの取得
+import type { Product } from "./types";
+import { SORT_KEYS } from "./format";
 
 // ロケール別データのインポート
 import * as jaData from "./locales/ja";
 import * as enData from "./locales/en";
 
-// ロケール別データマップ
+export {
+  formatPrice,
+  formatPriceWithVolume,
+  getVolume,
+  sortProductsBy,
+  SORT_KEYS,
+} from "./format";
+export type { SortKey } from "./format";
+
+// ロケール別データマップ（未対応の言語は日本語）
 const dataByLocale = {
   ja: jaData,
   en: enData,
 } as const;
 
-// ロケール対応のデータ取得関数
-export const getProducts = (locale: string = "ja"): Product[] => {
-  const data =
-    dataByLocale[locale as keyof typeof dataByLocale] || dataByLocale.ja;
-  return data.products;
-};
+const dataFor = (locale: string) =>
+  dataByLocale[locale as keyof typeof dataByLocale] ?? dataByLocale.ja;
 
-export const getHeroData = (locale: string = "ja") => {
-  const data =
-    dataByLocale[locale as keyof typeof dataByLocale] || dataByLocale.ja;
-  return data.heroData;
-};
+export const getProducts = (locale: string = "ja"): Product[] =>
+  dataFor(locale).products;
 
-export const getTopicsData = (locale: string = "ja") => {
-  const data =
-    dataByLocale[locale as keyof typeof dataByLocale] || dataByLocale.ja;
-  return data.topicsData;
-};
+export const getHeroData = (locale: string = "ja") => dataFor(locale).heroData;
 
-export const getCategories = (locale: string = "ja"): string[] => {
-  const data =
-    dataByLocale[locale as keyof typeof dataByLocale] || dataByLocale.ja;
-  return data.categories;
-};
+export const getTopicsData = (locale: string = "ja") =>
+  dataFor(locale).topicsData;
 
-export const getSortOptions = (locale: string = "ja"): string[] => {
-  const data =
-    dataByLocale[locale as keyof typeof dataByLocale] || dataByLocale.ja;
-  return data.sortOptions;
-};
+/** 先頭は「すべて」 */
+export const getCategories = (locale: string = "ja"): string[] =>
+  dataFor(locale).categories;
 
-// 価格フォーマット（既存のまま - AUD表示）
-export const formatPrice = (price: number): string => {
-  return `$${price.toFixed(2)} AUD`;
-};
+export const getSortOptions = (locale: string = "ja"): string[] =>
+  dataFor(locale).sortOptions;
 
-// 容量（商品名から取得）
-export const getVolume = (product: Product): string =>
-  product.name.match(/\d+ml/)?.[0] ?? "500ml";
-
-// ボリューム付き価格フォーマット
-export const formatPriceWithVolume = (product: Product): string => {
-  return `${getVolume(product)} $${product.price.toFixed(2)} AUD`;
-};
+/** 並び替えの選択肢（キーと表示名） */
+export const getSortChoices = (locale: string = "ja") =>
+  getSortOptions(locale).map((label, i) => ({ key: SORT_KEYS[i], label }));
 
 // 商品詳細の取得（国際化対応）
 export const getProductDetails = (
@@ -132,40 +119,4 @@ export const getProductById = (
 ): Product | undefined => {
   const products = getProducts(locale);
   return products.find((product) => product.id === id);
-};
-
-// カテゴリ別商品取得（国際化対応）
-export const getProductsByCategory = (
-  category: string,
-  locale: string = "ja"
-): Product[] => {
-  const products = getProducts(locale);
-  const categories = getCategories(locale);
-  const allCategory = categories[0]; // "すべて" or "All"
-
-  if (category === allCategory) return products;
-  return products.filter((product) => product.category === category);
-};
-
-// 商品ソート（国際化対応）
-export const sortProducts = (
-  products: Product[],
-  sortBy: string,
-  locale: string = "ja"
-): Product[] => {
-  const sorted = [...products];
-  const sortOptions = getSortOptions(locale);
-  const [recommended, priceLowToHigh, priceHighToLow, newest] = sortOptions;
-
-  switch (sortBy) {
-    case priceLowToHigh:
-      return sorted.sort((a, b) => a.price - b.price);
-    case priceHighToLow:
-      return sorted.sort((a, b) => b.price - a.price);
-    case newest:
-      return sorted.sort((a, b) => b.id - a.id);
-    case recommended:
-    default:
-      return sorted.sort((a, b) => a.id - b.id);
-  }
 };

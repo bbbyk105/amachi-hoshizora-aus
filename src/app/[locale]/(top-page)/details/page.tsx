@@ -1,15 +1,19 @@
 // src/app/[locale]/(top-page)/details/page.tsx - 天地星空・富士の雫の紹介ページ
 import type { Metadata } from "next";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
+import { CtaBand } from "@/components/shared/CtaBand";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { SectionHeading } from "@/components/shared/SectionHeading";
+import { SpecList } from "@/components/shared/SpecList";
 import {
   formatPriceWithVolume,
   getProductDetails,
   getProducts,
   getVolume,
 } from "@/data";
+import { localizedAlternates } from "@/lib/site";
 
 interface DetailsPageProps {
   params: Promise<{ locale: string }>;
@@ -40,6 +44,7 @@ export async function generateMetadata({
   return {
     title: t("metaTitle"),
     description: t("metaDescription"),
+    alternates: localizedAlternates(locale, "/details"),
   };
 }
 
@@ -48,6 +53,7 @@ const DetailsPage = async ({ params }: DetailsPageProps) => {
   setRequestLocale(locale);
 
   const t = await getTranslations("details");
+  const tHeritage = await getTranslations("heritage");
   const products = getProducts(locale);
   const lineCopy = t.raw("lines") as Record<string, LineCopy>;
   const breweryBody = t.raw("brewery.body") as string[];
@@ -78,82 +84,82 @@ const DetailsPage = async ({ params }: DetailsPageProps) => {
   });
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* ヒーロー */}
-      <section className="pt-24 pb-10 sm:pb-14 text-center">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6">
-          <p className="text-xs tracking-[0.3em] text-gray-500 mb-4">
-            {t("eyebrow")}
-          </p>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-light text-gray-900 mb-5">
-            {t("title")}
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-            {t("lead")}
-          </p>
-        </div>
-      </section>
+    <div className="bg-white">
+      <PageHeader title={t("title")} lead={t("lead")} />
 
       {/* 商品ごとの紹介 */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16 sm:space-y-24">
+      <div className="mx-auto max-w-6xl space-y-24 px-5 sm:space-y-36 sm:px-8">
         {lines.map(({ key, main, items, copy, specs }, index) => (
           <section
             key={key}
-            className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 items-start"
+            className="grid grid-cols-1 items-start gap-10 md:grid-cols-12 md:gap-8"
           >
             <div
-              className={`relative aspect-square rounded-2xl overflow-hidden bg-gray-50 ${
-                index % 2 === 1 ? "md:order-last" : ""
+              className={`md:sticky md:top-24 md:col-span-6 ${
+                index % 2 === 1 ? "md:order-last md:col-start-7" : ""
               }`}
             >
-              <Image
-                src={main.image.url}
-                alt={main.image.alt}
-                fill
-                sizes="(min-width: 768px) 50vw, 100vw"
-                priority={index === 0}
-                className="object-cover"
-              />
+              <div
+                data-motion="reveal"
+                className="relative aspect-4/5 overflow-hidden bg-mist"
+              >
+                <Image
+                  src={main.image.url}
+                  alt={main.image.alt}
+                  fill
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  priority={index === 0}
+                  className={
+                    main.image.cutout
+                      ? "object-contain py-[6%]"
+                      : "object-cover"
+                  }
+                />
+              </div>
             </div>
 
-            <div>
-              <span className="inline-block text-xs text-gray-600 bg-gray-100 px-3 py-1 rounded-full mb-4">
+            <div
+              className={
+                index % 2 === 1
+                  ? "md:col-span-5 md:col-start-1 md:row-start-1"
+                  : "md:col-span-5 md:col-start-8"
+              }
+            >
+              <p className="text-xs tracking-[0.2em] text-ruri">
                 {main.category}
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-light text-gray-900 mb-3">
-                {main.label}
-              </h2>
-              <p className="text-base sm:text-lg text-gray-900 mb-5">
+              </p>
+              <SectionHeading
+                text={main.label}
+                className="mt-3 text-3xl sm:text-4xl"
+              />
+              <p
+                data-motion="fade"
+                className="mt-5 font-serif text-lg leading-relaxed text-ink"
+              >
                 {copy.catch}
               </p>
-              <div className="space-y-4 text-sm sm:text-base text-gray-600 leading-relaxed mb-8">
+              <div
+                data-motion="fade"
+                className="mt-6 space-y-4 text-sm text-muted-foreground sm:text-[15px]"
+              >
                 {copy.body.map((paragraph) => (
                   <p key={paragraph}>{paragraph}</p>
                 ))}
               </div>
 
-              <dl className="border-y border-gray-200 divide-y divide-gray-100 mb-8">
-                {specs.map((spec) => (
-                  <div
-                    key={spec.label}
-                    className="flex justify-between gap-6 py-3 text-sm"
-                  >
-                    <dt className="text-gray-500 shrink-0">{spec.label}</dt>
-                    <dd className="text-gray-900 text-right">{spec.value}</dd>
-                  </div>
-                ))}
-              </dl>
+              <SpecList items={specs} className="mt-10" />
 
-              <p className="text-xs text-gray-500 mb-3">{t("priceHeading")}</p>
-              <div className="flex flex-wrap gap-3">
+              <p className="mt-10 text-xs text-muted-foreground">
+                {t("priceHeading")}
+              </p>
+              <div className="mt-3 flex flex-wrap gap-3">
                 {items.map((product) => (
                   <Link
                     key={product.id}
                     href={`/products/${product.id}`}
-                    className="inline-flex items-center gap-2 rounded-full border border-gray-300 px-5 py-2.5 text-sm text-gray-900 hover:border-gray-900 hover:bg-gray-50 transition-colors"
+                    className="inline-flex h-12 items-center border border-ink px-6 text-sm tabular text-ink transition-colors hover:bg-ink hover:text-white"
                   >
                     {formatPriceWithVolume(product)}
-                    <ArrowRight className="w-4 h-4" />
                   </Link>
                 ))}
               </div>
@@ -163,44 +169,46 @@ const DetailsPage = async ({ params }: DetailsPageProps) => {
       </div>
 
       {/* 純米吟醸と純米大吟醸の違い */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 sm:mt-28">
-        <div className="bg-gray-50 rounded-2xl px-5 py-10 sm:p-12">
-          <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-5 text-center">
-            {t("polish.title")}
-          </h2>
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-10">
+      <section className="mt-28 bg-mist py-20 sm:mt-40 sm:py-28">
+        <div className="mx-auto max-w-3xl px-5 sm:px-8">
+          <SectionHeading text={t("polish.title")} />
+          <p className="mt-6 text-sm text-muted-foreground sm:text-base">
             {t("polish.body")}
           </p>
 
-          <figure>
-            <figcaption className="text-xs text-gray-500 mb-5">
+          <figure className="mt-12">
+            <figcaption className="text-xs text-muted-foreground">
               {t("polish.chartLabel")}
             </figcaption>
-            <ul className="space-y-6">
+            <ul className="mt-6 space-y-7">
               {lines
                 .filter(({ polishRatio }) => !Number.isNaN(polishRatio))
                 .map(({ key, main, polishRatio }) => (
                   <li key={key}>
-                    <div className="flex justify-between items-baseline text-sm mb-2">
-                      <span className="text-gray-900">
-                        {main.label}
-                        <span className="text-gray-500 ml-2">
+                    <div className="mb-2 flex items-baseline justify-between text-sm">
+                      <span className="text-ink">
+                        <span className="font-serif text-base">
+                          {main.label}
+                        </span>
+                        <span className="ml-3 text-muted-foreground">
                           {main.category}
                         </span>
                       </span>
-                      <span className="text-gray-900 font-medium">
-                        {polishRatio}%
+                      <span className="font-serif text-2xl tabular text-ink">
+                        <span data-count={polishRatio}>{polishRatio}</span>
+                        <span className="ml-0.5 text-sm">%</span>
                       </span>
                     </div>
-                    <div className="relative h-3 rounded-full bg-gray-200 overflow-hidden">
+                    <div className="relative h-1.5 bg-gray-300/70">
                       <div
-                        className="h-full rounded-full bg-blue-800"
+                        data-motion="bar"
+                        className="h-full bg-ruri"
                         style={{ width: `${polishRatio}%` }}
                       />
                       {[DAIGINJO_MAX, GINJO_MAX].map((line) => (
                         <span
                           key={line}
-                          className="absolute inset-y-0 w-px bg-white"
+                          className="absolute -inset-y-1.5 w-px bg-ink/40"
                           style={{ left: `${line}%` }}
                         />
                       ))}
@@ -209,7 +217,7 @@ const DetailsPage = async ({ params }: DetailsPageProps) => {
                 ))}
             </ul>
             {/* 区分の目盛り */}
-            <div className="relative h-5 mt-2 text-[11px] text-gray-500">
+            <div className="relative mt-3 h-5 text-[11px] text-muted-foreground">
               <span
                 className="absolute top-0 pr-1.5 whitespace-nowrap"
                 style={{ right: `${100 - DAIGINJO_MAX}%` }}
@@ -225,49 +233,54 @@ const DetailsPage = async ({ params }: DetailsPageProps) => {
             </div>
           </figure>
 
-          <p className="text-xs sm:text-sm text-gray-500 leading-relaxed mt-8">
+          <p className="mt-10 text-xs leading-relaxed text-muted-foreground sm:text-sm">
             {t("polish.note")}
           </p>
         </div>
       </section>
 
       {/* 醸造元 */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-20 sm:mt-28">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-14 items-center">
-          <div className="relative aspect-4/3 rounded-2xl overflow-hidden bg-gray-900">
+      <section className="mx-auto mt-28 max-w-6xl px-5 sm:mt-40 sm:px-8">
+        <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-12 md:gap-8">
+          <div
+            data-motion="parallax"
+            className="relative aspect-4/3 overflow-hidden bg-night md:col-span-7"
+          >
             <Image
               src="/mt-fuji.webp"
               alt=""
               fill
-              sizes="(min-width: 768px) 50vw, 100vw"
+              sizes="(min-width: 768px) 58vw, 100vw"
               className="object-cover"
             />
           </div>
-          <div>
-            <h2 className="text-xl sm:text-2xl font-light text-gray-900 mb-5">
-              {t("brewery.title")}
-            </h2>
-            <div className="space-y-4 text-sm sm:text-base text-gray-600 leading-relaxed">
+          <div className="md:col-span-4 md:col-start-9">
+            <SectionHeading text={t("brewery.title")} />
+            <div
+              data-motion="fade"
+              className="mt-6 space-y-4 text-sm text-muted-foreground sm:text-[15px]"
+            >
               {breweryBody.map((paragraph) => (
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+            <Link
+              href="/heritage"
+              className="mt-6 inline-block text-sm text-ink underline decoration-gray-300 underline-offset-[6px] transition-colors hover:decoration-ink"
+            >
+              {tHeritage("teaser.link")}
+            </Link>
           </div>
         </div>
       </section>
 
       {/* 商品一覧への導線 */}
-      <section className="py-20 sm:py-28 text-center">
-        <h2 className="text-lg sm:text-xl font-light text-gray-900 mb-6">
-          {t("cta.title")}
-        </h2>
-        <Link
+      <section className="mx-auto max-w-6xl px-5 py-28 sm:px-8 sm:py-40">
+        <CtaBand
+          title={t("cta.title")}
           href="/products"
-          className="inline-flex items-center gap-2 rounded-full bg-gray-900 px-8 py-3 text-sm text-white hover:bg-gray-700 transition-colors"
-        >
-          {t("cta.button")}
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+          label={t("cta.button")}
+        />
       </section>
     </div>
   );

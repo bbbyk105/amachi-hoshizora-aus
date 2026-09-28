@@ -16,6 +16,7 @@ export const products: Product[] = [
       alt: "Amachi Hoshisora Junmai Daiginjo 720ml",
       width: 400,
       height: 400,
+      cutout: true,
     },
     details: {
       alcoholContent: "15%",
@@ -43,6 +44,7 @@ export const products: Product[] = [
       alt: "Amachi Hoshisora Junmai Daiginjo 500ml",
       width: 400,
       height: 400,
+      cutout: true,
     },
     details: {
       alcoholContent: "15%",
@@ -94,7 +96,8 @@ export const heroData: HeroData = {
   ],
   subtitle: "Junmai Daiginjo",
   productName: "Amachi Hoshisora - Heaven Earth Starry Sky",
-  heroImage: "/mt-fuji.gif",
+  heroImage: "/hero/fuji-night-poster.webp",
+  heroVideo: "/hero/fuji-night.mp4",
 };
 
 export const topicsData: TopicData[] = [
@@ -103,6 +106,15 @@ export const topicsData: TopicData[] = [
     title: "Junmai Daiginjo brewed with Mt. Fuji underground water",
     description: "Exquisite masterpiece using 100% Yamada Nishiki rice",
     image: "/river.webp",
+    body: [
+      "Rain and snow that fall on Mt. Fuji sink deep underground, where layers of hard lava rock filter them slowly for about 70 years.",
+      "The water surfaces in Yuno, the village where the brewery stands. With a hardness of just 32, it is exceptionally soft. Fujinishiki has brewed with this spring water ever since it was founded in the Genroku era.",
+    ],
+    facts: [
+      { label: "Time underground", value: "About 70 years" },
+      { label: "Water hardness", value: "32 (soft)" },
+      { label: "Brewery founded", value: "Genroku era (1688–1704)" },
+    ],
   },
   {
     id: 2,
@@ -113,6 +125,15 @@ export const topicsData: TopicData[] = [
     productColor: "from-blue-200 to-blue-300",
     hasRings: true,
     image: "/rice.webp",
+    body: [
+      "Yuno is a cold valley swept by the fuji-oroshi, the wind that blows down from the mountain. Its mineral-rich spring water also nurtures organically grown Yamada-nishiki, the classic sake rice.",
+      "In 1974 the brewery released Fuji Tennen Jozoshu, a sake brewed from rice alone. Since 2006 it has been led by its 18th-generation head. Amachi Hoshisora is a junmai daiginjo made from Yamada-nishiki polished to 40%, brewed with nothing but rice and water.",
+    ],
+    facts: [
+      { label: "Rice", value: "100% Yamada-nishiki" },
+      { label: "Polishing ratio", value: "40%" },
+      { label: "Brewery head", value: "18th generation (since 2006)" },
+    ],
   },
   {
     id: 3,
@@ -121,6 +142,9 @@ export const topicsData: TopicData[] = [
     bgColor: "from-indigo-50 to-blue-100",
     productColor: "from-indigo-100 to-indigo-200",
     image: "/star.webp",
+    body: [
+      "Amachi Hoshisora means heaven, earth and starry sky. At the foot of Mt. Fuji, stars that shift with each season light up the night.",
+    ],
   },
 ];
 
