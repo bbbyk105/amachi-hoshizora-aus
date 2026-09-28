@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Globe, ChevronDown } from "lucide-react";
+import { saveLocalePreference } from "@/lib/localePreference";
 
 interface LanguageSelectorProps {
   variant?: "desktop" | "mobile";
@@ -48,12 +49,7 @@ export const LanguageSelector = ({
 
   const handleLanguageChange = (loc: string) => {
     // クッキーに保存（ミドルウェアと連携）
-    if (typeof window !== "undefined") {
-      document.cookie = `preferred-locale=${loc}; path=/; max-age=${
-        365 * 24 * 60 * 60
-      }; SameSite=Lax`;
-      localStorage.setItem("preferred-language", loc);
-    }
+    saveLocalePreference(loc);
 
     router.replace(pathname, { locale: loc });
     onLanguageChange?.();

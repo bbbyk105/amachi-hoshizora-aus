@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { usePathname, useRouter } from "@/i18n/routing";
 import { routing } from "@/i18n/routing";
@@ -8,26 +8,28 @@ import { Button } from "@/components/ui/button";
 import {
   AGE_VERIFIED_STORAGE_KEY,
   LOCATION_STORAGE_KEY,
+  readAgeVerified,
 } from "@/lib/ageGateStorage";
+import { saveLocalePreference } from "@/lib/localePreference";
+
+const subscribeNoop = () => () => {};
 
 export function AgeGate() {
   const t = useTranslations("ageGate");
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const [ready, setReady] = useState(false);
-  const [passed, setPassed] = useState(false);
+  // localStorage はサーバーで読めないので、ハイドレーション中は null（未確定）
+  const storedPassed = useSyncExternalStore<boolean | null>(
+    subscribeNoop,
+    readAgeVerified,
+    () => null
+  );
+  const [passedNow, setPassed] = useState(false);
+  const passed = passedNow || storedPassed === true;
+  const ready = storedPassed !== null;
   const [confirming, setConfirming] = useState(false);
   const scrollYRef = useRef(0);
-
-  useEffect(() => {
-    try {
-      setPassed(window.localStorage.getItem(AGE_VERIFIED_STORAGE_KEY) === "1");
-    } catch {
-      setPassed(false);
-    }
-    setReady(true);
-  }, []);
 
   useEffect(() => {
     if (passed) return;
@@ -118,12 +120,7 @@ export function AgeGate() {
 
   const handleLanguageChange = (nextLocale: (typeof routing.locales)[number]) => {
     if (nextLocale === locale || confirming) return;
-    if (typeof window !== "undefined") {
-      document.cookie = `preferred-locale=${nextLocale}; path=/; max-age=${
-        365 * 24 * 60 * 60
-      }; SameSite=Lax`;
-      localStorage.setItem("preferred-language", nextLocale);
-    }
+    saveLocalePreference(nextLocale);
     router.replace(pathname, { locale: nextLocale });
   };
 
