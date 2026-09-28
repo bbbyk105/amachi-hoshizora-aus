@@ -47,16 +47,9 @@ export const formatPrice = (price: number): string => {
   return `$${price.toFixed(2)} AUD`;
 };
 
-// ボリューム付き価格フォーマット（国際化対応）
-export const formatPriceWithVolume = (
-  product: Product,
-  locale: string = "ja"
-): string => {
-  if (product.category === "抹茶" || product.category === "Matcha") {
-    const weightText = locale === "en" ? "20g" : "20g";
-    return `${weightText} $${product.price.toFixed(2)} AUD`;
-  }
-  const volume = product.name.includes("720ml") ? "720ml" : "500ml";
+// ボリューム付き価格フォーマット（容量は商品名から取得）
+export const formatPriceWithVolume = (product: Product): string => {
+  const volume = product.name.match(/\d+ml/)?.[0] ?? "500ml";
   return `${volume} $${product.price.toFixed(2)} AUD`;
 };
 

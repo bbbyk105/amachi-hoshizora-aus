@@ -32,7 +32,7 @@ const TopPage = ({ params }: TopPageProps) => {
     id: product.id,
     name: product.name,
     description: product.description,
-    price: formatPriceWithVolume(product, locale),
+    price: formatPriceWithVolume(product),
     colorClass: product.colorClass || "from-gray-600 to-gray-700",
     label: product.label,
     image: product.image.url.replace("/", ""), // Remove leading slash for compatibility

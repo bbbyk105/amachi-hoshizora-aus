@@ -57,6 +57,33 @@ export const products: Product[] = [
     stripePriceId: "price_amachi_500ml_aud",
     colorClass: "from-blue-700 to-blue-800",
   },
+  {
+    id: 3,
+    name: "Fuji no Shizuku Junmai Ginjo 180ml",
+    description: "Made with Mt. Fuji underground water, in a single-serve size",
+    price: 30,
+    originalPrice: null,
+    category: "Junmai Ginjo",
+    label: "Fuji no Shizuku",
+    image: {
+      url: "/180.webp",
+      alt: "Fuji no Shizuku Junmai Ginjo 180ml",
+      width: 400,
+      height: 400,
+    },
+    details: {
+      alcoholContent: "15%",
+      riceMilling: "55%",
+      brewery: "Fujinishiki Brewery",
+      region: "Fuji City, Shizuoka Prefecture",
+      taste: "Clear ginjo aroma with a soft, gentle mouthfeel",
+      temperature: "10-15℃ (50-59°F)",
+    },
+    stock: 100,
+    stripeProductId: "prod_fuji_shizuku_180ml_au",
+    stripePriceId: "price_fuji_shizuku_180ml_aud",
+    colorClass: "from-blue-900 to-indigo-900",
+  },
 ];
 
 export const heroData: HeroData = {
@@ -97,7 +124,7 @@ export const topicsData: TopicData[] = [
   },
 ];
 
-export const categories = ["All", "Junmai Daiginjo"];
+export const categories = ["All", "Junmai Daiginjo", "Junmai Ginjo"];
 
 export const sortOptions = [
   "Recommended",
