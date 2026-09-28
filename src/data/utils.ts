@@ -47,10 +47,13 @@ export const formatPrice = (price: number): string => {
   return `$${price.toFixed(2)} AUD`;
 };
 
-// ボリューム付き価格フォーマット（容量は商品名から取得）
+// 容量（商品名から取得）
+export const getVolume = (product: Product): string =>
+  product.name.match(/\d+ml/)?.[0] ?? "500ml";
+
+// ボリューム付き価格フォーマット
 export const formatPriceWithVolume = (product: Product): string => {
-  const volume = product.name.match(/\d+ml/)?.[0] ?? "500ml";
-  return `${volume} $${product.price.toFixed(2)} AUD`;
+  return `${getVolume(product)} $${product.price.toFixed(2)} AUD`;
 };
 
 // 商品詳細の取得（国際化対応）

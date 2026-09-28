@@ -8,6 +8,7 @@ import {
   Package,
   Info,
   HeadphonesIcon,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "./ui/button";
 import { useState } from "react";
@@ -25,6 +26,7 @@ export const Header = () => {
 
   const menuItems = [
     { href: "/", label: t("home"), icon: HeadphonesIcon },
+    { href: "/details", label: t("details"), icon: BookOpen },
     { href: "/faq", label: t("qa"), icon: Info },
     { href: "/products", label: t("product"), icon: Package },
   ];

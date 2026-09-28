@@ -6,6 +6,7 @@
     },
     "navigation": {
         "home": "HOME",
+        "details": "Details",
         "qa": "Q&A",
         "product": "PRODUCTS",
         "search": "Search",
@@ -335,6 +336,55 @@
                 "answer": "AMACHIHOSHISORA has an alcohol content of 15%. This is a standard level for junmai daiginjo, and you can enjoy a solid taste while having a refreshing drinking experience."
             }
         ]
+    },
+    "details": {
+        "metaTitle": "About Amachi Hoshisora & Fuji no Shizuku",
+        "metaDescription": "Two junmai sakes brewed by Fujinishiki Brewery with Mt. Fuji underground water: Amachi Hoshisora Junmai Daiginjo and Fuji no Shizuku Junmai Ginjo. Taste, specs and how they differ.",
+        "eyebrow": "DETAILS",
+        "title": "Amachi Hoshisora & Fuji no Shizuku",
+        "lead": "Two junmai sakes brewed with Mt. Fuji underground water by Fujinishiki Brewery in Fuji City, Shizuoka. Here is what sets each one apart.",
+        "spec": {
+            "type": "Type",
+            "rice": "Rice",
+            "volume": "Volume"
+        },
+        "priceHeading": "Price (tax included)",
+        "lines": {
+            "amachi": {
+                "catch": "A fragrant junmai daiginjo, polished to 40%",
+                "body": [
+                    "Brewed from 100% Yamada-nishiki rice polished down to 40% of each grain. Using only the core of the rice keeps the flavour clean, with an elegant, fragrant aroma and a smooth mouthfeel.",
+                    "It was born from the brewery's wish to take on the world with true sake made only from rice and water. A fine choice as a gift or for a special occasion."
+                ],
+                "rice": "100% Yamada-nishiki"
+            },
+            "shizuku": {
+                "catch": "A clear, gentle junmai ginjo in a single-serve bottle",
+                "body": [
+                    "Brewed from rice polished to 55%, this junmai ginjo has a clear ginjo aroma and a soft, gentle mouthfeel.",
+                    "At 180ml (one gō, the traditional Japanese serving size), it suits anyone trying sake for the first time or who wants to finish a bottle in a single evening."
+                ]
+            }
+        },
+        "polish": {
+            "title": "Junmai Ginjo vs Junmai Daiginjo",
+            "body": "Both are junmai sake: brewed only from rice, rice koji and water, with no added distilled alcohol. The difference is how far the rice is polished. The polishing ratio is the share of each grain left after milling. Sake polished to 60% or less can be called ginjo, and 50% or less, daiginjo.",
+            "chartLabel": "Rice polishing ratio (share of each grain remaining)",
+            "ginjoLine": "Ginjo ≤60%",
+            "daiginjoLine": "Daiginjo ≤50%",
+            "note": "The outer layers of the grain hold more protein and fat, which can add rough flavours. The further the rice is polished, the lighter and more fragrant the sake tends to be."
+        },
+        "brewery": {
+            "title": "The Brewery: Fujinishiki",
+            "body": [
+                "Fujinishiki Brewery was founded in the Genroku era (1688–1704) of the Edo period in Fuji City, Shizuoka, and has been brewing at the foot of Mt. Fuji for more than 300 years.",
+                "Its brewing water is Mt. Fuji underground water: rain and snow that seep into the mountain over many years and are filtered through layers of volcanic rock. Both Amachi Hoshisora and Fuji no Shizuku are brewed with this water."
+            ]
+        },
+        "cta": {
+            "title": "Find your bottle",
+            "button": "View all products"
+        }
     },
     "termsOfService": {
         "title": "Terms of Service",

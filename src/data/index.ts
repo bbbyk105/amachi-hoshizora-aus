@@ -10,6 +10,7 @@ export {
   getSortOptions,
   formatPrice,
   formatPriceWithVolume,
+  getVolume,
   getProductDetails,
   getProductById,
   getProductsByCategory,
