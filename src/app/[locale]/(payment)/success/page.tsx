@@ -1,179 +1,108 @@
-"use client";
-
-import { useEffect, useState, useRef, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+// src/app/[locale]/(payment)/success/page.tsx - 決済完了
+// Stripe のセッションはサーバーで取得する（秘密鍵をブラウザに渡さない）
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Package, ArrowLeft } from "lucide-react";
-import { useCart } from "@/store/cart";
-import { useTranslations } from "next-intl";
+import { buttonVariants } from "@/components/ui/button";
+import { getCheckoutSessionSummary } from "@/lib/stripe";
+import { ClearCartOnMount } from "@/components/cart/ClearCartOnMount";
 
-// ✅ Stripeセッションデータの型定義
-interface StripeSessionData {
-  id: string;
-  payment_status: string;
-  amount_total: number | null;
-  currency: string | null;
-  customer_details: {
-    email: string | null;
-    name: string | null;
-  } | null;
+interface SuccessPageProps {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ session_id?: string | string[] }>;
 }
 
-// useSearchParams()を使用するコンポーネント
-function SuccessPageContent() {
-  const searchParams = useSearchParams();
-  const sessionId = searchParams.get("session_id");
-  const [sessionData, setSessionData] = useState<StripeSessionData | null>(
-    null
-  );
-  const [loading, setLoading] = useState(true);
-  const { clearCart } = useCart();
+export async function generateMetadata({
+  params,
+}: SuccessPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "success" });
+  return { title: t("title"), robots: { index: false } };
+}
 
-  // 翻訳フック
-  const t = useTranslations("success");
+const row = "grid grid-cols-[9em_1fr] gap-4 border-b border-border py-3";
 
-  // useRefで一度だけの実行を保証
-  const hasInitialized = useRef(false);
+export default async function SuccessPage({
+  params,
+  searchParams,
+}: SuccessPageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
 
-  const fetchSessionData = async (sessionId: string) => {
-    try {
-      const response = await fetch(`/api/checkout?session_id=${sessionId}`);
-      if (response.ok) {
-        const data = await response.json();
-        setSessionData(data.session);
-      }
-    } catch (error) {
-      console.error("Failed to fetch session data:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    // 初期化が済んでいる場合は何もしない
-    if (hasInitialized.current) return;
-
-    // 初期化フラグを立てる
-    hasInitialized.current = true;
-
-    // カートをクリア（一度だけ）
-    clearCart();
-
-    // セッション情報を取得
-    if (sessionId) {
-      fetchSessionData(sessionId);
-    } else {
-      setLoading(false);
-    }
-  }, [sessionId, clearCart]); // 必要な依存関係を含める
+  const { session_id } = await searchParams;
+  const sessionId = typeof session_id === "string" ? session_id : null;
+  const session = sessionId ? await getCheckoutSessionSummary(sessionId) : null;
+  const t = await getTranslations("success");
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 flex items-center">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="text-center">
-          <CardContent className="p-8 space-y-6">
-            {/* 成功アイコン */}
-            <div className="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-green-600" />
-            </div>
+    <div className="bg-white">
+      <ClearCartOnMount />
+      <div className="mx-auto max-w-2xl px-5 pt-32 pb-28 sm:px-8 sm:pt-40 sm:pb-40">
+        <h1 className="font-serif text-3xl text-ink sm:text-4xl">{t("title")}</h1>
+        <p className="mt-5 text-sm text-muted-foreground sm:text-base">
+          {t("message")}
+        </p>
 
-            {/* メッセージ */}
-            <div className="space-y-3">
-              <h1 className="text-2xl font-medium text-gray-900">
-                {t("title")}
-              </h1>
-              <p className="text-gray-600">{t("message")}</p>
-            </div>
-
-            {/* セッション情報 */}
-            {loading ? (
-              <div className="text-sm text-gray-500">
-                {t("loadingOrderInfo")}
-              </div>
-            ) : sessionData ? (
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-                <h3 className="font-medium text-gray-900">
-                  {t("orderDetails")}
-                </h3>
-                <div className="text-sm text-gray-600 space-y-1">
-                  <p>
-                    {t("orderId")}: {sessionData.id}
-                  </p>
-                  <p>
-                    {t("paymentStatus")}:{" "}
-                    {sessionData.payment_status === "paid"
+        {/* セッション情報 */}
+        <div className="mt-12 border-t border-ink/80">
+          {session ? (
+            <>
+              <h2 className="pt-6 font-serif text-lg text-ink">{t("orderDetails")}</h2>
+              <dl className="mt-3 text-sm">
+                <div className={row}>
+                  <dt className="text-muted-foreground">{t("orderId")}</dt>
+                  <dd className="break-all text-ink">{session.id}</dd>
+                </div>
+                <div className={row}>
+                  <dt className="text-muted-foreground">{t("paymentStatus")}</dt>
+                  <dd className="text-ink">
+                    {session.paymentStatus === "paid"
                       ? t("paymentCompleted")
                       : t("paymentProcessing")}
-                  </p>
-                  {sessionData.amount_total && (
-                    <p>
-                      {t("totalAmount")}: $
-                      {(sessionData.amount_total / 100).toFixed(2)}{" "}
-                      {sessionData.currency?.toUpperCase()}
-                    </p>
-                  )}
-                  {sessionData.customer_details?.email && (
-                    <p>
-                      {t("email")}: {sessionData.customer_details.email}
-                    </p>
-                  )}
+                  </dd>
                 </div>
-              </div>
-            ) : sessionId ? (
-              <div className="text-sm text-gray-500">
-                {t("orderInfoFailed")}
-              </div>
-            ) : (
-              <div className="text-sm text-gray-500">
-                {t("sessionNotFound")}
-              </div>
-            )}
+                {session.amountTotal !== null && (
+                  <div className={row}>
+                    <dt className="text-muted-foreground">{t("totalAmount")}</dt>
+                    <dd className="tabular text-ink">
+                      ${(session.amountTotal / 100).toFixed(2)}{" "}
+                      {session.currency?.toUpperCase()}
+                    </dd>
+                  </div>
+                )}
+                {session.email && (
+                  <div className={row}>
+                    <dt className="text-muted-foreground">{t("email")}</dt>
+                    <dd className="break-all text-ink">{session.email}</dd>
+                  </div>
+                )}
+              </dl>
+            </>
+          ) : (
+            <p className="py-6 text-sm text-muted-foreground">
+              {sessionId ? t("orderInfoFailed") : t("sessionNotFound")}
+            </p>
+          )}
+        </div>
 
-            {/* アクションボタン */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/products">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  <Package className="w-4 h-4 mr-2" />
-                  {t("backToProducts")}
-                </Button>
-              </Link>
-              <Link href="/">
-                <Button className="bg-gray-900 hover:bg-gray-800 text-white w-full sm:w-auto">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  {t("backToHome")}
-                </Button>
-              </Link>
-            </div>
+        {/* アクション */}
+        <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/"
+            className={buttonVariants()}
+          >
+            {t("backToHome")}
+          </Link>
+          <Link
+            href="/products"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            {t("backToProducts")}
+          </Link>
+        </div>
 
-            {/* 追加情報 */}
-            <div className="text-xs text-gray-500 pt-4 border-t">
-              <p>{t("additionalInfo")}</p>
-            </div>
-          </CardContent>
-        </Card>
+        <p className="mt-12 text-xs text-muted-foreground">{t("additionalInfo")}</p>
       </div>
     </div>
-  );
-}
-
-// メインのページコンポーネント（Suspenseで囲む）
-export default function SuccessPage() {
-  const tCommon = useTranslations("common");
-
-  return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-gray-50 pt-16 flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">{tCommon("loading")}</p>
-          </div>
-        </div>
-      }
-    >
-      <SuccessPageContent />
-    </Suspense>
   );
 }

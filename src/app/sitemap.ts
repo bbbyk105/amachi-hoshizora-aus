@@ -40,7 +40,14 @@ function createLocalizedEntries(
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
-  const staticPages = ["details", "commerce", "privacy", "faq", "terms"];
+  const staticPages = [
+    "details",
+    "heritage",
+    "commerce",
+    "privacy",
+    "faq",
+    "terms",
+  ];
   const productIds = getProducts(routing.defaultLocale).map(
     (product) => product.id,
   );

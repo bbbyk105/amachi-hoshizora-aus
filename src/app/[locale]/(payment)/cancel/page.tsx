@@ -1,59 +1,61 @@
-"use client";
-
+// src/app/[locale]/(payment)/cancel/page.tsx - 決済キャンセル
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/routing";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { XCircle, ArrowLeft, ShoppingCart } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { buttonVariants } from "@/components/ui/button";
 
-export default function CancelPage() {
-  const t = useTranslations("cancel");
+interface CancelPageProps {
+  params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: CancelPageProps): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "cancel" });
+  return { title: t("title"), robots: { index: false } };
+}
+
+export default async function CancelPage({ params }: CancelPageProps) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("cancel");
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-16 flex items-center">
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Card className="text-center">
-          <CardContent className="p-8 space-y-6">
-            {/* キャンセルアイコン */}
-            <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
-              <XCircle className="w-10 h-10 text-red-600" />
-            </div>
+    <div className="bg-white">
+      <div className="mx-auto max-w-2xl px-5 pt-32 pb-28 sm:px-8 sm:pt-40 sm:pb-40">
+        <h1 className="font-serif text-3xl text-ink sm:text-4xl">
+          {t("title")}
+        </h1>
+        <p className="mt-5 text-sm text-muted-foreground sm:text-base">
+          {t("message")}
+        </p>
 
-            {/* メッセージ */}
-            <div className="space-y-3">
-              <h1 className="text-2xl font-medium text-gray-900">
-                {t("title")}
-              </h1>
-              <p className="text-gray-600">{t("message")}</p>
-            </div>
+        <div className="mt-12 flex flex-col gap-3 sm:flex-row">
+          <Link
+            href="/cart"
+            className={buttonVariants()}
+          >
+            {t("backToCart")}
+          </Link>
+          <Link
+            href="/products"
+            className={buttonVariants({ variant: "outline" })}
+          >
+            {t("viewProducts")}
+          </Link>
+        </div>
+        <Link
+          href="/"
+          className="mt-6 inline-block text-sm text-muted-foreground underline underline-offset-4 hover:text-ink"
+        >
+          {t("backToHome")}
+        </Link>
 
-            {/* アクションボタン */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <Link href="/cart">
-                <Button className="bg-gray-900 hover:bg-gray-800 text-white w-full sm:w-auto">
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  {t("backToCart")}
-                </Button>
-              </Link>
-              <Link href="/products">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  {t("viewProducts")}
-                </Button>
-              </Link>
-              <Link href="/">
-                <Button variant="outline" className="w-full sm:w-auto">
-                  <ArrowLeft className="w-4 h-4 mr-2" />
-                  {t("backToHome")}
-                </Button>
-              </Link>
-            </div>
-
-            {/* 追加情報 */}
-            <div className="text-xs text-gray-500 pt-4 border-t">
-              <p>{t("additionalInfo")}</p>
-            </div>
-          </CardContent>
-        </Card>
+        <p className="mt-12 border-t border-border pt-6 text-xs text-muted-foreground">
+          {t("additionalInfo")}
+        </p>
       </div>
     </div>
   );
