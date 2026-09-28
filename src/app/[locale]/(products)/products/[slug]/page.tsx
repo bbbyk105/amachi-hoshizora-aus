@@ -74,6 +74,11 @@ const ProductDetailPage = () => {
 
   const productDetails = getProductDetails(product, locale);
 
+  // 同カテゴリの他商品（1商品しかないカテゴリでは空になる）
+  const relatedProducts = getProducts(locale)
+    .filter((p) => p.id !== product.id && p.category === product.category)
+    .slice(0, 4);
+
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       {/* ナビゲーション */}
@@ -243,17 +248,13 @@ const ProductDetailPage = () => {
         </div>
 
         {/* 関連商品セクション */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">
-            {t("relatedProducts")}
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {getProducts(locale)
-              .filter(
-                (p) => p.id !== product.id && p.category === product.category
-              )
-              .slice(0, 4)
-              .map((relatedProduct) => (
+        {relatedProducts.length > 0 && (
+          <div className="mt-16">
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">
+              {t("relatedProducts")}
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {relatedProducts.map((relatedProduct) => (
                 <Card
                   key={relatedProduct.id}
                   className="border-none shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02] cursor-pointer"
@@ -281,8 +282,9 @@ const ProductDetailPage = () => {
                   </CardContent>
                 </Card>
               ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

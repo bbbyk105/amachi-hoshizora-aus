@@ -9,6 +9,14 @@ export type StoredAgeGateLocation = {
   ts: number;
 };
 
+export function readAgeVerified(): boolean {
+  try {
+    return window.localStorage.getItem(AGE_VERIFIED_STORAGE_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function readStoredAgeGateLocation(): StoredAgeGateLocation | null {
   if (typeof window === "undefined") return null;
   try {

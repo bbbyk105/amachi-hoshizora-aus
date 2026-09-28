@@ -56,6 +56,33 @@ export const products: Product[] = [
     stripePriceId: "price_amachi_500ml_aud",
     colorClass: "from-blue-700 to-blue-800",
   },
+  {
+    id: 3,
+    name: "富士の雫 純米吟醸 180ml",
+    description: "富士の伏流水使用・飲みきりサイズ",
+    price: 30,
+    originalPrice: null,
+    category: "純米吟醸",
+    label: "富士の雫",
+    image: {
+      url: "/180.webp",
+      alt: "富士の雫 純米吟醸 180ml",
+      width: 400,
+      height: 400,
+    },
+    details: {
+      alcoholContent: "15%",
+      riceMilling: "55%",
+      brewery: "富士錦酒造",
+      region: "静岡県富士市",
+      taste: "澄んだ吟醸香とやわらかな口当たり",
+      temperature: "10-15℃",
+    },
+    stock: 100,
+    stripeProductId: "prod_fuji_shizuku_180ml_au",
+    stripePriceId: "price_fuji_shizuku_180ml_aud",
+    colorClass: "from-blue-900 to-indigo-900",
+  },
 ];
 
 export const heroData: HeroData = {
@@ -91,7 +118,7 @@ export const topicsData: TopicData[] = [
   },
 ];
 
-export const categories = ["すべて", "純米大吟醸"];
+export const categories = ["すべて", "純米大吟醸", "純米吟醸"];
 
 export const sortOptions = [
   "おすすめ順",
