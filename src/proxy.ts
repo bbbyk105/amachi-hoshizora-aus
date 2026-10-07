@@ -43,6 +43,14 @@ export function proxy(request: NextRequest) {
     );
   }
 
+  // ロケールなしの URL（/products・/details など）は既定言語へ 308。
+  // next-intl に任せると 307（一時）になり、Google がリダイレクト元を正規 URL に選んでしまう
+  if (!pathnameHasLocale) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${routing.defaultLocale}${pathname}`;
+    return NextResponse.redirect(url, 308);
+  }
+
   // 通常のnext-intlミドルウェア処理
   const response = intlMiddleware(request);
 
