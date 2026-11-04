@@ -50,6 +50,16 @@ test('受けていない配送日時の指定を FAQ に書かない', async ({ 
   expect(ja.includes('配送日時')).toBe(false);
 });
 
+test('FAQ の配送の回答は特商法の表記と同じ内容にする', async ({ app }) => {
+  const en = await readPageText(app.baseUrl, '/en/faq');
+  const ja = await readPageText(app.baseUrl, '/ja/faq');
+
+  expect(en.includes('temperature control')).toBe(false);
+  expect(en.includes('3-5 business days')).toBe(true);
+  expect(ja.includes('温度管理')).toBe(false);
+  expect(ja.includes('3-5営業日')).toBe(true);
+});
+
 test('扱っていない支払い方法と配送を書かない', async ({ app }) => {
   const en = await readPageText(app.baseUrl, '/en/commerce');
   const ja = await readPageText(app.baseUrl, '/ja/commerce');
