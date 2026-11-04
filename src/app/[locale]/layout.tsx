@@ -12,7 +12,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { AgeGate } from "@/components/AgeGate";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+import { JsonLd } from "@/components/shared/JsonLd";
 import { siteUrl } from "@/lib/site";
+import { siteStructuredData } from "@/lib/structured-data";
 import { ageVerifiedBootScript } from "@/lib/ageGateStorage";
 
 // フォントは fujisan と同じ構成（本文: Noto Serif + Noto Serif JP / 見出し: Shippori Mincho）
@@ -126,167 +128,6 @@ export async function generateMetadata({
     verification: {
       google: "I9vYqWRKCC6wQW9ozvpwFSO9kevgNgmyEra13lQWQYY", // Google Search Consoleで取得
     },
-
-    // JSON-LD構造化データを追加
-    other: {
-      "application/ld+json": JSON.stringify([
-        {
-          "@context": "https://schema.org",
-          "@type": "LocalBusiness",
-          "@id": `${baseUrl}/#organization`,
-          name: "AMACHI HOSHISORA Australia",
-          alternateName: [
-            "天地星空",
-            "Amachi Aus",
-            "AMACHI AUS",
-            "Amachi Hoshisora Australia",
-          ],
-          url: baseUrl,
-          logo: `${baseUrl}/images/star.webp`,
-          image: `${baseUrl}/images/star.webp`,
-          description:
-            "AMACHI HOSHISORA Australia (Amachi Aus) - Premium Junmai Daiginjo sake from Mt. Fuji, crafted by Fujinishiki Brewery with 300 years of tradition. Made with 100% Yamada Nishiki rice and pure Mt. Fuji spring water. Official distributor in Australia.",
-          address: {
-            "@type": "PostalAddress",
-            addressLocality: "Sydney",
-            addressRegion: "NSW",
-            addressCountry: "AU",
-          },
-          areaServed: [
-            {
-              "@type": "Country",
-              name: "Australia",
-            },
-            {
-              "@type": "City",
-              name: "Sydney",
-            },
-            {
-              "@type": "City",
-              name: "Melbourne",
-            },
-            {
-              "@type": "City",
-              name: "Brisbane",
-            },
-          ],
-          makesOffer: {
-            "@type": "Offer",
-            itemOffered: {
-              "@type": "Product",
-              name: "AMACHI HOSHISORA Junmai Daiginjo",
-              description: "Premium Japanese sake from Mt. Fuji",
-            },
-          },
-          sameAs: ["https://www.instagram.com/amasora_mtfuji3776/"],
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "Product",
-          name: "AMACHI HOSHISORA Junmai Daiginjo",
-          alternateName: [
-            "天地星空 純米大吟醸",
-            "Amachi Hoshisora",
-            "Amachi Aus Sake",
-          ],
-          brand: {
-            "@type": "Brand",
-            name: "AMACHI HOSHISORA",
-            alternateName: ["Amachi Aus", "天地星空"],
-            logo: `${baseUrl}/images/star.webp`,
-          },
-          description:
-            "AMACHI HOSHISORA (Amachi Aus) - The finest Junmai Daiginjo sake crafted at the base of sacred Mt. Fuji. Brewed by Fujinishiki Brewery using 100% Yamada Nishiki rice and pristine Mt. Fuji spring water, embodying 300 years of traditional sake brewing expertise. This premium Japanese sake offers an exquisite harmony of flavors with elegant fragrance and refined taste. Available in Australia.",
-          manufacturer: {
-            "@type": "Organization",
-            name: "Fujinishiki Brewery",
-            logo: `${baseUrl}/images/star.webp`,
-            address: {
-              "@type": "PostalAddress",
-              streetAddress: "Yunono, Fuji City",
-              addressLocality: "Shizuoka",
-              addressCountry: "JP",
-            },
-            foundingDate: "1688",
-          },
-          category: "Junmai Daiginjo Sake",
-          alcoholWarning: "Drink responsibly. Must be 18+ to purchase.",
-          countryOfOrigin: {
-            "@type": "Country",
-            name: "Japan",
-          },
-          offers: {
-            "@type": "AggregateOffer",
-            availability: "https://schema.org/InStock",
-            priceCurrency: "AUD",
-            seller: {
-              "@type": "Organization",
-              name: "AMACHI HOSHISORA Australia",
-              alternateName: "Amachi Aus",
-            },
-          },
-          aggregateRating: {
-            "@type": "AggregateRating",
-            ratingValue: "4.8",
-            reviewCount: "127",
-          },
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          "@id": `${baseUrl}/#website`,
-          url: baseUrl,
-          name: "AMACHI HOSHISORA Australia",
-          alternateName: ["Amachi Aus", "天地星空 オーストラリア"],
-          description:
-            "AMACHI HOSHISORA Australia (Amachi Aus) - Premium Junmai Daiginjo sake from Mt. Fuji, available in Australia",
-          publisher: {
-            "@id": `${baseUrl}/#organization`,
-          },
-          potentialAction: [
-            {
-              "@type": "SearchAction",
-              target: {
-                "@type": "EntryPoint",
-                urlTemplate: `${baseUrl}/search?q={search_term_string}`,
-              },
-              "query-input": "required name=search_term_string",
-            },
-          ],
-          inLanguage: ["en-AU", "ja-JP"],
-        },
-        {
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: [
-            {
-              "@type": "Question",
-              name: "What is AMACHI HOSHISORA Australia (Amachi Aus)?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "AMACHI HOSHISORA Australia (also known as Amachi Aus or 天地星空 AUS) is the official Australian distributor of premium Junmai Daiginjo sake crafted at the base of Mt. Fuji by Fujinishiki Brewery. Made with 100% Yamada Nishiki rice and pure Mt. Fuji spring water, it represents 300 years of traditional Japanese sake brewing excellence.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "Where can I buy AMACHI HOSHISORA (Amachi Aus) in Australia?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "AMACHI HOSHISORA (Amachi Aus) is available through selected premium sake retailers, Japanese restaurants, and online stores across Australia, particularly in Sydney, Melbourne, and Brisbane. Contact us for the nearest stockist.",
-              },
-            },
-            {
-              "@type": "Question",
-              name: "What makes AMACHI HOSHISORA (Amachi Aus) special?",
-              acceptedAnswer: {
-                "@type": "Answer",
-                text: "AMACHI HOSHISORA (Amachi Aus) is special because it uses 100% premium Yamada Nishiki rice (the king of sake rice), pure Mt. Fuji spring water, and is crafted by master brewers with 300 years of expertise at Fujinishiki Brewery located at the foothills of sacred Mt. Fuji in Japan.",
-              },
-            },
-          ],
-        },
-      ]),
-    },
   };
 }
 
@@ -336,6 +177,7 @@ export default async function RootLayout({
             __html: `if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');${ageVerifiedBootScript(locale)}`,
           }}
         />
+        <JsonLd data={siteStructuredData} />
       </head>
       <body
         className={`${notoSerif.variable} ${notoSerifJp.variable} ${shipporiMincho.variable}`}

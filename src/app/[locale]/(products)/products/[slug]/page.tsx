@@ -14,8 +14,10 @@ import {
 import { ProductTile } from "@/components/ProductTile";
 import { PurchasePanel } from "@/components/products/PurchasePanel";
 import { SectionHeading } from "@/components/shared/SectionHeading";
+import { JsonLd } from "@/components/shared/JsonLd";
 import { SpecList } from "@/components/shared/SpecList";
 import { localizedAlternates } from "@/lib/site";
+import { productStructuredData } from "@/lib/structured-data";
 
 interface ProductDetailPageProps {
   params: Promise<{ locale: string; slug: string }>;
@@ -62,6 +64,7 @@ export default async function ProductDetailPage({
 
   return (
     <div className="bg-white pt-16">
+      <JsonLd data={productStructuredData(product, locale)} />
       {/* パンくず */}
       <nav
         aria-label="Breadcrumb"
