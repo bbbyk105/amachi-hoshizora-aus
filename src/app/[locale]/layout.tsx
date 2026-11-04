@@ -13,7 +13,7 @@ import { Footer } from "@/components/Footer";
 import { AgeGate } from "@/components/AgeGate";
 import { MotionProvider } from "@/components/motion/MotionProvider";
 import { siteUrl } from "@/lib/site";
-import { AGE_VERIFIED_BOOT_SCRIPT } from "@/lib/ageGateStorage";
+import { ageVerifiedBootScript } from "@/lib/ageGateStorage";
 
 // フォントは fujisan と同じ構成（本文: Noto Serif + Noto Serif JP / 見出し: Shippori Mincho）
 const notoSerif = Noto_Serif({
@@ -330,10 +330,10 @@ export default async function RootLayout({
       <head>
         {/* 最初の描画より前に <html> へ印を付ける。
             motion: 動きを減らす設定でなければ、GSAP の演出前に要素を隠しておく
-            age-verified: 年齢確認を通過済みなら、確認画面の下地を出さない */}
+            age-verified: この言語の年齢確認を通過済みなら、確認画面の下地を出さない */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');${AGE_VERIFIED_BOOT_SCRIPT}`,
+            __html: `if(!matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion');${ageVerifiedBootScript(locale)}`,
           }}
         />
       </head>

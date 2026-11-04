@@ -1,34 +1,36 @@
 "use client";
 
-import { useState, useSyncExternalStore } from "react";
+import { useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import { markAgeVerified, readAgeVerified } from "@/lib/ageGateStorage";
+import {
+  AGE_VERIFIED_EVENT,
+  markAgeVerified,
+  readAgeVerified,
+} from "@/lib/ageGateStorage";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
 import { useLocaleSwitcher } from "@/hooks/use-locale-switcher";
 
-const subscribeNoop = () => () => {};
+const subscribeAgeVerified = (onChange: () => void) => {
+  window.addEventListener(AGE_VERIFIED_EVENT, onChange);
+  return () => window.removeEventListener(AGE_VERIFIED_EVENT, onChange);
+};
 
 export function AgeGate() {
   const t = useTranslations("ageGate");
   const { locale, locales, switchLocale } = useLocaleSwitcher();
   // localStorage はサーバーで読めないので、ハイドレーション中は null（未確定）
+  // 必要な年齢は言語で違うので、言語を切り替えたら確かめ直す
   const storedPassed = useSyncExternalStore<boolean | null>(
-    subscribeNoop,
-    readAgeVerified,
+    subscribeAgeVerified,
+    () => readAgeVerified(locale),
     () => null
   );
-  const [passedNow, setPassed] = useState(false);
-  const passed = passedNow || storedPassed === true;
+  const passed = storedPassed === true;
   const ready = storedPassed !== null;
 
   // 確認画面を出している間は後ろのページをスクロールさせない
   useBodyScrollLock(ready && !passed);
-
-  const handleConfirm = () => {
-    setPassed(true);
-    markAgeVerified();
-  };
 
   const handleDecline = () => {
     window.location.href = "https://www.google.com";
@@ -114,7 +116,7 @@ export function AgeGate() {
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               type="button"
-              onClick={handleConfirm}
+              onClick={() => markAgeVerified(locale)}
               className="h-12 cursor-pointer bg-white px-8 text-sm text-night transition-colors hover:bg-moon sm:min-w-[180px]"
             >
               {t("confirm")}
