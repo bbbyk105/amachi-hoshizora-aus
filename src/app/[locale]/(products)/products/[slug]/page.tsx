@@ -16,6 +16,7 @@ import { PurchasePanel } from "@/components/products/PurchasePanel";
 import { SectionHeading } from "@/components/shared/SectionHeading";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { SpecList } from "@/components/shared/SpecList";
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/cart";
 import { localizedAlternates } from "@/lib/site";
 import { productStructuredData } from "@/lib/structured-data";
 
@@ -136,6 +137,12 @@ export default async function ProductDetailPage({
                   </span>
                 )}
               </div>
+              <p className="mt-2 text-xs text-muted-foreground">
+                {t("shippingNote", {
+                  fee: formatPrice(SHIPPING_COST),
+                  threshold: formatPrice(FREE_SHIPPING_THRESHOLD),
+                })}
+              </p>
             </div>
 
             <PurchasePanel

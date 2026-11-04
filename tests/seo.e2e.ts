@@ -50,6 +50,27 @@ test('商品ページに実際の価格の構造化データを出す', async ({
   });
 });
 
+test('商品ページに決済と同じ送料を出す', async ({ app }) => {
+  const { items } = await readPage(app.baseUrl, '/en/products/1');
+  const product = items.find((item) => item['@type'] === 'Product');
+
+  expect(product).toMatchObject({
+    offers: {
+      shippingDetails: {
+        shippingDestination: { addressCountry: 'AU' },
+        shippingRate: { value: 50, currency: 'AUD' },
+      },
+    },
+  });
+});
+
+test('実態と違う「返品不可」を出さない', async ({ app }) => {
+  const { html } = await readPage(app.baseUrl, '/en/products/1');
+
+  // 不備や誤配送の返品は受けるので、一律の返品不可にしない
+  expect(html.includes('MerchantReturnNotPermitted')).toBe(false);
+});
+
 test('FAQ ページに画面と同じ質問と回答の構造化データを出す', async ({ app }) => {
   const { html, items } = await readPage(app.baseUrl, '/ja/faq');
   const faq = items.find((item) => item['@type'] === 'FAQPage');
