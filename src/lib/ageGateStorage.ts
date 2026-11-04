@@ -1,15 +1,9 @@
 /** localStorage keys used by the age gate (client-only). */
 export const AGE_VERIFIED_STORAGE_KEY = "amachi_age_verified_v1";
-export const LOCATION_STORAGE_KEY = "amachi_location_v1";
+/** 以前の版が保存していた位置情報。使わなくなったので、残っていれば消す */
+const LEGACY_LOCATION_STORAGE_KEY = "amachi_location_v1";
 /** 年齢確認を通過した瞬間に window へ流すイベント（ページ冒頭の演出を待たせるため） */
 export const AGE_VERIFIED_EVENT = "amachi:age-verified";
-
-export type StoredAgeGateLocation = {
-  lat: number;
-  lng: number;
-  accuracy: number | null;
-  ts: number;
-};
 
 /** 年齢確認を通過したら <html> に付けるクラス（通過済みの人には確認画面の下地を出さない） */
 export const AGE_VERIFIED_CLASS = "age-verified";
@@ -40,29 +34,13 @@ export function markAgeVerified() {
 
 /**
  * <head> で最初の描画より前に実行するスクリプト。
- * 通過済みなら <html> に印を付け、ハイドレーションまでの間も確認画面の下地を出さない
+ * 通過済みなら <html> に印を付け、ハイドレーションまでの間も確認画面の下地を出さない。
+ * 以前の版が保存した位置情報もここで消す
  */
-export const AGE_VERIFIED_BOOT_SCRIPT = `try{if(localStorage.getItem(${JSON.stringify(
+export const AGE_VERIFIED_BOOT_SCRIPT = `try{localStorage.removeItem(${JSON.stringify(
+  LEGACY_LOCATION_STORAGE_KEY,
+)});if(localStorage.getItem(${JSON.stringify(
   AGE_VERIFIED_STORAGE_KEY,
 )})==="1")document.documentElement.classList.add(${JSON.stringify(
   AGE_VERIFIED_CLASS,
 )})}catch(e){}`;
-
-export function readStoredAgeGateLocation(): StoredAgeGateLocation | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const raw = window.localStorage.getItem(LOCATION_STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw) as StoredAgeGateLocation;
-    if (
-      typeof parsed.lat !== "number" ||
-      typeof parsed.lng !== "number" ||
-      typeof parsed.ts !== "number"
-    ) {
-      return null;
-    }
-    return parsed;
-  } catch {
-    return null;
-  }
-}

@@ -3,13 +3,9 @@
 import { useState, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
-import {
-  LOCATION_STORAGE_KEY,
-  markAgeVerified,
-  readAgeVerified,
-} from "@/lib/ageGateStorage";
+import { markAgeVerified, readAgeVerified } from "@/lib/ageGateStorage";
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock";
-import { useLocaleSwitcher, type AppLocale } from "@/hooks/use-locale-switcher";
+import { useLocaleSwitcher } from "@/hooks/use-locale-switcher";
 
 const subscribeNoop = () => () => {};
 
@@ -25,69 +21,17 @@ export function AgeGate() {
   const [passedNow, setPassed] = useState(false);
   const passed = passedNow || storedPassed === true;
   const ready = storedPassed !== null;
-  const [confirming, setConfirming] = useState(false);
 
   // 確認画面を出している間は後ろのページをスクロールさせない
   useBodyScrollLock(ready && !passed);
 
-
-  const finalizeEntry = () => {
-    setConfirming(false);
+  const handleConfirm = () => {
     setPassed(true);
     markAgeVerified();
   };
 
-  const handleConfirm = () => {
-    if (confirming) return;
-    setConfirming(true);
-
-    const tryLocationThenFinish = () => {
-      if (typeof navigator === "undefined" || !navigator.geolocation) {
-        finalizeEntry();
-        return;
-      }
-
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          try {
-            window.localStorage.setItem(
-              LOCATION_STORAGE_KEY,
-              JSON.stringify({
-                lat: pos.coords.latitude,
-                lng: pos.coords.longitude,
-                accuracy:
-                  typeof pos.coords.accuracy === "number"
-                    ? pos.coords.accuracy
-                    : null,
-                ts: Date.now(),
-              })
-            );
-          } catch {
-            /* ignore */
-          }
-          finalizeEntry();
-        },
-        () => {
-          finalizeEntry();
-        },
-        {
-          enableHighAccuracy: false,
-          timeout: 12_000,
-          maximumAge: 300_000,
-        }
-      );
-    };
-
-    tryLocationThenFinish();
-  };
-
   const handleDecline = () => {
     window.location.href = "https://www.google.com";
-  };
-
-  const handleLanguageChange = (nextLocale: AppLocale) => {
-    if (confirming) return;
-    switchLocale(nextLocale);
   };
 
   if (passed) {
@@ -143,9 +87,8 @@ export function AgeGate() {
                 type="button"
                 lang={loc}
                 aria-pressed={loc === locale}
-                onClick={() => handleLanguageChange(loc)}
-                disabled={confirming}
-                className={`cursor-pointer py-1 tracking-[0.16em] transition-opacity disabled:cursor-default ${
+                onClick={() => switchLocale(loc)}
+                className={`cursor-pointer py-1 tracking-[0.16em] transition-opacity ${
                   loc === locale ? "opacity-100" : "opacity-45 hover:opacity-100"
                 }`}
               >
@@ -168,23 +111,18 @@ export function AgeGate() {
           <p className="mt-4 text-xs leading-relaxed text-white/55">
             {t("notice")}
           </p>
-          <p className="mt-2 text-xs leading-relaxed text-white/55">
-            {t("locationNotice")}
-          </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:justify-center">
             <button
               type="button"
               onClick={handleConfirm}
-              disabled={confirming}
-              className="h-12 cursor-pointer bg-white px-8 text-sm text-night transition-colors hover:bg-moon disabled:cursor-wait disabled:opacity-70 sm:min-w-[180px]"
+              className="h-12 cursor-pointer bg-white px-8 text-sm text-night transition-colors hover:bg-moon sm:min-w-[180px]"
             >
-              {confirming ? t("confirming") : t("confirm")}
+              {t("confirm")}
             </button>
             <button
               type="button"
               onClick={handleDecline}
-              disabled={confirming}
-              className="h-12 cursor-pointer border border-white/40 px-8 text-sm text-white transition-colors hover:border-white disabled:opacity-50 sm:min-w-[180px]"
+              className="h-12 cursor-pointer border border-white/40 px-8 text-sm text-white transition-colors hover:border-white sm:min-w-[180px]"
             >
               {t("decline")}
             </button>
