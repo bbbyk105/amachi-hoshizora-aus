@@ -13,6 +13,7 @@ export default {
         // 本番の鍵で決済セッションを作らないよう、テスト用のサーバーには Stripe の鍵を渡さない。
         // 動いているサーバーには鍵が入っているかもしれないので、再利用（reuseExisting）はしない
         env: { STRIPE_SECRET_KEY: '' },
+        log: '.e2e/logs/app.log',
       },
     },
   }],

@@ -41,6 +41,15 @@ test('商品ページに決済と同じ送料を表示する', async ({ app }) =
   }
 });
 
+test('受けていない配送日時の指定を FAQ に書かない', async ({ app }) => {
+  const en = await readPageText(app.baseUrl, '/en/faq');
+  const ja = await readPageText(app.baseUrl, '/ja/faq');
+
+  expect(en.includes('How is delivery handled?')).toBe(true);
+  expect(en.includes('delivery date')).toBe(false);
+  expect(ja.includes('配送日時')).toBe(false);
+});
+
 test('扱っていない支払い方法と配送を書かない', async ({ app }) => {
   const en = await readPageText(app.baseUrl, '/en/commerce');
   const ja = await readPageText(app.baseUrl, '/ja/commerce');
