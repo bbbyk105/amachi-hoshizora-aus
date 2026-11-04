@@ -208,11 +208,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("Checkout error:", error);
-    return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : "Internal server error",
-      },
-      { status: 500 },
-    );
+    // 環境変数名や Stripe の文言を外に出さない。画面は翻訳済みの文言を出す（use-checkout.ts）
+    return NextResponse.json({}, { status: 500 });
   }
 }

@@ -53,7 +53,7 @@ const onEnter = (trigger: Element, start = "top 85%") => ({
 
 // 年齢確認がまだなら、通過するまで冒頭の演出を止めておく
 function whenAgeVerified(play: () => void, cleanups: (() => void)[]) {
-  if (readAgeVerified()) {
+  if (readAgeVerified(document.documentElement.lang)) {
     play();
     return;
   }

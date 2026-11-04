@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test:e2e": "e2e run"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -25,11 +26,13 @@
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
+    "@e2e-dev/web": "^0.15.4",
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^25",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "e2e": "^0.22.0",
     "eslint": "^9",
     "eslint-config-next": "16.4.1",
     "tailwindcss": "^4",
