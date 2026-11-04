@@ -93,16 +93,18 @@ export function FaqList({ items, categories }: FaqListProps) {
                 </button>
               </h2>
 
-              {open && (
-                <div id={`faq-${item.id}`} className="flex gap-5 pb-8">
-                  <span className="font-serif text-lg leading-7 text-muted-foreground">
-                    A
-                  </span>
-                  <p className="flex-1 pr-10 text-sm leading-[1.9] text-gray-700 sm:text-[15px]">
-                    {item.answer}
-                  </p>
-                </div>
-              )}
+              {/* 閉じている間も HTML には入れる（検索エンジンが回答を読めるように） */}
+              <div
+                id={`faq-${item.id}`}
+                className={cn("gap-5 pb-8", open ? "flex" : "hidden")}
+              >
+                <span className="font-serif text-lg leading-7 text-muted-foreground">
+                  A
+                </span>
+                <p className="flex-1 pr-10 text-sm leading-[1.9] text-gray-700 sm:text-[15px]">
+                  {item.answer}
+                </p>
+              </div>
             </li>
           );
         })}

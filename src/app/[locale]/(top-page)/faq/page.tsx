@@ -2,9 +2,11 @@
 // 質問データはサーバーで組み立て、絞り込みと開閉だけを Client（FaqList）に任せる
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { JsonLd } from "@/components/shared/JsonLd";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { FaqList, type FaqItem } from "@/components/faq/FaqList";
 import { localizedAlternates } from "@/lib/site";
+import { faqStructuredData } from "@/lib/structured-data";
 
 interface FaqPageProps {
   params: Promise<{ locale: string }>;
@@ -52,6 +54,7 @@ export default async function FaqPage({ params }: FaqPageProps) {
 
   return (
     <div className="bg-white pb-28 sm:pb-40">
+      <JsonLd data={faqStructuredData(items)} />
       <PageHeader
         title={t("title")}
         width="narrow"
