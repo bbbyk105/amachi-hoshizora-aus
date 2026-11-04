@@ -133,6 +133,7 @@
         "backToProducts": "Back to Products",
         "productList": "Products",
         "onSale": "On Sale",
+        "shippingNote": "Delivery within Australia: {fee} (free on orders of {threshold} or more)",
         "quantity": "Quantity",
         "subtotal": "Subtotal",
         "addToCart": "Add to Cart",
@@ -155,7 +156,7 @@
     "commerceLaw": {
         "title": "Specified Commercial Transaction Law",
         "subtitle": "AMACHIHOSHISORA",
-        "lastUpdated": "Last Updated: June 4, 2025",
+        "lastUpdated": "Last Updated: November 4, 2026",
         "intro": "We hereby provide the following information in accordance with the Specified Commercial Transaction Law.",
         "seller": "Seller",
         "sellerInfo": "Kondo Pharmacy Co., Ltd.",
@@ -173,17 +174,10 @@
             "AMACHIHOSHISORA Junmai Daiginjo 500ml: $95.00 AUD (tax included)",
             "Fuji no Shizuku Junmai Ginjo 180ml: $30.00 AUD (tax included)"
         ],
-        "additionalFees": "Additional Fees",
+        "additionalFees": "Additional Fees (for delivery orders)",
         "shipping": "Shipping:",
-        "shippingFees": [
-            "Nationwide flat rate: ¥1,100 (tax included)",
-            "Free shipping for purchases over ¥10,000",
-            "Cool delivery (refrigerated): Additional ¥330 (tax included)"
-        ],
-        "codFee": "Cash on Delivery Fee:",
-        "codFeeAmount": "¥330 (tax included)",
-        "bankTransferFee": "Bank Transfer Fee:",
-        "bankTransferFeeInfo": "Customer's responsibility",
+        "shippingFlatRate": "Flat rate within Australia: {fee} (tax included)",
+        "shippingFreeOver": "Free shipping on orders of {threshold} or more",
         "paymentMethods": "Payment Methods",
         "paymentMethodsList": [
             "Credit Card (VISA, MasterCard, JCB, American Express, Diners Club, Discover)",
@@ -200,7 +194,7 @@
         "deliveryTimingList": [
             "In-stock items: Shipped within 3-5 business days after order confirmation",
             "Pre-order items: Shipping date as listed on product page",
-            "Bank Transfer: Shipped within 3-5 business days after payment confirmation"
+            "Exhibitions and events: Handed over on the day"
         ],
         "deliveryNote": "※Excluding weekends, holidays, year-end and New Year holidays, Golden Week, and Obon period\n※May be delayed due to weather or traffic conditions",
         "returns": "Returns & Exchanges",
@@ -223,7 +217,7 @@
             "When due to customer's convenience: Customer bears the cost"
         ],
         "alcoholSales": "Alcohol Sales",
-        "alcoholLicense": "Alcohol Sales License: Shizuoka Prefecture Fuji City No. 〇〇",
+        "alcoholLicense": "Alcohol Sales License: Shizuoka Prefecture, Fuji City (obtained)",
         "alcoholConditions": "Sales Conditions: Persons 18 years of age or older only",
         "alcoholWarnings": "Important Notices:",
         "alcoholWarningsList": [
@@ -323,7 +317,7 @@
             },
             {
                 "question": "How is delivery handled?",
-                "answer": "We deliver under appropriate temperature control to maintain product quality. You can also specify delivery date and time."
+                "answer": "We deliver under appropriate temperature control to maintain product quality."
             },
             {
                 "question": "Please tell me the recommended way to drink",

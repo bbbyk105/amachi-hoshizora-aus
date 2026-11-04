@@ -133,6 +133,7 @@
         "backToProducts": "商品一覧に戻る",
         "productList": "商品一覧",
         "onSale": "セール中",
+        "shippingNote": "オーストラリア国内への配送料 {fee}（{threshold} 以上は無料）",
         "quantity": "数量",
         "subtotal": "小計",
         "addToCart": "カートに追加",
@@ -155,7 +156,7 @@
     "commerceLaw": {
         "title": "特定商取引法に基づく表記",
         "subtitle": "天地星空",
-        "lastUpdated": "最終更新日：2025年6月4日",
+        "lastUpdated": "最終更新日：2026年11月4日",
         "intro": "特定商取引法に基づき、以下の通り表記いたします。",
         "seller": "販売業者",
         "sellerInfo": "株式会社 近藤薬局",
@@ -175,13 +176,8 @@
         ],
         "additionalFees": "商品代金以外の必要料金(配送の場合)",
         "shipping": "送料：",
-        "shippingFees": [
-            "全国一律 A$ 50（税込）"
-        ],
-        "codFee": "代金引換手数料：",
-        "codFeeAmount": "¥330（税込）",
-        "bankTransferFee": "振込手数料：",
-        "bankTransferFeeInfo": "お客様のご負担となります",
+        "shippingFlatRate": "オーストラリア国内 一律 {fee}（税込）",
+        "shippingFreeOver": "{threshold} 以上のご注文は送料無料",
         "paymentMethods": "支払方法",
         "paymentMethodsList": [
             "クレジットカード（VISA、MasterCard、JCB、American Express、Diners Club, Discover）",
@@ -221,7 +217,7 @@
             "お客様のご都合による場合：お客様負担"
         ],
         "alcoholSales": "酒類販売について",
-        "alcoholLicense": "酒類販売業免許：静岡県富士市 第〇〇号",
+        "alcoholLicense": "酒類販売業免許：静岡県富士市（取得済み）",
         "alcoholConditions": "販売条件：満20歳以上の方のみ",
         "alcoholWarnings": "注意事項：",
         "alcoholWarningsList": [
@@ -321,7 +317,7 @@
             },
             {
                 "question": "配送はどのように行われますか？",
-                "answer": "商品の品質を保つため、適切な温度管理の下で配送いたします。配送日時のご指定も可能です。"
+                "answer": "商品の品質を保つため、適切な温度管理の下で配送いたします。"
             },
             {
                 "question": "おすすめの飲み方を教えてください",

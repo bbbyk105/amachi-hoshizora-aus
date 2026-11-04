@@ -1,5 +1,6 @@
 // 検索エンジン向けの構造化データ（JSON-LD）。そのページに実際に出ている内容だけを書く
 import type { Product } from "@/data/types";
+import { SHIPPING_COST } from "@/lib/cart";
 import { absoluteUrl, siteUrl } from "@/lib/site";
 
 const CONTEXT = "https://schema.org";
@@ -54,6 +55,15 @@ export function productStructuredData(product: Product, locale: string) {
       price: product.price,
       priceCurrency: "AUD",
       availability: "https://schema.org/InStock",
+      shippingDetails: {
+        "@type": "OfferShippingDetails",
+        shippingDestination: { "@type": "DefinedRegion", addressCountry: "AU" },
+        shippingRate: {
+          "@type": "MonetaryAmount",
+          value: SHIPPING_COST,
+          currency: "AUD",
+        },
+      },
     },
   };
 }

@@ -3,6 +3,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LegalHeader } from "@/components/shared/LegalHeader";
+import { formatPrice } from "@/data/format";
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST } from "@/lib/cart";
 import { localizedAlternates } from "@/lib/site";
 
 interface CommercePageProps {
@@ -122,18 +124,18 @@ const CommerceLaw = async ({ params }: CommercePageProps) => {
                     <p className="mb-3">
                       <strong>{t("shipping")}</strong>
                     </p>
-                    <ul className="list-disc list-inside mb-4 space-y-1">
-                      {t
-                        .raw("shippingFees")
-                        .map((fee: string, index: number) => (
-                          <li key={index}>{fee}</li>
-                        ))}
-                    </ul>
-                    <p className="mb-3">
-                      <strong>{t("codFee")}</strong>
-                    </p>
-                    <ul className="list-disc list-inside mb-4 space-y-1">
-                      <li>{t("codFeeAmount")}</li>
+                    {/* 送料は決済と同じ定数から出す（文章に直接書かない） */}
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>
+                        {t("shippingFlatRate", {
+                          fee: formatPrice(SHIPPING_COST),
+                        })}
+                      </li>
+                      <li>
+                        {t("shippingFreeOver", {
+                          threshold: formatPrice(FREE_SHIPPING_THRESHOLD),
+                        })}
+                      </li>
                     </ul>
                   </div>
                 </div>
